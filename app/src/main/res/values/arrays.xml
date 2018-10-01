@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="reddit_feeds">
+        <item>All</item>
+        <item>Front page</item>
+        <item>Popular</item>
+        <item>Explore</item>
+        <item>Saved</item>
+    </string-array>
+
+    <string-array name="subscriptions">
+        <item>android</item>
+        <item>androidapps</item>
+        <item>aww</item>
+        <item>funny</item>
+        <item>pics</item>
+        <item>video</item>
+        <item>wtf</item>
+    </string-array>
+
+
+</resources>
