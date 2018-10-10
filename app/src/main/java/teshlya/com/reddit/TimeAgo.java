@@ -89,7 +89,7 @@ public class TimeAgo {
     public String time(long distanceMillis, final boolean allowFuture) {
         final String prefix;
         final String suffix;
-        //distanceMillis = Math.abs(distanceMillis);
+        distanceMillis = Math.abs(distanceMillis);
 
         if (allowFuture) {
             prefix = prefixFromNow;

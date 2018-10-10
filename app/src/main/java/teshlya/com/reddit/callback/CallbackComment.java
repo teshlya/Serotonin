@@ -1,7 +1,10 @@
 package teshlya.com.reddit.callback;
 
-import teshlya.com.reddit.model.ArticleDataWithComment;
+import java.util.ArrayList;
+
+import teshlya.com.reddit.adapter.SwipePostAdapter;
+import teshlya.com.reddit.model.CommentData;
 
 public interface CallbackComment {
-    void showDataOnScreen(ArticleDataWithComment articleDataWithComment);
+    void showDataOnScreen(ArrayList<CommentData> list);
 }

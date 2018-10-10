@@ -1,5 +1,8 @@
 package teshlya.com.reddit.viewbinder;
 
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +28,8 @@ public class CommentNodeBinder extends TreeViewBinder<CommentNodeBinder.ViewHold
         int rotateDegree = node.isExpand() ? 90 : 0;
         holder.ivArrow.setRotation(rotateDegree);
         CommentBean commentNode = (CommentBean) node.getContent();
-        holder.body.setText(commentNode.comment.getBody());
+        holder.body.setText(Html.fromHtml(commentNode.comment.getBody()));
+        holder.body.setMovementMethod(LinkMovementMethod.getInstance());
         holder.author.setText(commentNode.comment.getAuthor());
         holder.score.setText(commentNode.comment.getScore());
         holder.date.setText(commentNode.comment.getDate());

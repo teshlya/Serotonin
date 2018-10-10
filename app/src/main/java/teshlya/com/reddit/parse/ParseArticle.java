@@ -17,29 +17,42 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
+import tellh.com.recyclertreeview_lib.TreeNode;
+import teshlya.com.reddit.TimeAgo;
+import teshlya.com.reddit.adapter.ArticleAdapter;
+import teshlya.com.reddit.adapter.SwipePostAdapter;
+import teshlya.com.reddit.bean.CommentBean;
 import teshlya.com.reddit.callback.CallbackComment;
 import teshlya.com.reddit.model.ArticleDataWithComment;
 import teshlya.com.reddit.model.CommentData;
 
-public class ParseArticle extends AsyncTask<Void, Void, String> {
+public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> {
     CallbackComment callbackComment;
     String url;
     Context context;
+    ArticleAdapter adapter;
+    List<TreeNode> nodes;
+    public static HashMap<String, ArrayList<CommentData>> hmap = new HashMap<String, ArrayList<CommentData>>();
 
-    public ParseArticle(CallbackComment callbackComment, String url, Context context) {
+
+    public ParseArticle(CallbackComment callbackComment, String url, Context context, ArticleAdapter adapter) {
         this.callbackComment = callbackComment;
         this.url = url;
         this.context = context;
+        this.adapter = adapter;
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected ArrayList<CommentData> doInBackground(Void... params) {
+        if (hmap.containsKey(url))
+            return hmap.get(url);
         String resultJson = "";
         try {
             URL url = new URL(this.url);
-            Log.d("qwerty", this.url);
-
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -59,41 +72,28 @@ public class ParseArticle extends AsyncTask<Void, Void, String> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return resultJson;
-    }
 
-    @Override
-    protected void onPostExecute(String strJson) {
-        super.onPostExecute(strJson);
+        ArticleDataWithComment articleDataWithComment = new ArticleDataWithComment();
 
         try {
             JSONArray dataJsonObj = null;
-            dataJsonObj = new JSONArray(strJson);
-            JSONObject data1 = dataJsonObj.getJSONObject(0);
-            JSONObject data2 = data1.getJSONObject("data");
-            JSONArray children = data2.getJSONArray("children");
-            JSONObject child = children.getJSONObject(0);
-            JSONObject child3 = child.getJSONObject("data");
-
-            String title="";
-            if (child3.has("title"))
-            title = child3.getString("title");
-
-            String imageUrl = "";
-            if (child3.has("url"))
-            imageUrl = child3.getString("url");
-
-            ArticleDataWithComment articleDataWithComment = new ArticleDataWithComment();
-            articleDataWithComment.setTitle(title);
-            articleDataWithComment.setImageUrl(imageUrl);
-
+            dataJsonObj = new JSONArray(resultJson);
             articleDataWithComment.setCommentData(parseComment(dataJsonObj.getJSONObject(1)));
-            callbackComment.showDataOnScreen(articleDataWithComment);
 
         } catch (JSONException e) {
-            Toast.makeText(context, "Error, load data!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            return null;
         }
+
+        hmap.put(url, articleDataWithComment.getCommentData());
+        return articleDataWithComment.getCommentData();
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<CommentData> list) {
+        super.onPostExecute(list);
+        bind(list);
+
     }
 
     private ArrayList<CommentData> parseComment(JSONObject jsonObject) {
@@ -105,14 +105,14 @@ public class ParseArticle extends AsyncTask<Void, Void, String> {
                 JSONObject child = children.getJSONObject(i);
                 JSONObject data2 = child.getJSONObject("data");
                 CommentData comment = new CommentData();
-                if (data2.has("body")) {
-                    comment.setBody(cleanString(data2.getString("body")));
+                if (data2.has("body_html")) {
+                    comment.setBody(stringToHtml(data2.getString("body_html")));
                     if (data2.has("author"))
                         comment.setAuthor(data2.getString("author"));
                     if (data2.has("score"))
                         comment.setScore(processScore(data2.getInt("score")));
-                    if (data2.has("created"))
-                        comment.setDate(processDate(data2.getLong("created")));
+                    if (data2.has("created_utc"))
+                        comment.setDate(processDate(data2.getLong("created_utc")));
 
                     if (data2.has("replies"))
                         if (!data2.getString("replies").equals("")) {
@@ -130,11 +130,12 @@ public class ParseArticle extends AsyncTask<Void, Void, String> {
         return commentData;
     }
 
-    private String cleanString(String str) {
-        return str
-                .replace("[deleted]", "Comment deleted")
-                .replace("&amp;#x200B;", "")
-                .replace("&gt;", "");
+    private String stringToHtml(String str) {
+        str = str.replace("&lt;", "<");
+        str = str.replace("&gt;", ">");
+        str = str.replace("&amp;", "&");
+        str = str.replace("\\n", "");
+        return str;
     }
 
     private String processScore(int score) {
@@ -149,28 +150,52 @@ public class ParseArticle extends AsyncTask<Void, Void, String> {
     }
 
     private String processDate(Long milliseconds) {
-        Calendar cl = Calendar.getInstance();
-        cl.setTimeInMillis(milliseconds * 1000);
-        String result = "";
-
-        int diff;
-        if ((diff = getDateDiff(cl, Calendar.YEAR)) > 0)
-            result = diff + ((diff == 1) ? " year" : " years");
-        else if ((diff = getDateDiff(cl, Calendar.MONTH)) > 0)
-            result = diff + ((diff == 1) ? " month" : " month");
-        else if ((diff = getDateDiff(cl, Calendar.DAY_OF_MONTH)) > 0)
-            result = diff + ((diff == 1) ? " day" : " days");
-        else if ((diff = getDateDiff(cl, Calendar.HOUR)) > 0)
-            result = diff + ((diff == 1) ? " hour" : " hours");
-        else if ((diff = getDateDiff(cl, Calendar.MINUTE)) > 0)
-            result = diff + ((diff == 1) ? " minute" : " minutes");
-        else if ((diff = getDateDiff(cl, Calendar.SECOND)) > 0)
-            result = diff + ((diff == 1) ? " second" : " seconds");
-
-        return result + " ago";
+        return new TimeAgo().timeAgo((milliseconds) * 1000);
     }
 
-    private static int getDateDiff(Calendar cl, int period) {
-        return Calendar.getInstance().get(period) - cl.get(period);
+    public void bind(ArrayList<CommentData> list) {
+        if (list == null) {
+            Toast.makeText(context, "Error, load comment!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        initData(list);
+    }
+
+    private void initData(ArrayList<CommentData> list) {
+        nodes = new ArrayList<>();
+        ArrayList<CommentData> commentData;
+        commentData = new ArrayList<>();
+        commentData.addAll(list);
+        if (commentData != null)
+            for (CommentData comment : commentData) {
+                TreeNode<CommentBean> tempComment = new TreeNode<>(new CommentBean(comment.getComment()));
+                tempComment.setChildList(setData(comment.getReplies()));
+                tempComment.expandAll();
+                nodes.add(tempComment);
+            }
+        adapter.findDisplayNodes(nodes);
+        adapter.notifyDataSetChanged();
+    }
+
+
+    private List<TreeNode> setData(ArrayList<CommentData> commentData) {
+        List<TreeNode> nodes = new ArrayList<>();
+        if (commentData != null)
+            for (CommentData comment : commentData) {
+                TreeNode<CommentBean> tempComment = new TreeNode<>(new CommentBean(comment.getComment()));
+                tempComment.setChildList(setData(comment.getReplies()));
+                tempComment.expandAll();
+                nodes.add(tempComment);
+            }
+        return nodes;
+    }
+
+
+    public void update() {
+        if (nodes == null)
+            Log.d("qwerty", "null");
+        adapter.findDisplayNodes(nodes);
+        adapter.notifyDataSetChanged();
+
     }
 }

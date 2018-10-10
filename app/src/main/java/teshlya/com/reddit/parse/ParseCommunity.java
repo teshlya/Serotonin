@@ -27,7 +27,7 @@ import teshlya.com.reddit.model.ArticleData;
 
 public class ParseCommunity extends AsyncTask<Void, Void, String> {
     private static int offsetFromUtc = TimeZone.getDefault().getOffset(new Date().getTime()) / 3600000;
-    private static int hour = 60 *60;
+    private static int hour = 60 * 60;
     private CallbackArticle callbackArticle;
     private String url;
     private Context context;
@@ -92,15 +92,65 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                     author = data2.getString("author");
                 article.setAuthor(author);
 
+                String text = "";
+                if (data2.has("selftext_html") && !data2.isNull("selftext_html"))
+                    text = data2.getString("selftext_html");
+
+                article.setText(stringToHtml(text));
+
                 String urlImage = "";
-                if (data2.has("thumbnail"))
-                    urlImage = data2.getString("thumbnail");
+
+                JSONObject preview;
+                if (data2.has("preview") && !data2.isNull("preview")) {
+                    preview = data2.getJSONObject("preview");
+                    JSONArray images = preview.getJSONArray("images");
+                    JSONObject image = images.getJSONObject(0);
+                    JSONObject source = image.getJSONObject("source");
+                    urlImage = source.getString("url");
+                }
+
+                if (urlImage == null || urlImage.equals(""))
+                    if (data2.has("thumbnail"))
+                        urlImage = data2.getString("thumbnail");
+                if (urlImage == null || urlImage.equals(""))
+                    if (data2.has("media") && !data2.isNull("media")) {
+                        JSONObject media;
+                        media = data2.getJSONObject("media");
+                        if (media.has("oembed")) {
+                            JSONObject oembed;
+                            oembed = media.getJSONObject("oembed");
+                            if (oembed.has("thumbnail_url"))
+                                urlImage = oembed.getString("thumbnail_url");
+                        }
+                    }
+
                 article.setUrlImage(urlImage);
+
 
                 Long date = null;
                 if (data2.has("created_utc"))
                     date = data2.getLong("created_utc");
                 article.setDate(processDate(date));
+
+                Long commentCount = null;
+                if (data2.has("num_comments"))
+                    commentCount = data2.getLong("num_comments");
+                article.setCommentCount(processComments(commentCount));
+
+                int score = 0;
+                if (data2.has("score"))
+                    score = data2.getInt("score");
+                article.setScore(processScore(score));
+
+                Boolean withoutImage = true;
+                if (data2.has("is_self"))
+                    withoutImage = data2.getBoolean("is_self");
+                article.setWithoutImage(withoutImage);
+
+                String url = "";
+                if (data2.has("permalink"))
+                    url = data2.getString("permalink");
+                article.setUrl(url);
 
                 articleData.add(article);
             }
@@ -111,12 +161,14 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         }
     }
 
-    private String cleanString(String str) {
-        return str
-                .replace("[deleted]", "Comment deleted")
-                .replace("&amp;#x200B;", "")
-                .replace("&gt;", "");
+    private String stringToHtml(String str){
+        str = str.replace("&lt;", "<");
+        str = str.replace("&gt;", ">");
+        str = str.replace("&amp;", "&");
+        str = str.replace("\\n", "");
+        return str;
     }
+
 
     private static String processScore(int score) {
         String point = " points";
@@ -130,6 +182,16 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
     }
 
     private static String processDate(Long milliseconds) {
-        return new TimeAgo().timeAgo((milliseconds + hour * offsetFromUtc) * 1000);
+        return new TimeAgo().timeAgo((milliseconds) * 1000);
+    }
+
+    private static String processComments(Long commentsCount) {
+        String result = Long.toString(commentsCount);
+        if (commentsCount <= 1)
+            result = result + " comment_icon";
+        else
+            result = result + " comments";
+
+        return result;
     }
 }

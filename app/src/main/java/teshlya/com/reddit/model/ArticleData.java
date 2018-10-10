@@ -1,11 +1,17 @@
 package teshlya.com.reddit.model;
 
-public class ArticleData {
+import java.io.Serializable;
+
+public class ArticleData implements Serializable {
     String title;
+    String text;
     String urlImage;
+    String url;
     String author;
     String date;
     String score;
+    String commentCount;
+    Boolean withoutImage;
 
     public String getTitle() {
         return title;
@@ -45,5 +51,37 @@ public class ArticleData {
 
     public void setScore(String score) {
         this.score = score;
+    }
+
+    public String getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Boolean getWithoutImage() {
+        return withoutImage;
+    }
+
+    public void setWithoutImage(Boolean withoutImage) {
+        this.withoutImage = withoutImage;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

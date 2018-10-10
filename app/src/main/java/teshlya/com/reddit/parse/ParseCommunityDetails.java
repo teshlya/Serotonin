@@ -64,6 +64,7 @@ public class ParseCommunityDetails extends AsyncTask<Void, Void, String> {
             dataJsonObj = new JSONObject(strJson);
             JSONObject data = dataJsonObj.getJSONObject("data");
             String iconUrl = null;
+            String communityUrl = null;
             if (data.has("community_icon")) {
                 iconUrl = data.getString("community_icon");
             }
@@ -72,7 +73,13 @@ public class ParseCommunityDetails extends AsyncTask<Void, Void, String> {
                     iconUrl = data.getString("icon_img");
             if (iconUrl == null || iconUrl.equals(""))
                 iconUrl= "default";
-            callbackCommunity.addCommunity(new Subscription(content, iconUrl));
+
+            if (data.has("url")) {
+                communityUrl = data.getString("url");
+            }
+
+
+            callbackCommunity.addCommunity(new Subscription(content, iconUrl, communityUrl));
 
 
         } catch (JSONException e) {

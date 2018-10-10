@@ -11,7 +11,7 @@
     <color name="colorBackgroundMainWindow">#6200ee</color>
 
     <color name="colorMenuIcon">#ffffff</color>
-    <color name="colorSearchBackground">#d0b2fa</color>
+        <color name="colorSearchBackground">#d0b2fa</color>
 
     <color name="colorSearchText">@android:color/tab_indicator_text</color>
     <color name="colorRedditFeeds">#8b9999</color>
@@ -20,5 +20,6 @@
     <color name="colorBackgroundArticle">#ffffff</color>
     <color name="colorBorderArticle">#cccccc</color>
     <color name="colorCommunityListTitle">@android:color/tab_indicator_text</color>
-    <color name="colorCommunityListAuthor">@android:color/tab_indicator_text</color>
+    <color name="colorCommunityListAuthor">#729aff</color>
+    <color name="colorCommunityListComment">@android:color/tab_indicator_text</color>
 </resources>

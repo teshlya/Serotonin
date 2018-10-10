@@ -9,7 +9,7 @@
     <style name="title">
         <item name="android:textColor">@color/colorTitleArticle</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">normal</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="comment">
@@ -75,7 +75,13 @@
     </style>
 
     <style name="community_list_author">
-        <item name="android:textColor">@color/colorCommunityListTitle</item>
+        <item name="android:textColor">@color/colorCommunityListAuthor</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="community_list_comment">
+        <item name="android:textColor">@color/colorCommunityListComment</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">12sp</item>
     </style>

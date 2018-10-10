@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ArticleDataWithComment {
     private String title;
     private String imageUrl;
+    private String text;
 
     private ArrayList<CommentData> commentData;
 
@@ -30,5 +31,13 @@ public class ArticleDataWithComment {
 
     public void setCommentData(ArrayList<CommentData> commentData) {
         this.commentData = commentData;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }
