@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,10 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         notifyItemChanged(subscriptions.size() - 1);
     }
 
+    public void addSubscription(List<Subscription> subscriptions) {
+        this.subscriptions.addAll(subscriptions);
+    }
+
     @Override
     public SubscriptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -44,7 +49,6 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
 
     @Override
     public void onBindViewHolder(SubscriptionViewHolder holder, int position) {
-
         holder.bind(subscriptions.get(position));
     }
 
@@ -59,25 +63,21 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         private TextView subscriptionTextView;
 
         public void bind(final Subscription subscription) {
-            Picasso.with(context)
-                    .load(subscription.getIconUrl())
-                    .placeholder(R.drawable.default_icon)
-                    .into(subscriptionImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            subscriptionTextView.setText(subscription.getContent());
-                        }
-                        @Override
-                        public void onError() {
-                        }
-                    });
-            if (subscription.getIconUrl().equals("default"))
-                subscriptionTextView.setText(subscription.getContent());
+
+            if (subscription.getIconResource() > 0)
+                subscriptionImageView.setImageResource(subscription.getIconResource());
+            else
+                Picasso.with(context)
+                        .load(subscription.getIconUrl())
+                        .placeholder(R.drawable.default_icon)
+                        .into(subscriptionImageView);
+
+            subscriptionTextView.setText(subscription.getContent());
 
             onClickItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openCommunity(subscription.getCommunityUrl());
+                    openCommunity(subscription.getCommunityUrl(), subscription.getContent());
                 }
             });
 
@@ -91,11 +91,11 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
             onClickItem = itemView.findViewById(R.id.onClickItem);
         }
 
-        private void openCommunity(String url){
+        private void openCommunity(String url, String community) {
             Intent myIntent = new Intent(context, ArticleActivity.class);
             myIntent.putExtra(Constants.URL, url);
+            myIntent.putExtra(Constants.COMMUNITY, community);
             context.startActivity(myIntent);
         }
     }
-
 }

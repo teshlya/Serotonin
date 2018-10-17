@@ -6,6 +6,7 @@ public class ArticleData implements Serializable {
     String title;
     String text;
     String urlImage;
+    String urlImage3;
     String url;
     String author;
     String date;
@@ -83,5 +84,13 @@ public class ArticleData implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getUrlImage3() {
+        return urlImage3;
+    }
+
+    public void setUrlImage3(String urlImage3) {
+        this.urlImage3 = urlImage3;
     }
 }

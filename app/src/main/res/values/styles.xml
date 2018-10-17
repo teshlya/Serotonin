@@ -59,13 +59,19 @@
     <style name="reddit_feeds">
         <item name="android:textColor">@color/colorRedditFeeds</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="reddit_feeds_list">
         <item name="android:textColor">@color/colorRedditFeedsList</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="reddit_subscription_list">
+        <item name="android:textColor">@color/colorSubscriptionList</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="community_list_title">

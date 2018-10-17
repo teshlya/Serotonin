@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/onClickItem"
     android:layout_width="match_parent"
@@ -47,7 +46,8 @@
         android:id="@+id/title"
         style="@style/community_list_title"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
 
     <ImageView
         android:id="@+id/image"
@@ -55,7 +55,8 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:paddingBottom="10dp"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,5 +81,4 @@
             style="@style/community_list_comment"/>
 
     </LinearLayout>
-
 </LinearLayout>

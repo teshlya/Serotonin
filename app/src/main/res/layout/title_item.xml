@@ -2,6 +2,6 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/title"
     style="@style/title"
-    android:padding="10dp"
+    android:paddingHorizontal="10dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>

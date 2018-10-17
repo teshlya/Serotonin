@@ -9,19 +9,18 @@ import teshlya.com.reddit.R;
 
 public class ArticleActivity extends AppCompatActivity {
 
-    private String url;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
+        setContentView(R.layout.activity_community);
         init();
     }
 
     private void init() {
-        url = getIntent().getExtras().getString(Constants.URL);
+        String url = getIntent().getExtras().getString(Constants.URL, "");
+        String community = getIntent().getExtras().getString(Constants.COMMUNITY, "");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_article, CommunityFragment.newInstance(url));
+        ft.replace(R.id.fragment_article, CommunityFragment.newInstance(url, community));
         ft.commit();
     }
 }

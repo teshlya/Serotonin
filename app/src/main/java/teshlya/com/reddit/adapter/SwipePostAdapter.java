@@ -1,32 +1,21 @@
 package teshlya.com.reddit.adapter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import tellh.com.recyclertreeview_lib.TreeNode;
 import tellh.com.recyclertreeview_lib.TreeViewAdapter;
-import teshlya.com.reddit.OnSwipeTouchListener;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.bean.CommentBean;
 import teshlya.com.reddit.callback.CallbackComment;
@@ -82,8 +71,8 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
 
             adapter.setTitle(article.getTitle());
             if (!article.getWithoutImage() && article.getUrlImage() != null && !article.getUrlImage().equals("")) {
-                adapter.setImage(article.getUrlImage());
-            } else adapter.setImage(null);
+                adapter.setImage(article.getUrlImage3(), article.getUrlImage());
+            } else adapter.setImage(null, null);
             adapter.setText(article.getText());
             ParseArticle parseArticle = new ParseArticle(this, domain + article.getUrl() + ".json", context, adapter);
                 parseArticle.execute();

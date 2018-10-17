@@ -1,8 +1,8 @@
 package teshlya.com.reddit.screen;
 
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,12 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
+import java.util.ArrayList;
+import java.util.List;
 
 import teshlya.com.reddit.Constants;
 import teshlya.com.reddit.R;
@@ -71,24 +68,26 @@ public class MainFragment extends Fragment implements CallbackCommunity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = "/";
+                String community = "";
                 switch (position) {
                     case 0:
                         url = "/r/all";
+                        community = "All";
                         break;
                     case 1:
                         url = "/";
+                        community = "Front Page";
                         break;
                     case 2:
                         url = "/r/popular";
+                        community = "Popular";
                         break;
                     case 3:
                         //url = "/r/explore";
-                        break;
-                    case 4:
-                        //url = "/r/seved";
+                        community = "Explore";
                         break;
                 }
-                openCommunity(url);
+                openCommunity(url, community);
             }
         });
     }
@@ -97,12 +96,25 @@ public class MainFragment extends Fragment implements CallbackCommunity {
         subscription = view.findViewById(R.id.subscriptions);
         subscription.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new SubscriptionAdapter();
+        adapter.addSubscription(loadSubscriptionFromResource());
         subscription.setAdapter(adapter);
-        String[] strings;
-        strings = getResources().getStringArray(R.array.subscriptions);
+        /*String[] strings;
+        strings = getResources().getStringArray(R.array.subscriptions_name);
         for (String str : strings) {
             new ParseCommunityDetails(str, getContext(), this).execute();
+        }*/
+    }
+
+    private List<Subscription> loadSubscriptionFromResource() {
+        List<Subscription> subscriptions = new ArrayList<>();
+        String[] strings = getResources().getStringArray(R.array.subscriptions_name);
+        TypedArray icons = getResources().obtainTypedArray(R.array.subscriptions_icon);
+        for (int i = 0; i < strings.length; i++) {
+            subscriptions.add(new Subscription(strings[i],
+                    "/r/" + strings[i] + "/",
+                    icons.getResourceId(i, -1)));
         }
+        return subscriptions;
     }
 
     private void initSearch(View view) {
@@ -136,9 +148,10 @@ public class MainFragment extends Fragment implements CallbackCommunity {
         adapter.addSubscription(subscription);
     }
 
-    private void openCommunity(String url) {
+    private void openCommunity(String url, String community) {
         Intent myIntent = new Intent(getContext(), ArticleActivity.class);
         myIntent.putExtra(Constants.URL, url);
+        myIntent.putExtra(Constants.COMMUNITY, community);
         getContext().startActivity(myIntent);
     }
 

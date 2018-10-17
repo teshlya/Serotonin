@@ -4,11 +4,18 @@ public class Subscription {
     String content;
     String iconUrl;
     String communityUrl;
+    int iconResource;
 
     public Subscription(String content, String iconUrl, String communityUrl) {
         this.content = content;
         this.iconUrl = iconUrl;
         this.communityUrl = communityUrl;
+    }
+
+    public Subscription(String content, String communityUrl, int iconResource) {
+        this.content = content;
+        this.communityUrl = communityUrl;
+        this.iconResource = iconResource;
     }
 
     public String getContent() {
@@ -33,5 +40,13 @@ public class Subscription {
 
     public void setCommunityUrl(String communityUrl) {
         this.communityUrl = communityUrl;
+    }
+
+    public int getIconResource() {
+        return iconResource;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
     }
 }

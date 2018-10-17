@@ -4,6 +4,7 @@ public class Constants {
     public static final String POSITION = "position";
     public static final String URL = "url";
     public static final String DATA = "data";
+    public static final String COMMUNITY = "community";
 
     public static final int TITLE = 1;
     public static final int IMAGE = 3;

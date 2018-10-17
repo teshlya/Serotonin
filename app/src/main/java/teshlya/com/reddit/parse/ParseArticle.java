@@ -189,13 +189,4 @@ public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> 
             }
         return nodes;
     }
-
-
-    public void update() {
-        if (nodes == null)
-            Log.d("qwerty", "null");
-        adapter.findDisplayNodes(nodes);
-        adapter.notifyDataSetChanged();
-
-    }
 }

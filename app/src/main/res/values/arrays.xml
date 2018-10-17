@@ -5,11 +5,10 @@
         <item>Front page</item>
         <item>Popular</item>
         <item>Explore</item>
-        <item>Saved</item>
     </string-array>
 
-    <string-array name="subscriptions">
-        <item>android</item>
+    <string-array name="subscriptions_name">
+        <item>Android</item>
         <item>androidapps</item>
         <item>aww</item>
         <item>funny</item>
@@ -17,6 +16,16 @@
         <item>video</item>
         <item>wtf</item>
     </string-array>
+
+    <integer-array name="subscriptions_icon">
+        <item>@drawable/android</item>
+        <item>@drawable/default_icon</item>
+        <item>@drawable/aww</item>
+        <item>@drawable/funny</item>
+        <item>@drawable/pics</item>
+        <item>@drawable/default_icon</item>
+        <item>@drawable/wtf</item>
+    </integer-array>
 
 
 </resources>

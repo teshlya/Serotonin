@@ -2,7 +2,6 @@ package teshlya.com.reddit.parse;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -16,18 +15,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import teshlya.com.reddit.TimeAgo;
 import teshlya.com.reddit.callback.CallbackArticle;
-import teshlya.com.reddit.callback.CallbackComment;
 import teshlya.com.reddit.model.ArticleData;
 
 public class ParseCommunity extends AsyncTask<Void, Void, String> {
-    private static int offsetFromUtc = TimeZone.getDefault().getOffset(new Date().getTime()) / 3600000;
-    private static int hour = 60 * 60;
     private CallbackArticle callbackArticle;
     private String url;
     private Context context;
@@ -106,7 +99,17 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                     JSONArray images = preview.getJSONArray("images");
                     JSONObject image = images.getJSONObject(0);
                     JSONObject source = image.getJSONObject("source");
-                    urlImage = source.getString("url");
+                    urlImage = stringToHtml(source.getString("url"));
+
+                    if (image.has("resolutions")&& !image.isNull("resolutions")){
+                        JSONArray resolutions = image.getJSONArray("resolutions");
+                        if (resolutions.length() > 3) {
+                            JSONObject resolution = resolutions.getJSONObject(3);
+                            if (resolution.has("url"))
+                                article.setUrlImage3(stringToHtml(resolution.getString("url")));
+                        }
+                    }
+
                 }
 
                 if (urlImage == null || urlImage.equals(""))

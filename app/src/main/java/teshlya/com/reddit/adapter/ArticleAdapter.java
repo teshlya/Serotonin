@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ArticleAdapter extends TreeViewAdapter {
     private String text;
     private String image;
     private Context context;
+    private String thumbnail;
 
     public ArticleAdapter(List<CommentNodeBinder> commentNodeBinders) {
         super(commentNodeBinders);
@@ -40,8 +42,9 @@ public class ArticleAdapter extends TreeViewAdapter {
         this.title = title;
     }
 
-    public void setImage(String image) {
+    public void setImage(String image, String thumbnail) {
         this.image = image;
+        this.thumbnail = thumbnail;
     }
 
     public void setText(String text) {
@@ -102,7 +105,7 @@ public class ArticleAdapter extends TreeViewAdapter {
         }
         if (holder instanceof ImageHolder) {
             if (image != null)
-            ((ImageHolder) holder).bind(image);
+            ((ImageHolder) holder).bind(image, thumbnail);
             return;
         }
         super.onBindViewHolder(holder, position);
@@ -146,8 +149,23 @@ public class ArticleAdapter extends TreeViewAdapter {
             imageView = itemView.findViewById(R.id.image);
         }
 
-        public void bind(String image) {
-                Picasso.with(context).load(image).into(imageView);
+        public void bind(final String image, final String thumbnail) {
+
+            Picasso.with(context)
+                    .load(image)
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso.with(context)
+                                    .load(thumbnail)
+                                    .into(imageView);
+                        }
+                    });
             }
         }
 
