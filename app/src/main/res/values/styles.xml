@@ -20,20 +20,20 @@
 
     <style name="author">
         <item name="android:textColor">@color/colorCommentAuthor</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="score">
         <item name="android:textColor">@color/colorTitleArticle</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
 
     <style name="date">
         <item name="android:textColor">@color/colorTitleArticle</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 

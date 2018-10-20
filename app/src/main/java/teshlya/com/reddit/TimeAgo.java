@@ -11,33 +11,33 @@ public class TimeAgo {
 
     private String prefixFromNow = null;
 
-    private String suffixAgo = "ago"; //Messages.getString("TimeAgo.AGO"); //$NON-NLS-1$
+    private String suffixAgo = ""; //Messages.getString("TimeAgo.AGO"); //$NON-NLS-1$
 
-    private String suffixFromNow = "from now"; //Messages.getString("TimeAgo.SUFFIX_FROM_NOW"); //$NON-NLS-1$
+    private String suffixFromNow = ""; //Messages.getString("TimeAgo.SUFFIX_FROM_NOW"); //$NON-NLS-1$
 
-    private String second = " second"; //Messages.getString("TimeAgo.SECONDS"); //$NON-NLS-1$
+    private String second = " s"; //Messages.getString("TimeAgo.SECONDS"); //$NON-NLS-1$
 
-    private String seconds = " seconds"; //Messages.getString("TimeAgo.SECONDS"); //$NON-NLS-1$
+    private String seconds = " s"; //Messages.getString("TimeAgo.SECONDS"); //$NON-NLS-1$
 
-    private String minute = " minute"; //Messages.getString("TimeAgo.MINUTE"); //$NON-NLS-1$
+    private String minute = " m"; //Messages.getString("TimeAgo.MINUTE"); //$NON-NLS-1$
 
-    private String minutes = " minutes"; //Messages.getString("TimeAgo.MINUTES"); //$NON-NLS-1$
+    private String minutes = " m"; //Messages.getString("TimeAgo.MINUTES"); //$NON-NLS-1$
 
-    private String hour = " hour"; //Messages.getString("TimeAgo.HOUR"); //$NON-NLS-1$
+    private String hour = " h"; //Messages.getString("TimeAgo.HOUR"); //$NON-NLS-1$
 
-    private String hours = " hours"; //Messages.getString("TimeAgo.HOURS"); //$NON-NLS-1$
+    private String hours = " h"; //Messages.getString("TimeAgo.HOURS"); //$NON-NLS-1$
 
-    private String day = " day"; //Messages.getString("TimeAgo.DAY"); //$NON-NLS-1$
+    private String day = " d"; //Messages.getString("TimeAgo.DAY"); //$NON-NLS-1$
 
-    private String days = " days"; //Messages.getString("TimeAgo.DAYS"); //$NON-NLS-1$
+    private String days = " d"; //Messages.getString("TimeAgo.DAYS"); //$NON-NLS-1$
 
-    private String month = " month"; //Messages.getString("TimeAgo.MONTH"); //$NON-NLS-1$
+    private String month = " m"; //Messages.getString("TimeAgo.MONTH"); //$NON-NLS-1$
 
-    private String months = " months"; //Messages.getString("TimeAgo.MONTHS"); //$NON-NLS-1$
+    private String months = " m"; //Messages.getString("TimeAgo.MONTHS"); //$NON-NLS-1$
 
-    private String year = " year"; //Messages.getString("TimeAgo.YEAR"); //$NON-NLS-1$
+    private String year = " y"; //Messages.getString("TimeAgo.YEAR"); //$NON-NLS-1$
 
-    private String years = " years"; //Messages.getString("TimeAgo.YEARS"); //$NON-NLS-1$
+    private String years = " y"; //Messages.getString("TimeAgo.YEARS"); //$NON-NLS-1$
 
     /**
      * Get time until specified date

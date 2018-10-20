@@ -12,6 +12,7 @@ public class ArticleData implements Serializable {
     String date;
     String score;
     String commentCount;
+    String subredditName;
     Boolean withoutImage;
 
     public String getTitle() {
@@ -92,5 +93,13 @@ public class ArticleData implements Serializable {
 
     public void setUrlImage3(String urlImage3) {
         this.urlImage3 = urlImage3;
+    }
+
+    public String getSubredditName() {
+        return subredditName;
+    }
+
+    public void setSubredditName(String subredditName) {
+        this.subredditName = subredditName;
     }
 }

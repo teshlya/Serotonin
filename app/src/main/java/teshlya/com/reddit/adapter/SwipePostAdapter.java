@@ -3,6 +3,7 @@ package teshlya.com.reddit.adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,12 +69,7 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
 
         public void bind(final ArticleData article) {
             initRecycler();
-
-            adapter.setTitle(article.getTitle());
-            if (!article.getWithoutImage() && article.getUrlImage() != null && !article.getUrlImage().equals("")) {
-                adapter.setImage(article.getUrlImage3(), article.getUrlImage());
-            } else adapter.setImage(null, null);
-            adapter.setText(article.getText());
+            adapter.setData(article);
             ParseArticle parseArticle = new ParseArticle(this, domain + article.getUrl() + ".json", context, adapter);
                 parseArticle.execute();
 
@@ -98,7 +94,7 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
 
         protected void initRecycler() {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-            linearLayoutManager.setInitialPrefetchItemCount(5);
+            //linearLayoutManager.setInitialPrefetchItemCount(5);
             recyclerView.setLayoutManager(linearLayoutManager);
             adapter = new ArticleAdapter(Arrays.asList(new CommentNodeBinder()));
             adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
@@ -107,19 +103,21 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
                     if (!node.isLeaf()) {
                         onToggle(!node.isExpand(), holder);
                     }
+
                     return false;
                 }
 
                 @Override
                 public void onToggle(boolean isExpand, RecyclerView.ViewHolder holder) {
                     CommentNodeBinder.ViewHolder commentViewHolder = (CommentNodeBinder.ViewHolder) holder;
-                    ImageView ivArrow = commentViewHolder.getIvArrow();
-                    int rotateDegree = isExpand ? 90 : -90;
+                    //ImageView ivArrow = commentViewHolder.getIvArrow();
+                    //int rotateDegree = isExpand ? 90 : -90;
 
-                    TextView body = commentViewHolder.getBody();
-                    body.setVisibility(isExpand ? View.VISIBLE : View.GONE);
-                    ivArrow.animate().rotationBy(rotateDegree)
-                            .start();
+
+                    //TextView commentCount = commentViewHolder.getCommentCount();
+                    //commentCount.setVisibility(isExpand ? View.INVISIBLE : View.VISIBLE);
+                   // ivArrow.animate().rotationBy(rotateDegree)
+                   //         .start();
                 }
             });
             recyclerView.setAdapter(adapter);

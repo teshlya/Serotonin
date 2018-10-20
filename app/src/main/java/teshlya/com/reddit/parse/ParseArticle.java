@@ -117,8 +117,9 @@ public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> 
                     if (data2.has("replies"))
                         if (!data2.getString("replies").equals("")) {
                             JSONObject replies = data2.getJSONObject("replies");
-                            if (replies != null)
+                            if (replies != null){
                                 comment.setReplies(parseComment(replies));
+                            }
                         }
                     commentData.add(comment);
                 }
@@ -139,13 +140,13 @@ public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> 
     }
 
     private String processScore(int score) {
-        String point = " points";
+        String point = " pts";
         String result = Integer.toString(score);
         if (score > 1000)
             result = new DecimalFormat("#.#").format((float) score / 1000) + "k";
 
         if (score == 1)
-            point = " point";
+            point = " pt";
         return result + point;
     }
 
@@ -169,24 +170,30 @@ public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> 
         if (commentData != null)
             for (CommentData comment : commentData) {
                 TreeNode<CommentBean> tempComment = new TreeNode<>(new CommentBean(comment.getComment()));
-                tempComment.setChildList(setData(comment.getReplies()));
+                if (comment.getReplies() != null && !comment.getReplies().isEmpty()){
+                    tempComment.setChildList(setData(comment.getReplies()));
+                }
                 tempComment.expandAll();
                 nodes.add(tempComment);
             }
+
         adapter.findDisplayNodes(nodes);
         adapter.notifyDataSetChanged();
     }
 
 
+
     private List<TreeNode> setData(ArrayList<CommentData> commentData) {
         List<TreeNode> nodes = new ArrayList<>();
-        if (commentData != null)
+        if (commentData != null) {
             for (CommentData comment : commentData) {
                 TreeNode<CommentBean> tempComment = new TreeNode<>(new CommentBean(comment.getComment()));
-                tempComment.setChildList(setData(comment.getReplies()));
+                if (comment.getReplies() != null && !comment.getReplies().isEmpty())
+                    tempComment.setChildList(setData(comment.getReplies()));
                 tempComment.expandAll();
                 nodes.add(tempComment);
             }
+        }
         return nodes;
     }
 }

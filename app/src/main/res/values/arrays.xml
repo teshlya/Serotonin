@@ -27,5 +27,19 @@
         <item>@drawable/wtf</item>
     </integer-array>
 
+    <array name="rainbow">
+        <item>@color/bright_pink</item>
+        <item>@color/chartreuse</item>
+        <item>@color/cyan</item>
+        <item>@color/magenta</item>
+        <item>@color/spring_green</item>
+        <item>@color/violet</item>
+        <item>@color/yellow</item>
+        <item>@color/red</item>
+        <item>@color/azure</item>
+        <item>@color/green</item>
+        <item>@color/orange</item>
+    </array>
+
 
 </resources>

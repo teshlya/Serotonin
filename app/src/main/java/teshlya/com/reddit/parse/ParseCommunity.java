@@ -85,6 +85,11 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                     author = data2.getString("author");
                 article.setAuthor(author);
 
+                String subredditName = "";
+                if (data2.has("subreddit_name_prefixed"))
+                    subredditName = data2.getString("subreddit_name_prefixed");
+                article.setSubredditName(subredditName);
+
                 String text = "";
                 if (data2.has("selftext_html") && !data2.isNull("selftext_html"))
                     text = data2.getString("selftext_html");
@@ -174,13 +179,13 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
 
 
     private static String processScore(int score) {
-        String point = " points";
+        String point = " pts";
         String result = Integer.toString(score);
         if (score > 1000)
             result = new DecimalFormat("#.#").format((float) score / 1000) + "k";
 
         if (score == 1)
-            point = " point";
+            point = " pt";
         return result + point;
     }
 
@@ -191,9 +196,9 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
     private static String processComments(Long commentsCount) {
         String result = Long.toString(commentsCount);
         if (commentsCount <= 1)
-            result = result + " comment_icon";
+            result = result + "";
         else
-            result = result + " comments";
+            result = result + "";
 
         return result;
     }

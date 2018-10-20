@@ -22,7 +22,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final String KEY_IS_EXPAND = "IS_EXPAND";
     private final List<? extends TreeViewBinder> viewBinders;
     protected List<TreeNode> displayNodes;
-    private int padding = 30;
+    private int padding = 0;
     private OnTreeNodeListener onTreeNodeListener;
     private boolean toCollapseChild;
 
@@ -47,6 +47,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     public void findDisplayNodes(List<TreeNode> nodes) {
         for (TreeNode node : nodes) {
+
             displayNodes.add(node);
             if (!node.isLeaf() && node.isExpand())
                 findDisplayNodes(node.getChildList());
@@ -55,7 +56,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        return displayNodes.get(position - 3).getContent().getLayoutId();
+        return displayNodes.get(position - 4).getContent().getLayoutId();
     }
 
     @Override
@@ -73,7 +74,6 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
-        //position = position - 3;
         if (payloads != null && !payloads.isEmpty()) {
             Bundle b = (Bundle) payloads.get(0);
             for (String key : b.keySet()) {
@@ -90,12 +90,13 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        position = position - 3;
-        holder.itemView.setPadding(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
+        position = position - 4;
+        holder.itemView.setPadding(displayNodes.get(position).getHeight() * padding, 0, 3, 0);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+
+                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition() - 4);
                 // Prevent multi-click during the short interval.
                 try {
                     long lastClickTime = (long) holder.itemView.getTag();
@@ -106,19 +107,23 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 holder.itemView.setTag(System.currentTimeMillis());
 
-                if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
-                    return;
                 if (selectedNode.isLeaf())
                     return;
+
+                if (onTreeNodeListener != null && onTreeNodeListener.onClick(selectedNode, holder))
+                    return;
+
                 // This TreeNode was locked to click.
                 if (selectedNode.isLocked()) return;
                 boolean isExpand = selectedNode.isExpand();
-                int positionStart = displayNodes.indexOf(selectedNode) + 1;
+                int positionStart = displayNodes.indexOf(selectedNode) + 5;
                 if (!isExpand) {
                     notifyItemRangeInserted(positionStart, addChildNodes(selectedNode, positionStart));
                 } else {
                     notifyItemRangeRemoved(positionStart, removeChildNodes(selectedNode, true));
                 }
+                notifyItemChanged(positionStart - 1);
+
             }
         });
         for (TreeViewBinder viewBinder : viewBinders) {
@@ -131,7 +136,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         List<TreeNode> childList = pNode.getChildList();
         int addChildCount = 0;
         for (TreeNode treeNode : childList) {
-            displayNodes.add(startIndex + addChildCount++, treeNode);
+            displayNodes.add(startIndex - 4 + addChildCount++, treeNode);
             if (treeNode.isExpand()) {
                 addChildCount += addChildNodes(treeNode, startIndex + addChildCount);
             }

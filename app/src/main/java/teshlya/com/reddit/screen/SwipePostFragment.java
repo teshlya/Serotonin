@@ -10,6 +10,7 @@ import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ public class SwipePostFragment extends Fragment {
     private RecyclerView recyclerView;
     private SwipePostAdapter adapter;
     private TextView communityTextView;
+    private ImageView homeImageView;
     private String community;
-
 
 
     public static SwipePostFragment newInstance(ArrayList<ArticleData> list, int position, String community) {
@@ -53,6 +54,19 @@ public class SwipePostFragment extends Fragment {
     private void init(View view) {
         recyclerView = view.findViewById(R.id.rw);
         communityTextView = view.findViewById(R.id.community);
+        communityTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBack();
+            }
+        });
+        homeImageView = view.findViewById(R.id.home);
+        homeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBack();
+            }
+        });
         initArguments();
         communityTextView.setText(community);
         initRecycler();
@@ -74,4 +88,8 @@ public class SwipePostFragment extends Fragment {
         community = getArguments().getString(Constants.COMMUNITY);
     }
 
+
+    public void goBack() {
+        getFragmentManager().popBackStack();
+    }
 }

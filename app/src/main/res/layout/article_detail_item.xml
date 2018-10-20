@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/community"
+            style="@style/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="3dp" />
+
+        <TextView
+            android:id="@+id/point1"
+            style="@style/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/community"
+            android:paddingLeft="3dp"
+            android:text="&#8231;" />
+
+        <TextView
+            android:id="@+id/author"
+            style="@style/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/point1"
+            android:paddingLeft="3dp" />
+
+        <TextView
+            android:id="@+id/point2"
+            style="@style/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/author"
+            android:paddingLeft="3dp"
+            android:text="&#8231;" />
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/point2"
+            android:paddingLeft="3dp" />
+
+        <TextView
+            android:id="@+id/score"
+            style="@style/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/like"
+            android:layout_alignParentRight="true"
+            android:paddingRight="3dp" />
+
+        <TextView
+            android:id="@+id/point3"
+            style="@style/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/score"
+            android:paddingRight="3dp"
+            android:text="&#8231;" />
+
+        <TextView
+            android:id="@+id/comments"
+            style="@style/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/point3"
+            android:drawableLeft="@drawable/comment"
+            android:paddingRight="3dp"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#cccccc" />
+
+</LinearLayout>

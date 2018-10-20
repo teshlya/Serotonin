@@ -21,36 +21,21 @@ import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 import tellh.com.recyclertreeview_lib.TreeViewBinder;
 import teshlya.com.reddit.Constants;
 import teshlya.com.reddit.R;
+import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.viewbinder.CommentNodeBinder;
 
 public class ArticleAdapter extends TreeViewAdapter {
-    public ArticleAdapter(List<TreeNode> nodes, List<? extends TreeViewBinder> viewBinders) {
-        super(nodes, viewBinders);
-    }
 
-    private String title;
-    private String text;
-    private String image;
+    ArticleData articleData;
     private Context context;
-    private String thumbnail;
 
     public ArticleAdapter(List<CommentNodeBinder> commentNodeBinders) {
         super(commentNodeBinders);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setData(ArticleData articleData) {
+        this.articleData = articleData;
     }
-
-    public void setImage(String image, String thumbnail) {
-        this.image = image;
-        this.thumbnail = thumbnail;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     @Override
     public int getItemViewType(int position) {
         int type;
@@ -64,6 +49,9 @@ public class ArticleAdapter extends TreeViewAdapter {
             case 2:
                 type = Constants.IMAGE;
                 break;
+            case 3:
+                type = Constants.DETAIL;
+                break;
             default:
                 type = super.getItemViewType(position);
         }
@@ -72,7 +60,7 @@ public class ArticleAdapter extends TreeViewAdapter {
 
     @Override
     public int getItemCount() {
-        return displayNodes == null ? 3 : displayNodes.size()+3;
+        return displayNodes == null ? 4 : displayNodes.size() + 4;
     }
 
     @Override
@@ -90,22 +78,29 @@ public class ArticleAdapter extends TreeViewAdapter {
             View view = LayoutInflater.from(context).inflate(R.layout.image_item, parent, false);
             return new ImageHolder(view);
         }
+        if (viewType == Constants.DETAIL) {
+            View view = LayoutInflater.from(context).inflate(R.layout.article_detail_item, parent, false);
+            return new DetailHolder(view);
+        }
         return super.onCreateViewHolder(parent, viewType);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TitleHolder) {
-            ((TitleHolder) holder).bind(title);
+            ((TitleHolder) holder).bind();
             return;
         }
         if (holder instanceof TextHolder) {
-            ((TextHolder) holder).bind(text);
+            ((TextHolder) holder).bind();
             return;
         }
         if (holder instanceof ImageHolder) {
-            if (image != null)
-            ((ImageHolder) holder).bind(image, thumbnail);
+                ((ImageHolder) holder).bind();
+            return;
+        }
+        if (holder instanceof DetailHolder) {
+                ((DetailHolder) holder).bind();
             return;
         }
         super.onBindViewHolder(holder, position);
@@ -121,8 +116,8 @@ public class ArticleAdapter extends TreeViewAdapter {
             title = itemView.findViewById(R.id.title);
         }
 
-        public void bind(String str) {
-            title.setText(str);
+        public void bind() {
+            title.setText(articleData.getTitle());
         }
     }
 
@@ -135,8 +130,8 @@ public class ArticleAdapter extends TreeViewAdapter {
             text = itemView.findViewById(R.id.text);
         }
 
-        public void bind(String str) {
-            text.setText(Html.fromHtml(str));
+        public void bind() {
+            text.setText(Html.fromHtml(articleData.getText()));
         }
     }
 
@@ -149,10 +144,10 @@ public class ArticleAdapter extends TreeViewAdapter {
             imageView = itemView.findViewById(R.id.image);
         }
 
-        public void bind(final String image, final String thumbnail) {
+        public void bind() {
 
             Picasso.with(context)
-                    .load(image)
+                    .load(articleData.getUrlImage3())
                     .into(imageView, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -162,13 +157,37 @@ public class ArticleAdapter extends TreeViewAdapter {
                         @Override
                         public void onError() {
                             Picasso.with(context)
-                                    .load(thumbnail)
+                                    .load(articleData.getUrlImage())
                                     .into(imageView);
                         }
                     });
-            }
+        }
+    }
+
+    public class DetailHolder extends RecyclerView.ViewHolder {
+
+        TextView community;
+        TextView author;
+        TextView date;
+        TextView score;
+        TextView comments;
+
+        public DetailHolder(View itemView) {
+            super(itemView);
+            community = itemView.findViewById(R.id.community);
+            author = itemView.findViewById(R.id.author);
+            date = itemView.findViewById(R.id.date);
+            score = itemView.findViewById(R.id.score);
+            comments = itemView.findViewById(R.id.comments);
         }
 
-
+        public void bind() {
+            community.setText(articleData.getSubredditName());
+            author.setText(articleData.getAuthor());
+            date.setText(articleData.getDate());
+            score.setText(articleData.getScore());
+            comments.setText(articleData.getCommentCount());
+        }
     }
+}
 
