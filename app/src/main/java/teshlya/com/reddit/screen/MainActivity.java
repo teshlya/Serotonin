@@ -1,16 +1,16 @@
 package teshlya.com.reddit.screen;
 
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import teshlya.com.reddit.R;
 
 public class MainActivity extends AppCompatActivity  {
-
+    //InboxRecyclerView recyclerView;
     DrawerLayout mainDrawerL;
 
     @Override

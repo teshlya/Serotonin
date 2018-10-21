@@ -1,8 +1,8 @@
 package teshlya.com.reddit.viewbinder;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;

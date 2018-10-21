@@ -17,7 +17,7 @@
         android:paddingVertical="2dp" />
 
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
@@ -50,11 +50,11 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/subscriptions" />
 
-            <android.support.v7.widget.RecyclerView
+            <me.saket.inboxrecyclerview.InboxRecyclerView
                 android:id="@+id/subscriptions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

@@ -1,10 +1,15 @@
 package teshlya.com.reddit.adapter;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.saket.inboxrecyclerview.InboxRecyclerView;
+import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.screen.ArticleActivity;
@@ -31,11 +38,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     Context context;
     private ArrayList<ArticleData> articles = new ArrayList<>();
     String community;
+    InboxRecyclerView recyclerView;
+    ExpandablePageLayout conteinerSwipePostFragment;
 
-    public CommunityAdapter(RecyclerView rv, String community) {
+    public CommunityAdapter(InboxRecyclerView rv, String community, ExpandablePageLayout conteinerSwipePostFragment) {
         this.community = community;
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rv);
+        recyclerView = rv;
+        this.conteinerSwipePostFragment = conteinerSwipePostFragment;
     }
 
     public void addArticle(List<ArticleData> articles) {
@@ -60,6 +71,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         return articles.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     public class CommunityViewHolder extends RecyclerView.ViewHolder {
 
@@ -118,14 +133,16 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
 
         private void openArticle(int position) {
+
             ArticleActivity articleActivity = (ArticleActivity) context;
             SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, position, community);
 
+            FragmentManager fm = articleActivity.getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(conteinerSwipePostFragment.getId(), swipePostFragment)
+                    .commitNowAllowingStateLoss();
 
-            FragmentTransaction ft = articleActivity.getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.fragment_article, swipePostFragment)
-                    .addToBackStack(null)
-                    .commit();
+            recyclerView.expandItem(position);
         }
     }
 
@@ -141,7 +158,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             //Remove swiped item from list and notify the RecyclerView
             int position = viewHolder.getAdapterPosition();
             articles.remove(position);
-            notifyDataSetChanged();
+            notifyItemRemoved(position);
+            //notifyDataSetChanged();
 
         }
     };

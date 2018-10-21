@@ -2,20 +2,28 @@ package teshlya.com.reddit.screen;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
+
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import me.saket.inboxrecyclerview.InboxRecyclerView;
+import me.saket.inboxrecyclerview.dimming.CompleteListTintPainter;
+import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.adapter.CommunityAdapter;
@@ -29,11 +37,12 @@ import teshlya.com.reddit.parse.ParseCommunity;
 @SuppressLint("ValidFragment")
 public class CommunityFragment extends Fragment implements CallbackArticle {
 
-    private RecyclerView recyclerView;
+    private InboxRecyclerView recyclerView;
     private CommunityAdapter adapter;
     private static String url;
     private static String domain = "https://www.reddit.com";
     private String comunnity;
+    ExpandablePageLayout conteinerSwipePostFragment;
 
     public CommunityFragment() {
     }
@@ -64,15 +73,31 @@ public class CommunityFragment extends Fragment implements CallbackArticle {
     private void init(View view) {
         recyclerView = view.findViewById(R.id.community_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        conteinerSwipePostFragment = view.findViewById(R.id.conteinerSwipePostFragment);
         new ParseCommunity(this, domain + url + ".json", getContext()).execute();
 
     }
 
     @Override
     public void addArticles(ArrayList<ArticleData> articles) {
-        adapter = new CommunityAdapter(recyclerView, comunnity);
+        adapter = new CommunityAdapter(recyclerView, comunnity, conteinerSwipePostFragment);
+        adapter.setHasStableIds(true);
         adapter.addArticle(articles);
+        conteinerSwipePostFragment.setAnimationDurationMillis(800);
+        conteinerSwipePostFragment.setPullToCollapseEnabled(false);
+        recyclerView.setExpandablePage(conteinerSwipePostFragment);
+        recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
         recyclerView.setAdapter(adapter);
+
+
+    }
+
+    public boolean onBack(){
+        if (conteinerSwipePostFragment.isExpandedOrExpanding()) {
+            recyclerView.collapse();
+            return false;
+        }
+        return true;
     }
 
 }

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screen.CommunityFragment">
+
+<me.saket.inboxrecyclerview.InboxRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/community_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screen.CommunityFragment"
+    android:clipToPadding="false"
     android:background="@color/colorBackgroundCommunity"/>
+
+    <me.saket.inboxrecyclerview.page.ExpandablePageLayout
+        android:id="@+id/conteinerSwipePostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
