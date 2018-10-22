@@ -17,9 +17,10 @@
     <color name="colorRedditFeeds">#8b9999</color>
     <color name="colorRedditFeedsList">#090909</color>
     <color name="colorSubscriptionList">#090909</color>
+    <color name="colorSearchMenu">#090909</color>
     <color name="colorBackgroundCommunity">#ffffff</color>
-    <color name="colorBackgroundArticle">#ffffff</color>
-    <color name="colorBorderArticle">#cccccc</color>
+    <color name="colorBackgroundSearch">#ffffff</color>
+    <color name="colorBorderSearch">#cccccc</color>
     <color name="colorCommunityListTitle">@android:color/tab_indicator_text</color>
     <color name="colorCommunityListAuthor">#729aff</color>
     <color name="colorCommunityListComment">@android:color/tab_indicator_text</color>

@@ -28,6 +28,7 @@ import teshlya.com.reddit.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.adapter.CommunityAdapter;
 import teshlya.com.reddit.callback.CallbackArticle;
+import teshlya.com.reddit.callback.CallbackBack;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.parse.ParseCommunity;
 
@@ -35,7 +36,7 @@ import teshlya.com.reddit.parse.ParseCommunity;
  * A simple {@link Fragment} subclass.
  */
 @SuppressLint("ValidFragment")
-public class CommunityFragment extends Fragment implements CallbackArticle {
+public class CommunityFragment extends Fragment implements CallbackArticle, CallbackBack {
 
     private InboxRecyclerView recyclerView;
     private CommunityAdapter adapter;
@@ -80,7 +81,7 @@ public class CommunityFragment extends Fragment implements CallbackArticle {
 
     @Override
     public void addArticles(ArrayList<ArticleData> articles) {
-        adapter = new CommunityAdapter(recyclerView, comunnity, conteinerSwipePostFragment);
+        adapter = new CommunityAdapter(recyclerView, comunnity, conteinerSwipePostFragment, this);
         adapter.setHasStableIds(true);
         adapter.addArticle(articles);
         conteinerSwipePostFragment.setAnimationDurationMillis(800);
@@ -88,16 +89,14 @@ public class CommunityFragment extends Fragment implements CallbackArticle {
         recyclerView.setExpandablePage(conteinerSwipePostFragment);
         recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
         recyclerView.setAdapter(adapter);
-
-
     }
 
-    public boolean onBack(){
+    @Override
+    public boolean back() {
         if (conteinerSwipePostFragment.isExpandedOrExpanding()) {
             recyclerView.collapse();
             return false;
         }
         return true;
     }
-
 }

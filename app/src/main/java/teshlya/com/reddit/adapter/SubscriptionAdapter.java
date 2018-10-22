@@ -2,8 +2,12 @@ package teshlya.com.reddit.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
+
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +22,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.saket.inboxrecyclerview.InboxRecyclerView;
+import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.Subscription;
 import teshlya.com.reddit.screen.ArticleActivity;
+import teshlya.com.reddit.screen.CommunityFragment;
+import teshlya.com.reddit.screen.MainActivity;
 
 
 public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapter.SubscriptionViewHolder> {
@@ -29,6 +37,11 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
     private List<Subscription> subscriptions = new ArrayList<>();
     private Context context;
     private LinearLayout onClickItem;
+    RecyclerView recyclerView;
+
+    public SubscriptionAdapter(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
 
     public void addSubscription(Subscription subscription) {
         subscriptions.add(subscription);
@@ -49,7 +62,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
 
     @Override
     public void onBindViewHolder(SubscriptionViewHolder holder, int position) {
-        holder.bind(subscriptions.get(position));
+        holder.bind(subscriptions.get(position), position);
     }
 
     @Override
@@ -57,12 +70,17 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         return subscriptions.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     public class SubscriptionViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView subscriptionImageView;
         private TextView subscriptionTextView;
 
-        public void bind(final Subscription subscription) {
+        public void bind(final Subscription subscription, final int position) {
 
             if (subscription.getIconResource() > 0)
                 subscriptionImageView.setImageResource(subscription.getIconResource());
@@ -77,10 +95,9 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
             onClickItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openCommunity(subscription.getCommunityUrl(), subscription.getContent());
+                    openCommunity(subscription.getCommunityUrl(), subscription.getContent(), v);
                 }
             });
-
         }
 
 
@@ -91,11 +108,25 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
             onClickItem = itemView.findViewById(R.id.onClickItem);
         }
 
-        private void openCommunity(String url, String community) {
+        private void openCommunity(String url, String community, View view) {
+            Rect rect = getPositionItem(view);
             Intent myIntent = new Intent(context, ArticleActivity.class);
             myIntent.putExtra(Constants.URL, url);
             myIntent.putExtra(Constants.COMMUNITY, community);
+            myIntent.putExtra(Constants.LEFT, rect.left);
+            myIntent.putExtra(Constants.RIGHT, rect.right);
+            myIntent.putExtra(Constants.TOP, rect.top);
+            myIntent.putExtra(Constants.BOTTOM, rect.bottom);
             context.startActivity(myIntent);
+        }
+
+        private Rect getPositionItem(View view) {
+            int[] originalPos = new int[2];
+            view.getLocationInWindow(originalPos);
+            int x = originalPos[0];
+            int y = originalPos[1];
+            Rect rect = new Rect(x, y, x + view.getWidth(), y + view.getHeight());
+            return rect;
         }
     }
 }

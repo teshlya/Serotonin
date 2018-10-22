@@ -4,7 +4,7 @@
         <item>All</item>
         <item>Front page</item>
         <item>Popular</item>
-        <item>Explore</item>
+        <item>Random</item>
     </string-array>
 
     <string-array name="subscriptions_name">

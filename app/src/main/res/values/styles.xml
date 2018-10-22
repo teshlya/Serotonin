@@ -6,6 +6,14 @@
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
     </style>
 
+    <style name="AppTheme.TransparentWindow">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
     <style name="title">
         <item name="android:textColor">@color/colorTitleArticle</item>
         <item name="android:textSize">16sp</item>
@@ -42,6 +50,20 @@
         <item name="android:textStyle">normal</item>
         <item name="android:layout_gravity">left</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ToolbarSubTitle">
+        <item name="android:textColor">@color/colorTitleMainWindow</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="MainMenu">
+        <item name="android:textColor">@color/colorTitleMainWindow</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -90,6 +112,12 @@
         <item name="android:textColor">@color/colorCommunityListComment</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="SearchMenu">
+        <item name="android:textColor">@color/colorSearchMenu</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 

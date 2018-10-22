@@ -1,16 +1,12 @@
 package teshlya.com.reddit.adapter;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +23,9 @@ import java.util.List;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.R;
+import teshlya.com.reddit.callback.CallbackBack;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.screen.ArticleActivity;
-import teshlya.com.reddit.screen.CommunityFragment;
 import teshlya.com.reddit.screen.SwipePostFragment;
 
 
@@ -40,8 +36,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     String community;
     InboxRecyclerView recyclerView;
     ExpandablePageLayout conteinerSwipePostFragment;
+    CallbackBack callback;
 
-    public CommunityAdapter(InboxRecyclerView rv, String community, ExpandablePageLayout conteinerSwipePostFragment) {
+    public CommunityAdapter(InboxRecyclerView rv,
+                            String community,
+                            ExpandablePageLayout conteinerSwipePostFragment,
+                            CallbackBack callback) {
+        this.callback = callback;
         this.community = community;
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rv);
@@ -135,7 +136,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private void openArticle(int position) {
 
             ArticleActivity articleActivity = (ArticleActivity) context;
-            SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, position, community);
+            SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, position, community, callback);
 
             FragmentManager fm = articleActivity.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();

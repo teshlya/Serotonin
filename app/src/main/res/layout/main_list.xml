@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    android:layout_marginHorizontal="10dp"
-    tools:context=".screen.MainFragment">
-
-    <EditText
-        android:id="@+id/search"
-        style="@style/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="2dp" />
-
+    android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -50,7 +37,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/subscriptions" />
 
-            <me.saket.inboxrecyclerview.InboxRecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/subscriptions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

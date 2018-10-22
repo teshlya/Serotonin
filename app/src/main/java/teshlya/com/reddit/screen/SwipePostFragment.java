@@ -2,11 +2,13 @@ package teshlya.com.reddit.screen;
 
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import teshlya.com.reddit.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.adapter.SwipePostAdapter;
+import teshlya.com.reddit.callback.CallbackBack;
 import teshlya.com.reddit.model.ArticleData;
 
 public class SwipePostFragment extends Fragment {
@@ -30,11 +33,16 @@ public class SwipePostFragment extends Fragment {
     private TextView communityTextView;
     private ImageView homeImageView;
     private String community;
+    private CallbackBack callback;
 
 
-    public static SwipePostFragment newInstance(ArrayList<ArticleData> list, int position, String community) {
+    public static SwipePostFragment newInstance(ArrayList<ArticleData> list,
+                                                int position,
+                                                String community,
+                                                CallbackBack callback) {
         SwipePostFragment fragment = new SwipePostFragment();
         Bundle args = new Bundle();
+        args.putSerializable(Constants.CALLBACK, callback);
         args.putSerializable(Constants.DATA, list);
         args.putInt(Constants.POSITION, position);
         args.putString(Constants.COMMUNITY, community);
@@ -83,6 +91,7 @@ public class SwipePostFragment extends Fragment {
     }
 
     private void initArguments() {
+        callback = (CallbackBack) getArguments().getSerializable(Constants.CALLBACK);
         data = (ArrayList<ArticleData>) getArguments().getSerializable(Constants.DATA);
         position = getArguments().getInt(Constants.POSITION);
         community = getArguments().getString(Constants.COMMUNITY);
@@ -90,6 +99,7 @@ public class SwipePostFragment extends Fragment {
 
 
     public void goBack() {
-        getFragmentManager().popBackStack();
+        if (callback != null)
+            callback.back();
     }
 }
