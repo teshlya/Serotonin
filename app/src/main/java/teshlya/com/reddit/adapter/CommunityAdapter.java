@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     @Override
     public void onBindViewHolder(CommunityViewHolder holder, int position) {
+        Log.d("qwerty", "bind - " + position);
+
         holder.bind(articles.get(position), position);
     }
 
@@ -156,12 +159,12 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            //Remove swiped item from list and notify the RecyclerView
             int position = viewHolder.getAdapterPosition();
-            articles.remove(position);
-            notifyItemRemoved(position);
-            //notifyDataSetChanged();
-
+            if (position != 0) {
+                articles.remove(position);
+                //notifyItemRemoved(position);
+                notifyDataSetChanged();
+            }
         }
     };
 
