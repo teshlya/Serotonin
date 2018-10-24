@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,27 +23,22 @@ import java.util.List;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.R;
-import teshlya.com.reddit.callback.CallbackBack;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.screen.ArticleActivity;
 import teshlya.com.reddit.screen.SwipePostFragment;
+import teshlya.com.reddit.utils.Calc;
+import teshlya.com.reddit.utils.DrawableIcon;
 
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
 
     Context context;
     private ArrayList<ArticleData> articles = new ArrayList<>();
-    String community;
     InboxRecyclerView recyclerView;
     ExpandablePageLayout conteinerSwipePostFragment;
-    CallbackBack callback;
 
     public CommunityAdapter(InboxRecyclerView rv,
-                            String community,
-                            ExpandablePageLayout conteinerSwipePostFragment,
-                            CallbackBack callback) {
-        this.callback = callback;
-        this.community = community;
+                            ExpandablePageLayout conteinerSwipePostFragment) {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rv);
         recyclerView = rv;
@@ -59,14 +53,12 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     public CommunityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.article_item, parent, false);
+                .inflate(R.layout.community_item, parent, false);
         return new CommunityViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(CommunityViewHolder holder, int position) {
-        Log.d("qwerty", "bind - " + position);
-
         holder.bind(articles.get(position), position);
     }
 
@@ -95,32 +87,44 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             date.setText(article.getDate());
             author.setText(article.getAuthor());
             comment.setText(article.getCommentCount());
+            comment.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.comment, null, null, null);
             score.setText(article.getScore());
+            score.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.score, null, null, null);
             onClickItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     openArticle(position);
                 }
             });
-            if (!article.getWithoutImage() && article.getUrlImage() != null && !article.getUrlImage().equals("")) {
                 Picasso.with(context)
                         .load(article.getUrlImage3())
                         .into(image, new Callback() {
                             @Override
                             public void onSuccess() {
+                                image.setPadding(0, Calc.dpToPx(8), 0, 0);
                             }
 
                             @Override
                             public void onError() {
                                 Picasso.with(context)
                                         .load(article.getUrlImage())
-                                        .into(image);
+                                        .into(image, new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                                image.setPadding(0, Calc.dpToPx(8), 0, 0);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                image.setVisibility(View.GONE);
+                                            }
+                                        });
                             }
                         });
+            if ((article.getUrlImage3() == null || article.getUrlImage3().isEmpty()) &&
+                    (article.getUrlImage() == null || article.getUrlImage().isEmpty()))
+                image.setVisibility(View.GONE);
 
-            } else {
-                image.setImageDrawable(null);
-            }
         }
 
 
@@ -139,7 +143,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private void openArticle(int position) {
 
             ArticleActivity articleActivity = (ArticleActivity) context;
-            SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, position, community, callback);
+            SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, position);
 
             FragmentManager fm = articleActivity.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
@@ -160,11 +164,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             int position = viewHolder.getAdapterPosition();
-            if (position != 0) {
                 articles.remove(position);
-                //notifyItemRemoved(position);
-                notifyDataSetChanged();
-            }
+                notifyItemRemoved(position);
+                //notifyDataSetChanged();
         }
     };
 

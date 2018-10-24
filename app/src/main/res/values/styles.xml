@@ -14,10 +14,22 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <style name="title">
+    <style name="title_article">
         <item name="android:textColor">@color/colorTitleArticle</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_article">
+        <item name="android:textColor">@color/colorTitleArticle</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="title_community">
+        <item name="android:textColor">@color/colorTitleCommunity</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="comment">
@@ -78,10 +90,16 @@
         <item name="android:background">@color/colorSearchBackground</item>
     </style>
 
+    <style name="search_hint">
+        <item name="android:textColor">#aaaaaa</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="reddit_feeds">
         <item name="android:textColor">@color/colorRedditFeeds</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="reddit_feeds_list">
@@ -98,7 +116,7 @@
 
     <style name="community_list_title">
         <item name="android:textColor">@color/colorCommunityListTitle</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:textSize">15sp</item>
     </style>
 

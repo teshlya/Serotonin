@@ -8,7 +8,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title">Hello Guest</string>
     <string name="sub_title">Welcome to Reddit</string>
-    <string name="search_reddit">\Search Reddit</string>
+    <string name="search_reddit">Search Reddit</string>
     <string name="reddit_feeds">REDDIT FEEDS</string>
     <string name="subscriptions">SUBSCRIPTIONS</string>
 

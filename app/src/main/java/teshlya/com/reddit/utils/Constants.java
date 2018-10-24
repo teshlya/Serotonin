@@ -1,4 +1,6 @@
-package teshlya.com.reddit;
+package teshlya.com.reddit.utils;
+
+import android.content.res.Resources;
 
 public class Constants {
     public static final String POSITION = "position";
@@ -15,5 +17,7 @@ public class Constants {
     public static final String RIGHT = "right";
     public static final String TOP = "top";
     public static final String BOTTOM = "bottom";
-    public static final String CALLBACK = "callback";
+
+    public static final int SP_IN_PX_13 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 13;
+    public static final int SP_IN_PX_14 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 14;
 }

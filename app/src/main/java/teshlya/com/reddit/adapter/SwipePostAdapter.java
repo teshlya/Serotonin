@@ -3,12 +3,10 @@ package teshlya.com.reddit.adapter;
 import android.content.Context;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import teshlya.com.reddit.callback.CallbackComment;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.model.CommentData;
 import teshlya.com.reddit.parse.ParseArticle;
-import teshlya.com.reddit.viewbinder.CommentNodeBinder;
 
 
 public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.SwipePostViewHolder> {
@@ -94,9 +91,8 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
 
         protected void initRecycler() {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-            //linearLayoutManager.setInitialPrefetchItemCount(5);
             recyclerView.setLayoutManager(linearLayoutManager);
-            adapter = new ArticleAdapter(Arrays.asList(new CommentNodeBinder()));
+            adapter = new ArticleAdapter(Arrays.asList(new CommentAdapter()));
             adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
                 @Override
                 public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
@@ -109,15 +105,7 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
 
                 @Override
                 public void onToggle(boolean isExpand, RecyclerView.ViewHolder holder) {
-                    CommentNodeBinder.ViewHolder commentViewHolder = (CommentNodeBinder.ViewHolder) holder;
-                    //ImageView ivArrow = commentViewHolder.getIvArrow();
-                    //int rotateDegree = isExpand ? 90 : -90;
-
-
-                    //TextView commentCount = commentViewHolder.getCommentCount();
-                    //commentCount.setVisibility(isExpand ? View.INVISIBLE : View.VISIBLE);
-                   // ivArrow.animate().rotationBy(rotateDegree)
-                   //         .start();
+                    CommentAdapter.ViewHolder commentViewHolder = (CommentAdapter.ViewHolder) holder;
                 }
             });
             recyclerView.setAdapter(adapter);

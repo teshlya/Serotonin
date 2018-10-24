@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="10dp"
     android:orientation="horizontal">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lines"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,62 +17,61 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
             <TextView
                 android:id="@+id/author"
-                android:layout_alignParentLeft="true"
+                style="@style/author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                style="@style/author"/>
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="5dp" />
 
             <TextView
                 android:id="@+id/point1"
+                style="@style/score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/author"
                 android:paddingLeft="5dp"
-                android:text="&#8231;"
-                style="@style/score"/>
+                android:text="&#8231;" />
 
             <TextView
                 android:id="@+id/date"
-                android:layout_toRightOf="@id/point1"
+                style="@style/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                style="@style/date"/>
+                android:layout_toRightOf="@id/point1"
+                android:paddingLeft="5dp" />
 
             <TextView
                 android:id="@+id/point2"
+                style="@style/score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/date"
                 android:paddingLeft="5dp"
-                android:text="&#8231;"
-                style="@style/score"/>
+                android:text="&#8231;" />
 
             <TextView
                 android:id="@+id/score"
-                android:layout_toRightOf="@id/point2"
+                style="@style/score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                style="@style/score"/>
+                android:layout_toRightOf="@id/point2"
+                android:paddingRight="5dp" />
 
 
             <TextView
                 android:id="@+id/comment_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/comment_count_background"
                 android:paddingHorizontal="10dp"
-                android:layout_marginHorizontal="5dp"
-                android:visibility="invisible"
-                android:background="@drawable/comment_count_background"/>
-
-
+                android:visibility="invisible" />
         </RelativeLayout>
 
         <TextView
@@ -79,9 +79,6 @@
             style="@style/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_vertical" />
     </LinearLayout>
-
-
 </LinearLayout>

@@ -1,10 +1,12 @@
 package teshlya.com.reddit.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Html;
-import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,26 +18,27 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import tellh.com.recyclertreeview_lib.TreeNode;
 import tellh.com.recyclertreeview_lib.TreeViewAdapter;
-import tellh.com.recyclertreeview_lib.TreeViewBinder;
-import teshlya.com.reddit.Constants;
+import teshlya.com.reddit.utils.Calc;
+import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.ArticleData;
-import teshlya.com.reddit.viewbinder.CommentNodeBinder;
+import teshlya.com.reddit.utils.DrawableIcon;
+import teshlya.com.reddit.utils.TrimHtml;
 
 public class ArticleAdapter extends TreeViewAdapter {
 
     ArticleData articleData;
     private Context context;
 
-    public ArticleAdapter(List<CommentNodeBinder> commentNodeBinders) {
-        super(commentNodeBinders);
+    public ArticleAdapter(List<CommentAdapter> commentAdapters) {
+        super(commentAdapters);
     }
 
     public void setData(ArticleData articleData) {
         this.articleData = articleData;
     }
+
     @Override
     public int getItemViewType(int position) {
         int type;
@@ -44,10 +47,10 @@ public class ArticleAdapter extends TreeViewAdapter {
                 type = Constants.TITLE;
                 break;
             case 1:
-                type = Constants.TEXT;
+                type = Constants.IMAGE;
                 break;
             case 2:
-                type = Constants.IMAGE;
+                type = Constants.TEXT;
                 break;
             case 3:
                 type = Constants.DETAIL;
@@ -96,11 +99,11 @@ public class ArticleAdapter extends TreeViewAdapter {
             return;
         }
         if (holder instanceof ImageHolder) {
-                ((ImageHolder) holder).bind();
+            ((ImageHolder) holder).bind();
             return;
         }
         if (holder instanceof DetailHolder) {
-                ((DetailHolder) holder).bind();
+            ((DetailHolder) holder).bind();
             return;
         }
         super.onBindViewHolder(holder, position);
@@ -131,7 +134,12 @@ public class ArticleAdapter extends TreeViewAdapter {
         }
 
         public void bind() {
-            text.setText(Html.fromHtml(articleData.getText()));
+            if (articleData.getText() != null && !articleData.getText().isEmpty()) {
+
+                text.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                text.setText(TrimHtml.trim(Html.fromHtml(articleData.getText())));
+                text.setMovementMethod(LinkMovementMethod.getInstance());
+            }
         }
     }
 
@@ -151,30 +159,41 @@ public class ArticleAdapter extends TreeViewAdapter {
                     .into(imageView, new Callback() {
                         @Override
                         public void onSuccess() {
-
+                            imageView.setPadding(0, Calc.dpToPx(10), 0, 0);
                         }
 
                         @Override
                         public void onError() {
                             Picasso.with(context)
                                     .load(articleData.getUrlImage())
-                                    .into(imageView);
+                                    .into(imageView, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            imageView.setPadding(0, Calc.dpToPx(10), 0, 0);
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            imageView.setVisibility(View.GONE);
+                                        }
+                                    });
                         }
                     });
+            if ((articleData.getUrlImage3() == null || articleData.getUrlImage3().isEmpty()) &&
+                    (articleData.getUrlImage() == null || articleData.getUrlImage().isEmpty()))
+                imageView.setVisibility(View.GONE);
         }
     }
 
     public class DetailHolder extends RecyclerView.ViewHolder {
 
-        TextView community;
-        TextView author;
-        TextView date;
-        TextView score;
-        TextView comments;
+        private TextView author;
+        private TextView date;
+        private TextView score;
+        private TextView comments;
 
         public DetailHolder(View itemView) {
             super(itemView);
-            community = itemView.findViewById(R.id.community);
             author = itemView.findViewById(R.id.author);
             date = itemView.findViewById(R.id.date);
             score = itemView.findViewById(R.id.score);
@@ -182,11 +201,12 @@ public class ArticleAdapter extends TreeViewAdapter {
         }
 
         public void bind() {
-            community.setText(articleData.getSubredditName());
             author.setText(articleData.getAuthor());
             date.setText(articleData.getDate());
             score.setText(articleData.getScore());
+            score.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.score, null, null, null);
             comments.setText(articleData.getCommentCount());
+            comments.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.comment, null, null, null);
         }
     }
 }

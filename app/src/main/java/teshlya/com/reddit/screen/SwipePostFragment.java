@@ -12,15 +12,12 @@ import androidx.recyclerview.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import teshlya.com.reddit.Constants;
+import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.adapter.SwipePostAdapter;
-import teshlya.com.reddit.callback.CallbackBack;
 import teshlya.com.reddit.model.ArticleData;
 
 public class SwipePostFragment extends Fragment {
@@ -30,22 +27,14 @@ public class SwipePostFragment extends Fragment {
     private int position;
     private RecyclerView recyclerView;
     private SwipePostAdapter adapter;
-    private TextView communityTextView;
-    private ImageView homeImageView;
-    private String community;
-    private CallbackBack callback;
 
 
     public static SwipePostFragment newInstance(ArrayList<ArticleData> list,
-                                                int position,
-                                                String community,
-                                                CallbackBack callback) {
+                                                int position) {
         SwipePostFragment fragment = new SwipePostFragment();
         Bundle args = new Bundle();
-        args.putSerializable(Constants.CALLBACK, callback);
         args.putSerializable(Constants.DATA, list);
         args.putInt(Constants.POSITION, position);
-        args.putString(Constants.COMMUNITY, community);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,22 +50,7 @@ public class SwipePostFragment extends Fragment {
 
     private void init(View view) {
         recyclerView = view.findViewById(R.id.rw);
-        communityTextView = view.findViewById(R.id.community);
-        communityTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goBack();
-            }
-        });
-        homeImageView = view.findViewById(R.id.home);
-        homeImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goBack();
-            }
-        });
         initArguments();
-        communityTextView.setText(community);
         initRecycler();
     }
 
@@ -91,15 +65,8 @@ public class SwipePostFragment extends Fragment {
     }
 
     private void initArguments() {
-        callback = (CallbackBack) getArguments().getSerializable(Constants.CALLBACK);
         data = (ArrayList<ArticleData>) getArguments().getSerializable(Constants.DATA);
         position = getArguments().getInt(Constants.POSITION);
-        community = getArguments().getString(Constants.COMMUNITY);
     }
 
-
-    public void goBack() {
-        if (callback != null)
-            callback.back();
-    }
 }

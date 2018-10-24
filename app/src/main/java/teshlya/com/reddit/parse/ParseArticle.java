@@ -2,7 +2,6 @@ package teshlya.com.reddit.parse;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -16,19 +15,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import tellh.com.recyclertreeview_lib.TreeNode;
-import teshlya.com.reddit.TimeAgo;
 import teshlya.com.reddit.adapter.ArticleAdapter;
-import teshlya.com.reddit.adapter.SwipePostAdapter;
 import teshlya.com.reddit.bean.CommentBean;
 import teshlya.com.reddit.callback.CallbackComment;
 import teshlya.com.reddit.model.ArticleDataWithComment;
 import teshlya.com.reddit.model.CommentData;
+import teshlya.com.reddit.utils.TimeAgo;
 
 public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> {
     CallbackComment callbackComment;

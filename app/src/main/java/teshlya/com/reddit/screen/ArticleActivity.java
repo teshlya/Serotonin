@@ -5,16 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
+import android.widget.TextView;
 
-import teshlya.com.reddit.Constants;
+import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 
 public class ArticleActivity extends AppCompatActivity {
@@ -71,16 +70,34 @@ public class ArticleActivity extends AppCompatActivity {
     private void init() {
         String url = getIntent().getExtras().getString(Constants.URL, "");
         String community = getIntent().getExtras().getString(Constants.COMMUNITY, "");
+        initTitle(community);
+        initHomeButton();
+        initFragmentCommunity(url, community);
+    }
+
+    private void initTitle(String community) {
+        ((TextView) findViewById(R.id.community_title)).setText(community);
+    }
+
+    private void initHomeButton() {
+        findViewById(R.id.home_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void initFragmentCommunity(String url, String community) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        communityFragment = CommunityFragment.newInstance(url, community);
+        communityFragment = CommunityFragment.newInstance(url);
         ft.replace(R.id.fragment_article, communityFragment);
         ft.commit();
     }
 
     @Override
     public void onBackPressed() {
-        if (communityFragment.back())
-        {
+        if (communityFragment.back()) {
             super.onBackPressed();
         }
     }
@@ -128,7 +145,6 @@ public class ArticleActivity extends AppCompatActivity {
         });
         getWindow().getDecorView().findViewById(android.R.id.content).startAnimation(animation);
     }
-
 
 
     public void animationClose() {

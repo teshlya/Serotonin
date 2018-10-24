@@ -33,6 +33,8 @@ dependencies {
 
     implementation 'me.saket:inboxrecyclerview:1.0.0-beta3'
 
+    //implementation 'me.saket:inboxrecyclerview:1.0.0-SNAPSHOT'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta02'

@@ -6,27 +6,31 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import me.saket.inboxrecyclerview.InboxRecyclerView;
-import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
-import teshlya.com.reddit.Constants;
+import teshlya.com.reddit.utils.Calc;
+import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.adapter.SubscriptionAdapter;
 import teshlya.com.reddit.callback.CallbackCommunity;
 import teshlya.com.reddit.model.Subscription;
+import teshlya.com.reddit.utils.DrawableIcon;
 
 public class MainActivity extends AppCompatActivity implements CallbackCommunity {
 
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements CallbackCommunity
     ListView redditFeedsList;
     RecyclerView recyclerView;
     SubscriptionAdapter adapter;
+    ImageView icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,21 +48,46 @@ public class MainActivity extends AppCompatActivity implements CallbackCommunity
     }
 
     private void init() {
+        DrawableIcon.initAllIcons(this);
         initSearch();
         initRedditFeeds();
         initSubscription();
     }
 
+
     private void initSearch() {
         search = findViewById(R.id.search);
-        search.setHint("\uD83D\uDD0D " + getResources().getString(R.string.search_reddit));
+        final RelativeLayout hint = findViewById(R.id.hint);
+        icon = findViewById(R.id.icon_search);
+        icon.setImageDrawable(DrawableIcon.hintSearch);
+        search.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() > 0) {
+                    hint.setVisibility(View.INVISIBLE);
+                } else {
+                    hint.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void initRedditFeeds() {
+
         redditFeedsList = findViewById(R.id.reddit_feeds);
+
         String[] strings;
         strings = getResources().getStringArray(R.array.reddit_feeds);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.reddit_feeds_item, R.id.list_content, strings);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.reddit_feeds_item, R.id.reddir_feeds_imet, strings);
         redditFeedsList.setAdapter(adapter);
         setListViewHeightBasedOnChildren(redditFeedsList);
 

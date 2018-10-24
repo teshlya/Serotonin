@@ -1,8 +1,5 @@
-package teshlya.com.reddit;
+package teshlya.com.reddit.utils;
 
-import android.util.Log;
-
-import java.text.MessageFormat;
 import java.util.Date;
 
 public class TimeAgo {

@@ -2,6 +2,7 @@ package teshlya.com.reddit.parse;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -16,9 +17,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import teshlya.com.reddit.TimeAgo;
 import teshlya.com.reddit.callback.CallbackArticle;
 import teshlya.com.reddit.model.ArticleData;
+import teshlya.com.reddit.utils.TimeAgo;
 
 public class ParseCommunity extends AsyncTask<Void, Void, String> {
     private CallbackArticle callbackArticle;
@@ -78,7 +79,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                 String title = "";
                 if (data2.has("title"))
                     title = data2.getString("title");
-                article.setTitle(title);
+                article.setTitle(stringToHtml(title));
 
                 String author = "";
                 if (data2.has("author"))
@@ -94,8 +95,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                 if (data2.has("selftext_html") && !data2.isNull("selftext_html"))
                     text = data2.getString("selftext_html");
 
-                article.setText(stringToHtml(text));
-
+                article.setText((stringToHtml(text)).trim());
                 String urlImage = "";
 
                 JSONObject preview;

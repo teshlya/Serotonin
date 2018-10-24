@@ -3,33 +3,29 @@ package teshlya.com.reddit.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Bundle;
 
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.saket.inboxrecyclerview.InboxRecyclerView;
-import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
-import teshlya.com.reddit.Constants;
+import teshlya.com.reddit.utils.Calc;
+import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.Subscription;
 import teshlya.com.reddit.screen.ArticleActivity;
-import teshlya.com.reddit.screen.CommunityFragment;
-import teshlya.com.reddit.screen.MainActivity;
 
 
 public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapter.SubscriptionViewHolder> {
