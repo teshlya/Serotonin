@@ -18,6 +18,7 @@ public class Constants {
     public static final String TOP = "top";
     public static final String BOTTOM = "bottom";
 
-    public static final int SP_IN_PX_13 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 13;
+    public static final int SP_IN_PX_12 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 12;
     public static final int SP_IN_PX_14 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 14;
+    public static final String CALLBACK_FRONT_PAGE = "callbackFrontPage";
 }

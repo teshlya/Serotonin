@@ -1,14 +1,26 @@
 package teshlya.com.reddit.screen;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import teshlya.com.reddit.R;
+import teshlya.com.reddit.adapter.SubscriptionAdapter;
+import teshlya.com.reddit.callback.CallbackCommunity;
+import teshlya.com.reddit.model.Subscription;
+import teshlya.com.reddit.parse.ParseArticle;
+import teshlya.com.reddit.utils.Constants;
+import teshlya.com.reddit.utils.DrawableIcon;
+
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,46 +34,45 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import teshlya.com.reddit.utils.Calc;
-import teshlya.com.reddit.utils.Constants;
-import teshlya.com.reddit.R;
-import teshlya.com.reddit.adapter.SubscriptionAdapter;
-import teshlya.com.reddit.callback.CallbackCommunity;
-import teshlya.com.reddit.model.Subscription;
-import teshlya.com.reddit.utils.DrawableIcon;
 
-public class MainActivity extends AppCompatActivity implements CallbackCommunity {
+public class MainMenuFragment extends Fragment implements CallbackCommunity {
 
-    EditText search;
-    ListView redditFeedsList;
-    RecyclerView recyclerView;
-    SubscriptionAdapter adapter;
-    ImageView icon;
+
+    public MainMenuFragment() {
+    }
+
+    public static MainMenuFragment newInstance() {
+        return new MainMenuFragment();
+    }
+
+    private EditText search;
+    private ListView redditFeedsList;
+    private RecyclerView recyclerView;
+    private SubscriptionAdapter adapter;
+    private Context context;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        init();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
+        context = view.getContext();
+        init(view);
+        return view;
     }
 
-    private void init() {
-        DrawableIcon.initAllIcons(this);
-        initSearch();
-        initRedditFeeds();
-        initSubscription();
+    private void init(View view) {
+        initSearch(view);
+        initRedditFeeds(view);
+        initSubscription(view);
     }
 
 
-    private void initSearch() {
-        search = findViewById(R.id.search);
-        final RelativeLayout hint = findViewById(R.id.hint);
-        icon = findViewById(R.id.icon_search);
+    private void initSearch(View view) {
+        search = view.findViewById(R.id.search);
+        final RelativeLayout hint = view.findViewById(R.id.hint);
+        ImageView icon = view.findViewById(R.id.icon_search);
         icon.setImageDrawable(DrawableIcon.hintSearch);
-        search.addTextChangedListener(new TextWatcher()
-        {
+        search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -81,13 +92,13 @@ public class MainActivity extends AppCompatActivity implements CallbackCommunity
         });
     }
 
-    private void initRedditFeeds() {
+    private void initRedditFeeds(View view) {
 
-        redditFeedsList = findViewById(R.id.reddit_feeds);
+        redditFeedsList = view.findViewById(R.id.reddit_feeds);
 
         String[] strings;
         strings = getResources().getStringArray(R.array.reddit_feeds);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.reddit_feeds_item, R.id.reddir_feeds_imet, strings);
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.reddit_feeds_item, R.id.reddir_feeds_imet, strings);
         redditFeedsList.setAdapter(adapter);
         setListViewHeightBasedOnChildren(redditFeedsList);
 
@@ -119,9 +130,9 @@ public class MainActivity extends AppCompatActivity implements CallbackCommunity
         });
     }
 
-    private void initSubscription() {
-        recyclerView = findViewById(R.id.subscriptions);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    private void initSubscription(View view) {
+        recyclerView = view.findViewById(R.id.subscriptions);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         adapter = new SubscriptionAdapter(recyclerView);
         adapter.addSubscription(loadSubscriptionFromResource());
@@ -173,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements CallbackCommunity
     }
 
     private void openCommunity(String url, String community, View view) {
-        Intent myIntent = new Intent(this, ArticleActivity.class);
+        /*Intent myIntent = new Intent(context, ArticleActivity.class);
         myIntent.putExtra(Constants.URL, url);
         Rect rect = getPositionItem(view);
         myIntent.putExtra(Constants.LEFT, rect.left);
@@ -182,7 +193,13 @@ public class MainActivity extends AppCompatActivity implements CallbackCommunity
         myIntent.putExtra(Constants.BOTTOM, rect.bottom);
 
         myIntent.putExtra(Constants.COMMUNITY, community);
-        startActivity(myIntent);
+        startActivity(myIntent);*/
+        ParseArticle.hmap.clear();
+        Intent data = new Intent();
+        data.putExtra(Constants.URL, url);
+        data.putExtra(Constants.COMMUNITY, community);
+        getActivity().setResult(getActivity().RESULT_OK, data);
+        getActivity().finish();
     }
 
     private Rect getPositionItem(View view) {
@@ -193,5 +210,6 @@ public class MainActivity extends AppCompatActivity implements CallbackCommunity
         Rect rect = new Rect(x, y, x + view.getWidth(), y + view.getHeight());
         return rect;
     }
+
 
 }

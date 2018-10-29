@@ -1,8 +1,8 @@
 <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/bar"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="0dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <androidx.appcompat.widget.Toolbar
@@ -11,37 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:contentInsetStart="0dp">
+        app:layout_behavior="teshlya.com.reddit.HidingViewWithBottomSheetBehaviorrgev"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/home_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="3dp"
-                android:background="@drawable/ripple_home"
-                android:clickable="true">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_margin="10dp"
-                    android:background="@null"
-                    android:src="@drawable/home_button" />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/community_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/home_button"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                style="@style/title_community"
-                android:layout_marginLeft="10dp"/>
+                android:text="Front page"
+                style="@style/title_community"/>
 
         </RelativeLayout>
 

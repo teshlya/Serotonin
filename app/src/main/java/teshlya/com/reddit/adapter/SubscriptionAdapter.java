@@ -1,5 +1,6 @@
 package teshlya.com.reddit.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -21,6 +22,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import teshlya.com.reddit.parse.ParseArticle;
+import teshlya.com.reddit.screen.FrontPageActivity;
 import teshlya.com.reddit.utils.Calc;
 import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
@@ -96,7 +99,6 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
             });
         }
 
-
         public SubscriptionViewHolder(View itemView) {
             super(itemView);
             subscriptionImageView = itemView.findViewById(R.id.icon);
@@ -105,7 +107,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         }
 
         private void openCommunity(String url, String community, View view) {
-            Rect rect = getPositionItem(view);
+            /*Rect rect = getPositionItem(view);
             Intent myIntent = new Intent(context, ArticleActivity.class);
             myIntent.putExtra(Constants.URL, url);
             myIntent.putExtra(Constants.COMMUNITY, community);
@@ -113,7 +115,13 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
             myIntent.putExtra(Constants.RIGHT, rect.right);
             myIntent.putExtra(Constants.TOP, rect.top);
             myIntent.putExtra(Constants.BOTTOM, rect.bottom);
-            context.startActivity(myIntent);
+            context.startActivity(myIntent);*/
+            ParseArticle.hmap.clear();
+            Intent data = new Intent();
+            data.putExtra(Constants.URL, url);
+            data.putExtra(Constants.COMMUNITY, community);
+            ((Activity)context).setResult(((Activity)context).RESULT_OK, data);
+            ((Activity)context).finish();
         }
 
         private Rect getPositionItem(View view) {

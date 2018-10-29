@@ -27,13 +27,12 @@ import teshlya.com.reddit.model.CommentData;
 import teshlya.com.reddit.utils.TimeAgo;
 
 public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> {
-    CallbackComment callbackComment;
-    String url;
-    Context context;
-    ArticleAdapter adapter;
-    List<TreeNode> nodes;
+    private CallbackComment callbackComment;
+    private String url;
+    private Context context;
+    private ArticleAdapter adapter;
+    private List<TreeNode> nodes;
     public static HashMap<String, ArrayList<CommentData>> hmap = new HashMap<String, ArrayList<CommentData>>();
-
 
     public ParseArticle(CallbackComment callbackComment, String url, Context context, ArticleAdapter adapter) {
         this.callbackComment = callbackComment;

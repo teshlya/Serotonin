@@ -1,13 +1,18 @@
 package teshlya.com.reddit.adapter;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,18 +26,19 @@ import teshlya.com.reddit.callback.CallbackComment;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.model.CommentData;
 import teshlya.com.reddit.parse.ParseArticle;
+import teshlya.com.reddit.screen.FrontPageActivity;
 
 
 public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.SwipePostViewHolder> {
+
     private static String domain = "https://www.reddit.com";
-
-    Context context;
-    ArticleAdapter adapter;
+    private Context context;
+    private ArticleAdapter adapter;
     private ArrayList<ArticleData> articles = new ArrayList<>();
-    RecyclerView.RecycledViewPool viewPool;
+    private static FloatingActionButton fab;
 
-    public SwipePostAdapter() {
-        viewPool = new RecyclerView.RecycledViewPool();
+    public static void setFab(FloatingActionButton fab) {
+        SwipePostAdapter.fab = fab;
     }
 
     public void addArticle(List<ArticleData> articles) {
@@ -58,24 +64,21 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
         return articles.size();
     }
 
-
     public class SwipePostViewHolder extends RecyclerView.ViewHolder implements CallbackComment {
         private ArrayList<CommentData> commentData;
-        RecyclerView recyclerView;
-
+        private RecyclerView recyclerView;
 
         public void bind(final ArticleData article) {
             initRecycler();
             adapter.setData(article);
             ParseArticle parseArticle = new ParseArticle(this, domain + article.getUrl() + ".json", context, adapter);
-                parseArticle.execute();
+            parseArticle.execute();
 
         }
 
         public SwipePostViewHolder(View view) {
             super(view);
             recyclerView = view.findViewById(R.id.rv);
-
         }
 
 
@@ -108,6 +111,23 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
                     CommentAdapter.ViewHolder commentViewHolder = (CommentAdapter.ViewHolder) holder;
                 }
             });
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView2, int dx, int dy) {
+                    super.onScrolled(recyclerView2, dx, dy);
+                    if (dy > 0 && FrontPageActivity.shown) {
+                        FrontPageActivity.shown = false;
+                        fab.hide();
+                    } else
+                    if (dy < 0 && !FrontPageActivity.shown) {
+                        FrontPageActivity.shown = true;
+                        fab.show();
+                    }
+
+                }
+            });
+
             recyclerView.setAdapter(adapter);
         }
 

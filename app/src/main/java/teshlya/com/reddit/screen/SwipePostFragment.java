@@ -3,12 +3,14 @@ package teshlya.com.reddit.screen;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,11 +64,17 @@ public class SwipePostFragment extends Fragment {
         SnapHelper helper = new PagerSnapHelper();
         helper.attachToRecyclerView(recyclerView);
         recyclerView.scrollToPosition(position);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
     }
 
     private void initArguments() {
         data = (ArrayList<ArticleData>) getArguments().getSerializable(Constants.DATA);
         position = getArguments().getInt(Constants.POSITION);
     }
-
 }

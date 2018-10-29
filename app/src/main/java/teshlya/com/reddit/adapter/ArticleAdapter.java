@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,34 +155,22 @@ public class ArticleAdapter extends TreeViewAdapter {
 
         public void bind() {
 
-            Picasso.with(context)
-                    .load(articleData.getUrlImage3())
-                    .into(imageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            imageView.setPadding(0, Calc.dpToPx(10), 0, 0);
-                        }
+            if (articleData.getUrlImage3() != null && !articleData.getUrlImage3().isEmpty())
+                Picasso.with(context)
+                        .load(articleData.getUrlImage3())
+                        .into(imageView);
 
-                        @Override
-                        public void onError() {
-                            Picasso.with(context)
-                                    .load(articleData.getUrlImage())
-                                    .into(imageView, new Callback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            imageView.setPadding(0, Calc.dpToPx(10), 0, 0);
-                                        }
+            if ((articleData.getUrlImage() != null && !articleData.getUrlImage().isEmpty() && !articleData.getUrlImage().equals("self")))
 
-                                        @Override
-                                        public void onError() {
-                                            imageView.setVisibility(View.GONE);
-                                        }
-                                    });
-                        }
-                    });
+                Picasso.with(context)
+                        .load(articleData.getUrlImage())
+                        .into(imageView);
+
             if ((articleData.getUrlImage3() == null || articleData.getUrlImage3().isEmpty()) &&
                     (articleData.getUrlImage() == null || articleData.getUrlImage().isEmpty()))
                 imageView.setVisibility(View.GONE);
+            else
+                imageView.setPadding(0, Calc.dpToPx(10), 0, 0);
         }
     }
 

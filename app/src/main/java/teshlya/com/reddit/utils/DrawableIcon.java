@@ -22,14 +22,14 @@ public class DrawableIcon {
     private static void initCommentIcon(Context context) {
         Drawable drawable = context.getResources().getDrawable(R.drawable.chat);
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        comment = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, Constants.SP_IN_PX_13, Constants.SP_IN_PX_13, true));
+        comment = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, Constants.SP_IN_PX_12, Constants.SP_IN_PX_12, true));
     }
 
 
     private static void initScoreIcon(Context context) {
         Drawable drawable = context.getResources().getDrawable(R.drawable.score);
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        score = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, Constants.SP_IN_PX_13, Constants.SP_IN_PX_13, true));
+        score = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, Constants.SP_IN_PX_12, Constants.SP_IN_PX_12, true));
     }
 
     private static void initHintSearchIcon(Context context) {

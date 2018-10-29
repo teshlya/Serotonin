@@ -2,6 +2,7 @@
 <resources>
     <color name="colorTitleArticle">@android:color/tab_indicator_text</color>
     <color name="colorTitleCommunity">@android:color/tab_indicator_text</color>
+    <color name="colorTransperentMainMenuActivity">#99000000</color>
 
     <color name="colorCommentText">@android:color/tab_indicator_text</color>
     <color name="colorCommentBackground">#dedddd</color>

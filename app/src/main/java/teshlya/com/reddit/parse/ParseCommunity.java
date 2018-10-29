@@ -86,11 +86,6 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                     author = data2.getString("author");
                 article.setAuthor(author);
 
-                String subredditName = "";
-                if (data2.has("subreddit_name_prefixed"))
-                    subredditName = data2.getString("subreddit_name_prefixed");
-                article.setSubredditName(subredditName);
-
                 String text = "";
                 if (data2.has("selftext_html") && !data2.isNull("selftext_html"))
                     text = data2.getString("selftext_html");
@@ -106,7 +101,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                     JSONObject source = image.getJSONObject("source");
                     urlImage = stringToHtml(source.getString("url"));
 
-                    if (image.has("resolutions")&& !image.isNull("resolutions")){
+                    if (image.has("resolutions") && !image.isNull("resolutions")) {
                         JSONArray resolutions = image.getJSONArray("resolutions");
                         if (resolutions.length() > 3) {
                             JSONObject resolution = resolutions.getJSONObject(3);
@@ -120,19 +115,25 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                 if (urlImage == null || urlImage.equals(""))
                     if (data2.has("thumbnail"))
                         urlImage = data2.getString("thumbnail");
-                if (urlImage == null || urlImage.equals(""))
-                    if (data2.has("media") && !data2.isNull("media")) {
-                        JSONObject media;
-                        media = data2.getJSONObject("media");
-                        if (media.has("oembed")) {
-                            JSONObject oembed;
-                            oembed = media.getJSONObject("oembed");
-                            if (oembed.has("thumbnail_url"))
-                                urlImage = oembed.getString("thumbnail_url");
-                        }
-                    }
-
                 article.setUrlImage(urlImage);
+
+                String type = "";
+                if (data2.has("media") && !data2.isNull("media")) {
+                    JSONObject media;
+                    media = data2.getJSONObject("media");
+                    if (media.has("type") && !media.isNull("type")) {
+                        type = media.getString("type");
+                    }
+                }
+                article.setMediaType(type);
+
+
+                String videoUrl = "";
+                if (data2.has("url") && !data2.isNull("url")) {
+                    videoUrl = data2.getString("url");
+                }
+                article.setVideoUrl(videoUrl);
+
 
 
                 Long date = null;
@@ -169,7 +170,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         }
     }
 
-    private String stringToHtml(String str){
+    private String stringToHtml(String str) {
         str = str.replace("&lt;", "<");
         str = str.replace("&gt;", ">");
         str = str.replace("&amp;", "&");

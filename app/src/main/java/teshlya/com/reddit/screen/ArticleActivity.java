@@ -1,11 +1,12 @@
 package teshlya.com.reddit.screen;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -13,10 +14,22 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import me.saket.inboxrecyclerview.InboxRecyclerView;
+import me.saket.inboxrecyclerview.dimming.CompleteListTintPainter;
+import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
+import teshlya.com.reddit.adapter.CommunityAdapter;
+import teshlya.com.reddit.adapter.SwipePostAdapter;
+import teshlya.com.reddit.callback.CallbackArticle;
+import teshlya.com.reddit.model.ArticleData;
+import teshlya.com.reddit.parse.ParseCommunity;
+import teshlya.com.reddit.utils.Calc;
 import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 
-public class ArticleActivity extends AppCompatActivity {
+public class ArticleActivity extends AppCompatActivity implements CallbackArticle {
 
     CommunityFragment communityFragment;
     int left;
@@ -28,8 +41,8 @@ public class ArticleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community);
-        init();
-        animateStartActivity();
+        init2();
+        //animateStartActivity();
     }
 
     private void animateStartActivity() {
@@ -39,7 +52,7 @@ public class ArticleActivity extends AppCompatActivity {
         bottom = getIntent().getExtras().getInt(Constants.BOTTOM);
         overridePendingTransition(0, 0);
 
-        Point size = getWindowSize();
+        Point size = Calc.getWindowSizeInPx(this);
         int width = size.x;
         int height = size.y;
         float pivotXValue = 0.5f;
@@ -60,44 +73,28 @@ public class ArticleActivity extends AppCompatActivity {
         rootView.startAnimation(animation);
     }
 
-    private Point getWindowSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size;
-    }
-
     private void init() {
-        String url = getIntent().getExtras().getString(Constants.URL, "");
-        String community = getIntent().getExtras().getString(Constants.COMMUNITY, "");
-        initTitle(community);
-        initHomeButton();
-        initFragmentCommunity(url, community);
+        //String url = getIntent().getExtras().getString(Constants.URL, "");
+        //String community = getIntent().getExtras().getString(Constants.COMMUNITY, "");
+        initTitle("Front");
+        //initFragmentCommunity("/");
     }
 
     private void initTitle(String community) {
-        ((TextView) findViewById(R.id.community_title)).setText(community);
+       // ((TextView) findViewById(R.id.community_title)).setText(community);
     }
 
-    private void initHomeButton() {
-        findViewById(R.id.home_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-
-    private void initFragmentCommunity(String url, String community) {
+    private void initFragmentCommunity(String url) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         communityFragment = CommunityFragment.newInstance(url);
-        ft.replace(R.id.fragment_article, communityFragment);
+        //ft.replace(R.id.fragment_article, communityFragment);
         ft.commit();
     }
 
     @Override
     public void onBackPressed() {
-        if (communityFragment.back()) {
+//        if (communityFragment.back())
+        {
             super.onBackPressed();
         }
     }
@@ -111,7 +108,7 @@ public class ArticleActivity extends AppCompatActivity {
     @Override
     public void finish() {
         overridePendingTransition(0, 0);
-        Point size = getWindowSize();
+        Point size = Calc.getWindowSizeInPx(this);
         int width = size.x;
         int height = size.y;
         float pivotXValue = 0.5f;
@@ -147,26 +144,70 @@ public class ArticleActivity extends AppCompatActivity {
     }
 
 
-    public void animationClose() {
-        overridePendingTransition(0, 0);
-        Point size = getWindowSize();
-        int width = size.x;
-        int height = size.y;
-        float pivotXValue = 0.5f;
-        float pivotYValue = (float) ((top + bottom) / 2) / height;
-        float toX = (float) (right - left) / width;
-        float toY = (float) (bottom - top) / height;
-        AnimationSet animation = new AnimationSet(true);
-        Animation anim = new ScaleAnimation(
-                1f, toX,
-                1f, toY,
-                Animation.RELATIVE_TO_SELF, pivotXValue,
-                Animation.RELATIVE_TO_SELF, pivotYValue);
-        anim.setFillAfter(true);
-        animation.addAnimation(anim);
-        animation.addAnimation(new AlphaAnimation(1.0F, 0.0F));
-        animation.setDuration(400);
-        View rootView = findViewById(android.R.id.content);
-        rootView.startAnimation(animation);
+
+
+
+    private InboxRecyclerView recyclerView;
+    private CommunityAdapter adapter;
+    private static String url;
+    private static String domain = "https://www.reddit.com";
+    private ExpandablePageLayout conteinerSwipePostFragment;
+
+    private void init2() {
+        conteinerSwipePostFragment = findViewById(R.id.conteinerSwipePostFragment);
+        //fab = getActivity().findViewById(R.id.fab);
+        SwipePostAdapter.setFab(null);
+        initRecycler();
+        new ParseCommunity(this, domain + "/" + ".json", this).execute();
     }
+
+    private void initRecycler(){
+        recyclerView = findViewById(R.id.community_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+       /* recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView2, int dx, int dy){
+                if (dy > 0 && fab.isShown())
+                    fab.hide();
+                else
+                    fab.show();
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });*/
+
+      /* recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+           @Override
+           public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+               super.onScrolled(recyclerView, dx, dy);
+               if (dy > 0 && fab.isShown())
+                   fab.hide();
+               else
+                   fab.show();
+           }
+       });*/
+    }
+
+    @Override
+    public void addArticles(ArrayList<ArticleData> articles) {
+        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment);
+        adapter.setHasStableIds(true);
+        adapter.addArticle(articles);
+        conteinerSwipePostFragment.setAnimationDurationMillis(800);
+        conteinerSwipePostFragment.setPullToCollapseEnabled(false);
+        SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, 4);
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(conteinerSwipePostFragment.getId(), swipePostFragment)
+                .commitNowAllowingStateLoss();
+
+        recyclerView.setExpandablePage(conteinerSwipePostFragment);
+        recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
+        recyclerView.setAdapter(adapter);
+    }
+
 }

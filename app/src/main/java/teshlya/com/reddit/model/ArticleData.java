@@ -3,17 +3,18 @@ package teshlya.com.reddit.model;
 import java.io.Serializable;
 
 public class ArticleData implements Serializable {
-    String title;
-    String text;
-    String urlImage;
-    String urlImage3;
-    String url;
-    String author;
-    String date;
-    String score;
-    String commentCount;
-    String subredditName;
-    Boolean withoutImage;
+    private String title;
+    private String text;
+    private String urlImage;
+    private String urlImage3;
+    private String url;
+    private String author;
+    private String date;
+    private String score;
+    private String commentCount;
+    private String mediaType;
+    private String videoUrl;
+    private Boolean withoutImage;
 
     public String getTitle() {
         return title;
@@ -95,11 +96,19 @@ public class ArticleData implements Serializable {
         this.urlImage3 = urlImage3;
     }
 
-    public String getSubredditName() {
-        return subredditName;
+    public String getMediaType() {
+        return mediaType;
     }
 
-    public void setSubredditName(String subredditName) {
-        this.subredditName = subredditName;
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 }
