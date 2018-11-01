@@ -29,11 +29,6 @@
         <activity
             android:name=".screen.MainMenuActivity"
             android:theme="@style/AppTheme.MainMenu" />
-        <activity
-            android:name=".screen.FrontPageActivityTemp"
-            android:screenOrientation="portrait">
-
-        </activity>
     </application>
 
 </manifest>
