@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Reddit</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder.xml text -->
     <string name="hello_blank_fragment">Hello comments fragment</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

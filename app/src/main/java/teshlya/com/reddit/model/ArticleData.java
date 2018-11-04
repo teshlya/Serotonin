@@ -15,6 +15,8 @@ public class ArticleData implements Serializable {
     private String mediaType;
     private String videoUrl;
     private Boolean withoutImage;
+    private int width;
+    private int height;
 
     public String getTitle() {
         return title;
@@ -110,5 +112,21 @@ public class ArticleData implements Serializable {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

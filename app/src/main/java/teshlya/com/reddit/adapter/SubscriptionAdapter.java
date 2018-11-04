@@ -7,15 +7,12 @@ import android.graphics.Rect;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -23,12 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import teshlya.com.reddit.parse.ParseArticle;
-import teshlya.com.reddit.screen.FrontPageActivity;
-import teshlya.com.reddit.utils.Calc;
 import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.Subscription;
-import teshlya.com.reddit.screen.ArticleActivity;
 
 
 public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapter.SubscriptionViewHolder> {
@@ -108,7 +102,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
 
         private void openCommunity(String url, String community, View view) {
             /*Rect rect = getPositionItem(view);
-            Intent myIntent = new Intent(context, ArticleActivity.class);
+            Intent myIntent = new Intent(context, ArticleLoadedActivity.class);
             myIntent.putExtra(Constants.URL, url);
             myIntent.putExtra(Constants.COMMUNITY, community);
             myIntent.putExtra(Constants.LEFT, rect.left);

@@ -5,11 +5,9 @@ import android.content.Context;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -42,7 +40,10 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
     }
 
     public void addArticle(List<ArticleData> articles) {
+        int listSize = this.articles.size();
+        int addCount = articles.size();
         this.articles.addAll(articles);
+        notifyItemRangeChanged(listSize, addCount);
     }
 
     @Override
@@ -116,12 +117,12 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
                 @Override
                 public void onScrolled(RecyclerView recyclerView2, int dx, int dy) {
                     super.onScrolled(recyclerView2, dx, dy);
-                    if (dy > 0 && FrontPageActivity.shown) {
-                        FrontPageActivity.shown = false;
+                    if (dy > 0 && FrontPageActivity.shownFab) {
+                        FrontPageActivity.shownFab = false;
                         fab.hide();
                     } else
-                    if (dy < 0 && !FrontPageActivity.shown) {
-                        FrontPageActivity.shown = true;
+                    if (dy < 0 && !FrontPageActivity.shownFab) {
+                        FrontPageActivity.shownFab = true;
                         fab.show();
                     }
 

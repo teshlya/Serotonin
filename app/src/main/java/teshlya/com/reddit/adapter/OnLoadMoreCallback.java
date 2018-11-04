@@ -1,5 +1,5 @@
 package teshlya.com.reddit.adapter;
 
-public interface OnLoadMoreListener {
+public interface OnLoadMoreCallback {
     void onLoadMore();
 }

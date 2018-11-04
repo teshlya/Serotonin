@@ -3,7 +3,6 @@ package teshlya.com.reddit.parse;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,17 +16,18 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import teshlya.com.reddit.callback.CallbackArticle;
+import teshlya.com.reddit.callback.CallbackArticleLoaded;
 import teshlya.com.reddit.model.ArticleData;
+import teshlya.com.reddit.model.CommunityData;
 import teshlya.com.reddit.utils.TimeAgo;
 
 public class ParseCommunity extends AsyncTask<Void, Void, String> {
-    private CallbackArticle callbackArticle;
+    private CallbackArticleLoaded callbackArticleLoaded;
     private String url;
     private Context context;
 
-    public ParseCommunity(CallbackArticle callbackArticle, String url, Context context) {
-        this.callbackArticle = callbackArticle;
+    public ParseCommunity(CallbackArticleLoaded callbackArticleLoaded, String url, Context context) {
+        this.callbackArticleLoaded = callbackArticleLoaded;
         this.url = url;
         this.context = context;
     }
@@ -67,6 +67,12 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
             JSONObject dataJsonObj = null;
             dataJsonObj = new JSONObject(strJson);
             JSONObject data = dataJsonObj.getJSONObject("data");
+
+            String after = null;
+            if (data.has("after") && !data.isNull("after")) {
+                after = data.getString("after");
+            }
+
             JSONArray children = data.getJSONArray("children");
 
             ArrayList<ArticleData> articleData = new ArrayList<>();
@@ -101,12 +107,23 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                     JSONObject source = image.getJSONObject("source");
                     urlImage = stringToHtml(source.getString("url"));
 
+                    article.setWidth(source.getInt("width"));
+                    article.setHeight(source.getInt("height"));
+
                     if (image.has("resolutions") && !image.isNull("resolutions")) {
                         JSONArray resolutions = image.getJSONArray("resolutions");
                         if (resolutions.length() > 3) {
                             JSONObject resolution = resolutions.getJSONObject(3);
                             if (resolution.has("url"))
                                 article.setUrlImage3(stringToHtml(resolution.getString("url")));
+
+                            if (article.getWidth() == 0 || article.getHeight() == 0){
+                                if (resolution.has("width") && resolution.has("height")){
+                                    article.setWidth(resolution.getInt("width"));
+                                    article.setHeight(resolution.getInt("height"));
+                                }
+                            }
+
                         }
                     }
 
@@ -163,9 +180,12 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
 
                 articleData.add(article);
             }
-            callbackArticle.addArticles(articleData);
+            CommunityData communityData = new CommunityData();
+            communityData.setArticles(articleData);
+            communityData.setAfter(after);
+            callbackArticleLoaded.addArticles(communityData);
         } catch (JSONException e) {
-            Toast.makeText(context, "Error, load data!", Toast.LENGTH_SHORT).show();
+            callbackArticleLoaded.addArticles(null);
             e.printStackTrace();
         }
     }

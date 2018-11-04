@@ -10,6 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.utils.DrawableIcon;
@@ -21,7 +22,8 @@ public class FrontPageActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private Context context;
     private TextView titleTextView;
-    public static boolean shown = true;
+    public static boolean shownFab = true;
+    private SmoothProgressBar smoothProgressBar;
 
 
     @Override
@@ -64,6 +66,10 @@ public class FrontPageActivity extends AppCompatActivity {
 
     private void initTitle() {
         titleTextView = findViewById(R.id.community_title);
+    }
+
+    private void initProgressBar() {
+        smoothProgressBar = findViewById(R.id.progress_bar_communuty);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

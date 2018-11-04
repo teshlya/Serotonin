@@ -3,6 +3,9 @@ package teshlya.com.reddit.utils;
 import android.content.res.Resources;
 
 public class Constants {
+
+    public static String DOMAIN = "https://www.reddit.com";
+
     public static final String POSITION = "position";
     public static final String URL = "url";
     public static final String DATA = "data";

@@ -2,13 +2,18 @@ package teshlya.com.reddit.adapter;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,49 +22,61 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.ArticleData;
-import teshlya.com.reddit.screen.ArticleActivity;
+import teshlya.com.reddit.model.CommunityData;
 import teshlya.com.reddit.screen.SwipePostFragment;
 import teshlya.com.reddit.utils.Calc;
 import teshlya.com.reddit.utils.DrawableIcon;
-import teshlya.com.reddit.utils.YouTubeURL;
 
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
 
-    Context context;
-    private ArrayList<ArticleData> articles = new ArrayList<>();
-    InboxRecyclerView recyclerView;
-    ExpandablePageLayout conteinerSwipePostFragment;
+    private Context context;
+    private CommunityData data = new CommunityData();
+    private InboxRecyclerView recyclerView;
+    private ExpandablePageLayout conteinerSwipePostFragment;
+    private String url;
+    private Drawable drawableImage;
+    private GradientDrawable drawableRectangle;
+    private int widthScreen;
+
 
     public CommunityAdapter(InboxRecyclerView rv,
-                            ExpandablePageLayout conteinerSwipePostFragment) {
+                            ExpandablePageLayout conteinerSwipePostFragment,
+                            String url) {
         //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         //itemTouchHelper.attachToRecyclerView(rv);
+        context = rv.getContext();
         recyclerView = rv;
         this.conteinerSwipePostFragment = conteinerSwipePostFragment;
+        this.url = url;
+        initDrawable();
+        widthScreen = Calc.getWindowSizeInDp(context).x;
     }
 
-    public void addArticle(List<ArticleData> articles) {
-        this.articles.addAll(articles);
+    private void initDrawable() {
+        drawableImage = context.getResources().getDrawable(R.drawable.placeholder);
+        drawableRectangle = new GradientDrawable();
+        drawableRectangle.setShape(GradientDrawable.RECTANGLE);
+        drawableRectangle.setColor(Color.LTGRAY);
+
+    }
+
+    public void addArticle(CommunityData data) {
+        int listSize = this.data.getArticles().size();
+        int addCount = data.getArticles().size();
+        this.data.getArticles().addAll(data.getArticles());
+        this.data.setAfter(data.getAfter());
+        notifyItemRangeChanged(listSize, addCount);
     }
 
     @Override
     public CommunityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.community_item, parent, false);
         return new CommunityViewHolder(view);
@@ -67,12 +84,12 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     @Override
     public void onBindViewHolder(CommunityViewHolder holder, int position) {
-        holder.bind(articles.get(position), position);
+        holder.bind(data.getArticles().get(position), position);
     }
 
     @Override
     public int getItemCount() {
-        return articles.size();
+        return data.getArticles().size();
     }
 
     @Override
@@ -110,6 +127,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
             if (initVideo(article)) return;
             initImage(article);
+
         }
 
         private boolean initVideo(ArticleData article) {
@@ -142,19 +160,22 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
 
         private void initImage(ArticleData article) {
-
             if (article.getUrlImage3() != null && !article.getUrlImage3().isEmpty())
                 Picasso.with(context)
                         .load(article.getUrlImage3())
+                        .placeholder(getPlaceholder(article.getWidth(), article.getHeight()))
                         .into(image);
-
-            if ((article.getUrlImage() != null && !article.getUrlImage().isEmpty() && !article.getUrlImage().equals("self")))
+            else if ((article.getUrlImage() != null && !article.getUrlImage().isEmpty() && !article.getUrlImage().equals("self")))
                 Picasso.with(context)
                         .load(article.getUrlImage())
+                        .placeholder(getPlaceholder(article.getWidth(), article.getHeight()))
                         .into(image);
 
             if ((article.getUrlImage3() == null || article.getUrlImage3().isEmpty()) &&
-                    (article.getUrlImage() == null || article.getUrlImage().isEmpty() || article.getUrlImage().equals("self"))) {
+                    (article.getUrlImage() == null ||
+                            article.getUrlImage().isEmpty() ||
+                            article.getUrlImage().equals("self") ||
+                            article.getUrlImage().equals("default"))) {
                 image.setVisibility(View.GONE);
             } else {
                 image.setVisibility(View.VISIBLE);
@@ -162,6 +183,20 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             }
         }
 
+        private Drawable getPlaceholder(int w, int h) {
+            if (h == 0 || w == 0) return null;
+            Drawable[] drawable = new Drawable[2];
+            GradientDrawable drawableRectangle;
+            drawableRectangle = new GradientDrawable();
+            drawableRectangle.setShape(GradientDrawable.RECTANGLE);
+            drawableRectangle.setColor(Color.LTGRAY);
+
+            drawableRectangle.setSize(widthScreen, widthScreen * h / w);
+            drawable[0] = drawableRectangle;
+            drawable[1] = drawableImage;
+            LayerDrawable placeholder = new LayerDrawable(drawable);
+            return placeholder;
+        }
 
         public CommunityViewHolder(View itemView) {
             super(itemView);
@@ -179,7 +214,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private void openArticle(int position) {
 
             AppCompatActivity articleActivity = (AppCompatActivity) context;
-            SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, position);
+            SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(data,
+                    url,
+                    position);
 
             FragmentManager fm = articleActivity.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();

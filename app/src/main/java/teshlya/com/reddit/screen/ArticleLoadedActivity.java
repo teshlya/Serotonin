@@ -12,9 +12,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
-import android.widget.TextView;
-
-import java.util.ArrayList;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
@@ -22,14 +19,14 @@ import me.saket.inboxrecyclerview.dimming.CompleteListTintPainter;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.adapter.CommunityAdapter;
 import teshlya.com.reddit.adapter.SwipePostAdapter;
-import teshlya.com.reddit.callback.CallbackArticle;
-import teshlya.com.reddit.model.ArticleData;
+import teshlya.com.reddit.callback.CallbackArticleLoaded;
+import teshlya.com.reddit.model.CommunityData;
 import teshlya.com.reddit.parse.ParseCommunity;
 import teshlya.com.reddit.utils.Calc;
 import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 
-public class ArticleActivity extends AppCompatActivity implements CallbackArticle {
+public class ArticleLoadedActivity extends AppCompatActivity implements CallbackArticleLoaded {
 
     CommunityFragment communityFragment;
     int left;
@@ -132,7 +129,7 @@ public class ArticleActivity extends AppCompatActivity implements CallbackArticl
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ArticleActivity.super.finish();
+                ArticleLoadedActivity.super.finish();
             }
 
             @Override
@@ -192,13 +189,13 @@ public class ArticleActivity extends AppCompatActivity implements CallbackArticl
     }
 
     @Override
-    public void addArticles(ArrayList<ArticleData> articles) {
-        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment);
+    public void addArticles(CommunityData data) {
+        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url);
         adapter.setHasStableIds(true);
-        adapter.addArticle(articles);
+        adapter.addArticle(data);
         conteinerSwipePostFragment.setAnimationDurationMillis(800);
         conteinerSwipePostFragment.setPullToCollapseEnabled(false);
-        SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(articles, 4);
+        SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(data, url, 4);
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();

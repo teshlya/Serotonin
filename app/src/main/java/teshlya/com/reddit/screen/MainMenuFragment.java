@@ -37,10 +37,6 @@ import java.util.List;
 
 public class MainMenuFragment extends Fragment implements CallbackCommunity {
 
-
-    public MainMenuFragment() {
-    }
-
     public static MainMenuFragment newInstance() {
         return new MainMenuFragment();
     }
@@ -184,7 +180,7 @@ public class MainMenuFragment extends Fragment implements CallbackCommunity {
     }
 
     private void openCommunity(String url, String community, View view) {
-        /*Intent myIntent = new Intent(context, ArticleActivity.class);
+        /*Intent myIntent = new Intent(context, ArticleLoadedActivity.class);
         myIntent.putExtra(Constants.URL, url);
         Rect rect = getPositionItem(view);
         myIntent.putExtra(Constants.LEFT, rect.left);

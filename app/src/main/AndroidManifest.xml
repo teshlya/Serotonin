@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".screen.ArticleActivity"
+            android:name=".screen.ArticleLoadedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TransparentWindow"></activity>
         <activity

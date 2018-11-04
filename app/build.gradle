@@ -30,14 +30,18 @@ dependencies {
     //picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
+    //recyclerview
     implementation 'me.saket:inboxrecyclerview:1.0.0-beta3'
 
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     //implementation 'me.saket:inboxrecyclerview:1.0.0-SNAPSHOT'
 
+    //youtube
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1'
 
+    //progressbar
+    implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
