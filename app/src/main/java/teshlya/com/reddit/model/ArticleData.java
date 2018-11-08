@@ -5,18 +5,16 @@ import java.io.Serializable;
 public class ArticleData implements Serializable {
     private String title;
     private String text;
-    private String urlImage;
-    private String urlImage3;
     private String url;
     private String author;
     private String date;
     private String score;
     private String commentCount;
-    private String mediaType;
-    private String videoUrl;
-    private Boolean withoutImage;
-    private int width;
-    private int height;
+    private Media media;
+    private MediaType mediaType;
+
+    public ArticleData() {
+    }
 
     public String getTitle() {
         return title;
@@ -24,14 +22,6 @@ public class ArticleData implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getUrlImage() {
-        return urlImage;
-    }
-
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
     }
 
     public String getAuthor() {
@@ -66,14 +56,6 @@ public class ArticleData implements Serializable {
         this.commentCount = commentCount;
     }
 
-    public Boolean getWithoutImage() {
-        return withoutImage;
-    }
-
-    public void setWithoutImage(Boolean withoutImage) {
-        this.withoutImage = withoutImage;
-    }
-
     public String getUrl() {
         return url;
     }
@@ -90,43 +72,19 @@ public class ArticleData implements Serializable {
         this.text = text;
     }
 
-    public String getUrlImage3() {
-        return urlImage3;
+    public Media getMedia() {
+        return media;
     }
 
-    public void setUrlImage3(String urlImage3) {
-        this.urlImage3 = urlImage3;
+    public void setMedia(Media media) {
+        this.media = media;
     }
 
-    public String getMediaType() {
+    public MediaType getMediaType() {
         return mediaType;
     }
 
-    public void setMediaType(String mediaType) {
+    public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 }

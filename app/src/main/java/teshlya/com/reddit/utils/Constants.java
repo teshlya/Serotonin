@@ -12,7 +12,7 @@ public class Constants {
     public static final String COMMUNITY = "community";
 
     public static final int TITLE = 1;
-    public static final int IMAGE = 3;
+    public static final int MEDIA = 3;
     public static final int TEXT = 2;
     public static final int DETAIL = 4;
 

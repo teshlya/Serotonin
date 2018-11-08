@@ -1,39 +1,56 @@
 package teshlya.com.reddit.adapter;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import tellh.com.recyclertreeview_lib.TreeViewAdapter;
-import teshlya.com.reddit.utils.Calc;
-import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.ArticleData;
+import teshlya.com.reddit.model.Media;
+import teshlya.com.reddit.utils.Calc;
+import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.utils.DrawableIcon;
 import teshlya.com.reddit.utils.TrimHtml;
+
+import static android.view.View.VISIBLE;
 
 public class ArticleAdapter extends TreeViewAdapter {
 
     ArticleData articleData;
     private Context context;
+    private Drawable drawableImage;
+    private int widthScreen;
 
-    public ArticleAdapter(List<CommentAdapter> commentAdapters) {
+    public ArticleAdapter(List<CommentAdapter> commentAdapters, Context context) {
         super(commentAdapters);
+        this.context = context;
+        init();
+    }
+
+    private void init() {
+        initDrawable();
+        widthScreen = Calc.getWindowSizeInDp(context).x;
+    }
+
+    private void initDrawable() {
+        drawableImage = context.getResources().getDrawable(R.drawable.placeholder);
     }
 
     public void setData(ArticleData articleData) {
@@ -48,7 +65,7 @@ public class ArticleAdapter extends TreeViewAdapter {
                 type = Constants.TITLE;
                 break;
             case 1:
-                type = Constants.IMAGE;
+                type = Constants.MEDIA;
                 break;
             case 2:
                 type = Constants.TEXT;
@@ -69,7 +86,6 @@ public class ArticleAdapter extends TreeViewAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
         if (viewType == Constants.TITLE) {
             View view = LayoutInflater.from(context).inflate(R.layout.title_item, parent, false);
             return new TitleHolder(view);
@@ -78,9 +94,9 @@ public class ArticleAdapter extends TreeViewAdapter {
             View view = LayoutInflater.from(context).inflate(R.layout.text_item, parent, false);
             return new TextHolder(view);
         }
-        if (viewType == Constants.IMAGE) {
-            View view = LayoutInflater.from(context).inflate(R.layout.image_item, parent, false);
-            return new ImageHolder(view);
+        if (viewType == Constants.MEDIA) {
+            View view = LayoutInflater.from(context).inflate(R.layout.media_item, parent, false);
+            return new MediaHolder(view);
         }
         if (viewType == Constants.DETAIL) {
             View view = LayoutInflater.from(context).inflate(R.layout.article_detail_item, parent, false);
@@ -99,8 +115,8 @@ public class ArticleAdapter extends TreeViewAdapter {
             ((TextHolder) holder).bind();
             return;
         }
-        if (holder instanceof ImageHolder) {
-            ((ImageHolder) holder).bind();
+        if (holder instanceof MediaHolder) {
+            ((MediaHolder) holder).bind();
             return;
         }
         if (holder instanceof DetailHolder) {
@@ -144,33 +160,58 @@ public class ArticleAdapter extends TreeViewAdapter {
         }
     }
 
-    public class ImageHolder extends RecyclerView.ViewHolder {
+    public class MediaHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
+        private FrameLayout conteinerMedia;
 
-        public ImageHolder(View itemView) {
+
+        public MediaHolder(View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.image);
+            conteinerMedia = itemView.findViewById(R.id.conteiner_media);
         }
 
         public void bind() {
 
-            if (articleData.getUrlImage3() != null && !articleData.getUrlImage3().isEmpty())
-                Picasso.with(context)
-                        .load(articleData.getUrlImage3())
-                        .into(imageView);
+            switch (articleData.getMediaType()) {
+                case IMAGE:
+                    initImage(articleData.getMedia());
+                    break;
+                case NONE: {
+                    conteinerMedia.setVisibility(View.GONE);
+                    break;
+                }
+            }
+        }
 
-            if ((articleData.getUrlImage() != null && !articleData.getUrlImage().isEmpty() && !articleData.getUrlImage().equals("self")))
+        private void initImage(Media media) {
+            ImageView image = new ImageView(context);
+            image.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            image.setAdjustViewBounds(true);
+            image.setScaleType(ImageView.ScaleType.FIT_XY);
+            Picasso.with(context)
+                    .load(media.getUrl())
+                    .placeholder(getPlaceholder(media.getWidth(), media.getHeight()))
+                    .into(image);
+            image.setVisibility(View.VISIBLE);
+            image.setPadding(0, Calc.dpToPx(10), 0, 0);
+            conteinerMedia.setVisibility(VISIBLE);
+            conteinerMedia.removeAllViews();
+            conteinerMedia.addView(image);
+        }
 
-                Picasso.with(context)
-                        .load(articleData.getUrlImage())
-                        .into(imageView);
+        private Drawable getPlaceholder(int w, int h) {
+            if (h == 0 || w == 0) return null;
+            Drawable[] drawable = new Drawable[2];
+            GradientDrawable drawableRectangle;
+            drawableRectangle = new GradientDrawable();
+            drawableRectangle.setShape(GradientDrawable.RECTANGLE);
+            drawableRectangle.setColor(Color.LTGRAY);
 
-            if ((articleData.getUrlImage3() == null || articleData.getUrlImage3().isEmpty()) &&
-                    (articleData.getUrlImage() == null || articleData.getUrlImage().isEmpty()))
-                imageView.setVisibility(View.GONE);
-            else
-                imageView.setPadding(0, Calc.dpToPx(10), 0, 0);
+            drawableRectangle.setSize(widthScreen, widthScreen * h / w);
+            drawable[0] = drawableRectangle;
+            drawable[1] = drawableImage;
+            LayerDrawable placeholder = new LayerDrawable(drawable);
+            return placeholder;
         }
     }
 

@@ -96,7 +96,7 @@ public class SwipePostAdapter extends RecyclerView.Adapter<SwipePostAdapter.Swip
         protected void initRecycler() {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             recyclerView.setLayoutManager(linearLayoutManager);
-            adapter = new ArticleAdapter(Arrays.asList(new CommentAdapter()));
+            adapter = new ArticleAdapter(Arrays.asList(new CommentAdapter()), context);
             adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
                 @Override
                 public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {

@@ -36,15 +36,11 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
     private FloatingActionButton fab;
     private ScrollListenerCommunity scrollListenerCommunity;
     private String after = null;
-    private SmoothProgressBar smoothProgressBar;
 
-
-    public CommunityFragment() {
-    }
-
-    public static CommunityFragment newInstance(String url) {
+    public static CommunityFragment newInstance(String url, CommunityData data) {
         CommunityFragment fragment = new CommunityFragment();
         Bundle args = new Bundle();
+        args.putSerializable(Constants.DATA, data);
         args.putString(Constants.URL, url);
         fragment.setArguments(args);
         return fragment;
@@ -53,41 +49,41 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle args = getArguments();
-
-        if (args != null) {
-            url = args.getString(Constants.URL, "");
-        }
         View view = inflater.inflate(R.layout.fragment_community, container, false);
-
-        init(view);
+        CommunityData data = getArgs();
+        if (data != null) {
+            initFab();
+            initRecycler(view, data);
+        }
         return view;
     }
 
-    private void init(View view) {
-        initFab();
-        initProgressBar();
-        initRecycler(view);
-        new ParseCommunity(this, Constants.DOMAIN + url + ".json", getContext()).execute();
+    private CommunityData getArgs() {
+        Bundle args = getArguments();
+        CommunityData data;
+        if (args != null) {
+            data = (CommunityData) args.getSerializable(Constants.DATA);
+            url = args.getString(Constants.URL);
+            after = data.getAfter();
+            return data;
+        }
+        return null;
     }
 
-    private void initFab(){
+    private void initFab() {
         fab = getActivity().findViewById(R.id.fab);
         SwipePostAdapter.setFab(fab);
     }
 
-    private void initProgressBar() {
-        smoothProgressBar = getActivity().findViewById(R.id.progress_bar_communuty);
-    }
-
-    private void initRecycler(View view) {
+    private void initRecycler(View view, CommunityData data) {
         recyclerView = view.findViewById(R.id.community_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url);
-        adapter.setHasStableIds(true);
         conteinerSwipePostFragment = view.findViewById(R.id.conteinerSwipePostFragment);
         conteinerSwipePostFragment.setAnimationDurationMillis(800);
         conteinerSwipePostFragment.setPullToCollapseEnabled(false);
+        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url);
+        adapter.setHasStableIds(true);
+        adapter.addArticle(data);
         recyclerView.setExpandablePage(conteinerSwipePostFragment);
         recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
         recyclerView.setAdapter(adapter);
@@ -95,7 +91,7 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
             @Override
             public void onLoadMore() {
                 if (after != null)
-                    new ParseCommunity(CommunityFragment.this, Constants.DOMAIN + url + ".json" + "?after=" + after, getContext()).execute();
+                    new ParseCommunity(CommunityFragment.this, Constants.DOMAIN + url + ".json" + "?after=" + after).execute();
 
             }
         });
@@ -109,7 +105,6 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
             after = data.getAfter();
         }
         scrollListenerCommunity.setLoaded();
-        smoothProgressBar.setVisibility(View.GONE);
     }
 
     public boolean back() {

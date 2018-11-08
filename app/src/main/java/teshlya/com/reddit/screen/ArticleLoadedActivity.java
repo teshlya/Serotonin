@@ -83,7 +83,7 @@ public class ArticleLoadedActivity extends AppCompatActivity implements Callback
 
     private void initFragmentCommunity(String url) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        communityFragment = CommunityFragment.newInstance(url);
+        //communityFragment = CommunityFragment.newInstance(url);
         //ft.replace(R.id.fragment_article, communityFragment);
         ft.commit();
     }
@@ -155,7 +155,7 @@ public class ArticleLoadedActivity extends AppCompatActivity implements Callback
         //fab = getActivity().findViewById(R.id.fab);
         SwipePostAdapter.setFab(null);
         initRecycler();
-        new ParseCommunity(this, domain + "/" + ".json", this).execute();
+        new ParseCommunity(this, domain + "/" + ".json").execute();
     }
 
     private void initRecycler(){

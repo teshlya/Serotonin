@@ -1,8 +1,6 @@
 package teshlya.com.reddit.parse;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,17 +17,17 @@ import java.util.ArrayList;
 import teshlya.com.reddit.callback.CallbackArticleLoaded;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.model.CommunityData;
+import teshlya.com.reddit.model.Media;
+import teshlya.com.reddit.model.MediaType;
 import teshlya.com.reddit.utils.TimeAgo;
 
 public class ParseCommunity extends AsyncTask<Void, Void, String> {
     private CallbackArticleLoaded callbackArticleLoaded;
     private String url;
-    private Context context;
 
-    public ParseCommunity(CallbackArticleLoaded callbackArticleLoaded, String url, Context context) {
+    public ParseCommunity(CallbackArticleLoaded callbackArticleLoaded, String url) {
         this.callbackArticleLoaded = callbackArticleLoaded;
         this.url = url;
-        this.context = context;
     }
 
     @Override
@@ -64,125 +62,12 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         super.onPostExecute(strJson);
 
         try {
-            JSONObject dataJsonObj = null;
-            dataJsonObj = new JSONObject(strJson);
-            JSONObject data = dataJsonObj.getJSONObject("data");
-
-            String after = null;
-            if (data.has("after") && !data.isNull("after")) {
-                after = data.getString("after");
-            }
-
-            JSONArray children = data.getJSONArray("children");
-
-            ArrayList<ArticleData> articleData = new ArrayList<>();
-
-            for (int i = 0; i < children.length(); i++) {
-                ArticleData article = new ArticleData();
-                JSONObject child = children.getJSONObject(i);
-                JSONObject data2 = child.getJSONObject("data");
-
-                String title = "";
-                if (data2.has("title"))
-                    title = data2.getString("title");
-                article.setTitle(stringToHtml(title));
-
-                String author = "";
-                if (data2.has("author"))
-                    author = data2.getString("author");
-                article.setAuthor(author);
-
-                String text = "";
-                if (data2.has("selftext_html") && !data2.isNull("selftext_html"))
-                    text = data2.getString("selftext_html");
-
-                article.setText((stringToHtml(text)).trim());
-                String urlImage = "";
-
-                JSONObject preview;
-                if (data2.has("preview") && !data2.isNull("preview")) {
-                    preview = data2.getJSONObject("preview");
-                    JSONArray images = preview.getJSONArray("images");
-                    JSONObject image = images.getJSONObject(0);
-                    JSONObject source = image.getJSONObject("source");
-                    urlImage = stringToHtml(source.getString("url"));
-
-                    article.setWidth(source.getInt("width"));
-                    article.setHeight(source.getInt("height"));
-
-                    if (image.has("resolutions") && !image.isNull("resolutions")) {
-                        JSONArray resolutions = image.getJSONArray("resolutions");
-                        if (resolutions.length() > 3) {
-                            JSONObject resolution = resolutions.getJSONObject(3);
-                            if (resolution.has("url"))
-                                article.setUrlImage3(stringToHtml(resolution.getString("url")));
-
-                            if (article.getWidth() == 0 || article.getHeight() == 0){
-                                if (resolution.has("width") && resolution.has("height")){
-                                    article.setWidth(resolution.getInt("width"));
-                                    article.setHeight(resolution.getInt("height"));
-                                }
-                            }
-
-                        }
-                    }
-
-                }
-
-                if (urlImage == null || urlImage.equals(""))
-                    if (data2.has("thumbnail"))
-                        urlImage = data2.getString("thumbnail");
-                article.setUrlImage(urlImage);
-
-                String type = "";
-                if (data2.has("media") && !data2.isNull("media")) {
-                    JSONObject media;
-                    media = data2.getJSONObject("media");
-                    if (media.has("type") && !media.isNull("type")) {
-                        type = media.getString("type");
-                    }
-                }
-                article.setMediaType(type);
-
-
-                String videoUrl = "";
-                if (data2.has("url") && !data2.isNull("url")) {
-                    videoUrl = data2.getString("url");
-                }
-                article.setVideoUrl(videoUrl);
-
-
-
-                Long date = null;
-                if (data2.has("created_utc"))
-                    date = data2.getLong("created_utc");
-                article.setDate(processDate(date));
-
-                Long commentCount = null;
-                if (data2.has("num_comments"))
-                    commentCount = data2.getLong("num_comments");
-                article.setCommentCount(processComments(commentCount));
-
-                int score = 0;
-                if (data2.has("score"))
-                    score = data2.getInt("score");
-                article.setScore(processScore(score));
-
-                Boolean withoutImage = true;
-                if (data2.has("is_self"))
-                    withoutImage = data2.getBoolean("is_self");
-                article.setWithoutImage(withoutImage);
-
-                String url = "";
-                if (data2.has("permalink"))
-                    url = data2.getString("permalink");
-                article.setUrl(url);
-
-                articleData.add(article);
-            }
             CommunityData communityData = new CommunityData();
-            communityData.setArticles(articleData);
-            communityData.setAfter(after);
+            JSONObject dataJsonObj = new JSONObject(strJson);
+            JSONObject data = dataJsonObj.getJSONObject("data");
+            communityData.setAfter(getAfter(data));
+            JSONArray children = data.getJSONArray("children");
+            communityData.setArticles(parseChildren(children));
             callbackArticleLoaded.addArticles(communityData);
         } catch (JSONException e) {
             callbackArticleLoaded.addArticles(null);
@@ -190,7 +75,210 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         }
     }
 
-    private String stringToHtml(String str) {
+    private String getAfter(JSONObject data) throws JSONException {
+        String after = null;
+        if (data.has("after") && !data.isNull("after")) {
+            after = data.getString("after");
+        }
+        return after;
+    }
+
+    private ArrayList<ArticleData> parseChildren(JSONArray children) throws JSONException {
+        ArrayList<ArticleData> articleData = new ArrayList<>();
+        for (int i = 0; i < children.length(); i++) {
+            ArticleData article = new ArticleData();
+            JSONObject child = children.getJSONObject(i);
+            JSONObject data = child.getJSONObject("data");
+
+            article.setTitle(htmlToString(getTitle(data)));
+            article.setAuthor(getAuthor(data));
+            article.setText((htmlToString(getText(data))).trim());
+            article.setDate(processDate(getDate(data)));
+            article.setCommentCount(processComments(getCommentCount(data)));
+            article.setScore(processScore(getScore(data)));
+            article.setUrl(getUrl(data));
+            article.setMediaType(getMediaType(data));
+            article.setMedia(getMedia(article.getMediaType(), data));
+            if (article.getMedia() == null)
+                article.setMediaType(MediaType.NONE);
+
+
+
+            String type = "";
+            if (data.has("media") && !data.isNull("media")) {
+                JSONObject media2;
+                media2 = data.getJSONObject("media");
+                if (media2.has("type") && !media2.isNull("type")) {
+                    type = media2.getString("type");
+                }
+            }
+            //article.setMediaType(type);
+
+
+            String videoUrl = "";
+            if (data.has("url") && !data.isNull("url")) {
+                videoUrl = data.getString("url");
+            }
+            //article.setVideoUrl(videoUrl);
+
+
+            articleData.add(article);
+        }
+        return articleData;
+    }
+
+    private String getTitle(JSONObject data) throws JSONException {
+        String title = "";
+        if (data.has("title"))
+            title = data.getString("title");
+        return title;
+    }
+
+    private String getAuthor(JSONObject data) throws JSONException {
+        String author = "";
+        if (data.has("author"))
+            author = data.getString("author");
+        return author;
+    }
+
+    private String getText(JSONObject data) throws JSONException {
+        String text = "";
+        if (data.has("selftext_html") && !data.isNull("selftext_html"))
+            text = data.getString("selftext_html");
+        return text;
+    }
+
+    private Long getDate(JSONObject data) throws JSONException {
+        Long date = null;
+        if (data.has("created_utc"))
+            date = data.getLong("created_utc");
+        return date;
+    }
+
+    private Long getCommentCount(JSONObject data) throws JSONException {
+        Long commentCount = null;
+        if (data.has("num_comments"))
+            commentCount = data.getLong("num_comments");
+        return commentCount;
+    }
+
+    private int getScore(JSONObject data) throws JSONException {
+        int score = 0;
+        if (data.has("score"))
+            score = data.getInt("score");
+        return score;
+    }
+
+    private String getUrl(JSONObject data) throws JSONException {
+        String url = "";
+        if (data.has("permalink"))
+            url = data.getString("permalink");
+        return url;
+    }
+
+    private MediaType getMediaType(JSONObject data) throws JSONException {
+        if (data.has("is_video"))
+            if (data.getBoolean("is_video"))
+                return MediaType.MPD;
+
+        Boolean isSelf = true;
+        if (data.has("is_self"))
+            isSelf = data.getBoolean("is_self");
+        if (isSelf) return MediaType.NONE;
+        else
+            return MediaType.IMAGE;
+    }
+
+    private Media getMedia(MediaType mediaType, JSONObject data) throws JSONException {
+        Media media = null;
+        switch (mediaType) {
+            case IMAGE:
+                media = getImageMedia(data);
+                break;
+            case MPD:
+                break;
+            case NONE:
+                break;
+        }
+        return media;
+    }
+
+    private Media getImageMedia(JSONObject data) throws JSONException {
+
+        Media media;
+        if (data.has("preview") && !data.isNull("preview")) {
+            JSONObject preview;
+            preview = data.getJSONObject("preview");
+            JSONArray images = preview.getJSONArray("images");
+            JSONObject image = images.getJSONObject(0);
+
+            media = getImage3(image);
+            if (isCorrect(media))
+                return media;
+
+            media = getImage(image);
+            if (isCorrect(media))
+                return media;
+        }
+
+        media = getThumbnail(data);
+        if (isCorrect(media))
+            return media;
+        else
+            return null;
+    }
+
+    private Media getImage3(JSONObject image) throws JSONException {
+        Media media = new Media();
+        if (image.has("resolutions") && !image.isNull("resolutions")) {
+            JSONArray resolutions = image.getJSONArray("resolutions");
+            if (resolutions.length() > 3) {
+                JSONObject resolution = resolutions.getJSONObject(3);
+                if (resolution.has("url"))
+                    media.setUrl(htmlToString(resolution.getString("url")));
+                if (resolution.has("width") && resolution.has("height")) {
+                    media.setWidth(resolution.getInt("width"));
+                    media.setHeight(resolution.getInt("height"));
+                }
+            }
+        }
+        return media;
+    }
+
+    private Media getImage(JSONObject image) throws JSONException {
+        Media media = new Media();
+        JSONObject source = image.getJSONObject("source");
+        media.setUrl(htmlToString(source.getString("url")));
+        media.setWidth(source.getInt("width"));
+        media.setHeight(source.getInt("height"));
+        return media;
+    }
+
+    private Media getThumbnail(JSONObject data) throws JSONException {
+        Media media = new Media();
+        if (data.has("thumbnail"))
+            media.setUrl(htmlToString(data.getString("thumbnail")));
+        if (data.has("thumbnail_width"))
+            media.setWidth(data.getInt("thumbnail_width"));
+        if (data.has("thumbnail_height"))
+            media.setHeight(data.getInt("thumbnail_height"));
+        return media;
+    }
+
+    private boolean isCorrect(Media media) {
+        if (media != null &&
+                media.getUrl() != null &&
+                !media.getUrl().isEmpty() &&
+                !media.getUrl().equals("self") &&
+                !media.getUrl().equals("default") &&
+                media.getWidth() > 0 &&
+                media.getHeight() > 0)
+            return true;
+        else
+            return false;
+    }
+
+    private String htmlToString(String str) {
         str = str.replace("&lt;", "<");
         str = str.replace("&gt;", ">");
         str = str.replace("&amp;", "&");

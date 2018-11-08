@@ -7,17 +7,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ScaleDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,9 +26,12 @@ import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.reddit.R;
 import teshlya.com.reddit.model.ArticleData;
 import teshlya.com.reddit.model.CommunityData;
+import teshlya.com.reddit.model.Media;
 import teshlya.com.reddit.screen.SwipePostFragment;
 import teshlya.com.reddit.utils.Calc;
 import teshlya.com.reddit.utils.DrawableIcon;
+
+import static android.view.ViewGroup.*;
 
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
@@ -42,7 +42,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     private ExpandablePageLayout conteinerSwipePostFragment;
     private String url;
     private Drawable drawableImage;
-    private GradientDrawable drawableRectangle;
     private int widthScreen;
 
 
@@ -61,10 +60,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     private void initDrawable() {
         drawableImage = context.getResources().getDrawable(R.drawable.placeholder);
-        drawableRectangle = new GradientDrawable();
-        drawableRectangle.setShape(GradientDrawable.RECTANGLE);
-        drawableRectangle.setColor(Color.LTGRAY);
-
     }
 
     public void addArticle(CommunityData data) {
@@ -104,7 +99,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private TextView date;
         private TextView comment;
         private TextView score;
-        private ImageView image;
+        private FrameLayout conteinerMedia;
         private LinearLayout onClickItem;
         //public YouTubePlayerView youTubePlayerView;
         private String idVideo;
@@ -125,9 +120,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
                 }
             });
 
-            if (initVideo(article)) return;
-            initImage(article);
-
+            switch (article.getMediaType()) {
+                case IMAGE:
+                    initImage(article.getMedia());
+                    break;
+                case NONE: {
+                    conteinerMedia.setVisibility(View.GONE);
+                    break;
+                }
+            }
         }
 
         private boolean initVideo(ArticleData article) {
@@ -158,29 +159,20 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             image.setVisibility(View.GONE);*/
         }
 
-
-        private void initImage(ArticleData article) {
-            if (article.getUrlImage3() != null && !article.getUrlImage3().isEmpty())
-                Picasso.with(context)
-                        .load(article.getUrlImage3())
-                        .placeholder(getPlaceholder(article.getWidth(), article.getHeight()))
-                        .into(image);
-            else if ((article.getUrlImage() != null && !article.getUrlImage().isEmpty() && !article.getUrlImage().equals("self")))
-                Picasso.with(context)
-                        .load(article.getUrlImage())
-                        .placeholder(getPlaceholder(article.getWidth(), article.getHeight()))
-                        .into(image);
-
-            if ((article.getUrlImage3() == null || article.getUrlImage3().isEmpty()) &&
-                    (article.getUrlImage() == null ||
-                            article.getUrlImage().isEmpty() ||
-                            article.getUrlImage().equals("self") ||
-                            article.getUrlImage().equals("default"))) {
-                image.setVisibility(View.GONE);
-            } else {
-                image.setVisibility(View.VISIBLE);
-                image.setPadding(0, Calc.dpToPx(8), 0, 0);
-            }
+        private void initImage(Media media) {
+            ImageView image = new ImageView(context);
+            image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            image.setAdjustViewBounds(true);
+            image.setScaleType(ImageView.ScaleType.FIT_XY);
+            Picasso.with(context)
+                    .load(media.getUrl())
+                    .placeholder(getPlaceholder(media.getWidth(), media.getHeight()))
+                    .into(image);
+            image.setVisibility(View.VISIBLE);
+            image.setPadding(0, Calc.dpToPx(8), 0, 0);
+            conteinerMedia.setVisibility(VISIBLE);
+            conteinerMedia.removeAllViews();
+            conteinerMedia.addView(image);
         }
 
         private Drawable getPlaceholder(int w, int h) {
@@ -202,7 +194,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             super(itemView);
             title = itemView.findViewById(R.id.title);
             date = itemView.findViewById(R.id.date);
-            image = itemView.findViewById(R.id.image);
+            conteinerMedia = itemView.findViewById(R.id.conteiner_media);
             author = itemView.findViewById(R.id.author);
             comment = itemView.findViewById(R.id.comments);
             score = itemView.findViewById(R.id.score);

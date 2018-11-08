@@ -2,26 +2,38 @@ package teshlya.com.reddit.screen;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import teshlya.com.reddit.R;
+import teshlya.com.reddit.callback.CallbackArticleLoaded;
+import teshlya.com.reddit.model.CommunityData;
+import teshlya.com.reddit.parse.ParseCommunity;
 import teshlya.com.reddit.utils.Constants;
 import teshlya.com.reddit.utils.DrawableIcon;
 
-public class FrontPageActivity extends AppCompatActivity {
+public class FrontPageActivity extends AppCompatActivity implements CallbackArticleLoaded {
 
     private CommunityFragment communityFragment;
-    private String Url = "/";
+    private String url = "/";
     private FloatingActionButton fab;
     private Context context;
     private TextView titleTextView;
+    String title = "Front page";
     public static boolean shownFab = true;
     private SmoothProgressBar smoothProgressBar;
 
@@ -31,19 +43,39 @@ public class FrontPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_front_page);
         init();
+        getHeshKey();
+    }
+
+    private void getHeshKey(){
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "teshlya.com.reddit",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
     }
 
     private void init() {
         context = this;
         DrawableIcon.initAllIcons(this);
-        openCommunityFragment(Url);
+        //openCommunityFragment(url);
+        initProgressBar();
         initFab();
         initTitle();
+        parseCommunity(url);
     }
 
-    private void openCommunityFragment(String url) {
+    private void openCommunityFragment(String url, CommunityData data) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        communityFragment = CommunityFragment.newInstance(url);
+        communityFragment = CommunityFragment.newInstance(url, data);
         ft.replace(R.id.conteiner, communityFragment);
         ft.commit();
     }
@@ -59,10 +91,10 @@ public class FrontPageActivity extends AppCompatActivity {
         });
     }
 
-    private void openCommunity(String url, String title) {
+   /* private void openCommunity(String url, String title) {
         openCommunityFragment(url);
         titleTextView.setText(title);
-    }
+    }*/
 
     private void initTitle() {
         titleTextView = findViewById(R.id.community_title);
@@ -72,15 +104,22 @@ public class FrontPageActivity extends AppCompatActivity {
         smoothProgressBar = findViewById(R.id.progress_bar_communuty);
     }
 
+    private void parseCommunity(String url) {
+        smoothProgressBar.setVisibility(View.VISIBLE);
+        new ParseCommunity(this, Constants.DOMAIN + url + ".json").execute();
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                String ulr = data.getStringExtra(Constants.URL);
+                String url = data.getStringExtra(Constants.URL);
                 String community = data.getStringExtra(Constants.COMMUNITY);
-                if (ulr != null && community != null) {
+                if (url != null && community != null) {
                 }
-                openCommunity(ulr, community);
+                parseCommunity(url);
+                this.url = url;
+                this.title = community;
             }
         }
     }
@@ -90,5 +129,14 @@ public class FrontPageActivity extends AppCompatActivity {
         if (communityFragment.back()) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void addArticles(CommunityData data) {
+        if (data != null) {
+            openCommunityFragment(url, data);
+            titleTextView.setText(title);
+        }
+        smoothProgressBar.setVisibility(View.GONE);
     }
 }

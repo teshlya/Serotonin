@@ -79,7 +79,7 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
                     @Override
                     public void onLoadMore() {
                         if (after != null)
-                            new ParseCommunity(SwipePostFragment.this, Constants.DOMAIN + url + ".json" + "?after=" + after, getContext()).execute();
+                            new ParseCommunity(SwipePostFragment.this, Constants.DOMAIN + url + ".json" + "?after=" + after).execute();
 
                     }
                 });
