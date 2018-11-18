@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Reddit</string>
+    <string name="app_name">Serotonin</string>
 
     <string name="facebook_app_id">352595348619383</string>
 
@@ -12,5 +12,8 @@
     <string name="search_reddit">Search Reddit</string>
     <string name="reddit_feeds">REDDIT FEEDS</string>
     <string name="subscriptions">SUBSCRIPTIONS</string>
+    <string name="starred">STARRED</string>
+    <string name="subreddits">SUBREDDITS</string>
+    <string name="go_to">GO TO</string>
 
 </resources>

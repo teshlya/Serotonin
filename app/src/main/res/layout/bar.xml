@@ -28,6 +28,24 @@
                 android:text="Front page"
                 style="@style/title_community"/>
 
+            <ImageView
+                android:id="@+id/star_disabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_disabled"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12dp"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/star_enabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_enabled"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12dp"
+                android:visibility="gone"/>
+
         </RelativeLayout>
 
 

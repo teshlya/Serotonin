@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="teshlya.com.reddit">
+    package="teshlya.com.serotonin">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,26 +12,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".screen.ArticleLoadedActivity"
+            android:name="teshlya.com.serotonin.screen.ArticleLoadedActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.TransparentWindow"></activity>
+            android:theme="@style/AppTheme.TransparentWindow" />
         <activity
-            android:name=".screen.FrontPageActivity"
+            android:name="teshlya.com.serotonin.screen.FrontPageActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
-            android:name=".screen.MainMenuActivity"
+            android:name="teshlya.com.serotonin.screen.MainMenuActivity"
             android:theme="@style/AppTheme.MainMenu" />
+        <activity android:name="teshlya.com.serotonin.screen.MpdPlayerActivity"
+            android:theme="@style/MpdPlayerActivity"></activity>
     </application>
 
 </manifest>

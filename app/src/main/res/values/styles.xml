@@ -23,6 +23,14 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="MpdPlayerActivity" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
     <style name="title_article">
         <item name="android:textColor">@color/colorTitleArticle</item>
         <item name="android:textSize">15sp</item>
@@ -156,5 +164,28 @@
         <item name="spb_gradients">true</item>
     </style>
 
+    <style name="ExoMediaButton.Previous">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ExoMediaButton.Next">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ExoMediaButton.FastForward">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ExoMediaButton.Rewind">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ExoMediaButton.Pause">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ExoMediaButton.Play">
+        <item name="android:visibility">gone</item>
+    </style>
 
 </resources>

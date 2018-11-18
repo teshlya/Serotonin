@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="20dp"
+        app:backgroundTint="#1976d2"
         android:src="@drawable/home_button" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
