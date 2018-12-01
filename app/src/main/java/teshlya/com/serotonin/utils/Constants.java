@@ -17,6 +17,9 @@ public class Constants {
     public static final int TEXT = 2;
     public static final int DETAIL = 4;
 
+    public static final int NORMAL_CLICK = 1;
+    public static final int LONG_CLICK = 2;
+
     public static final int VIEW_TYPE_ITEM = 5;
     public static final int VIEW_TYPE_LOADING = 6;
 
@@ -27,4 +30,8 @@ public class Constants {
 
     public static final int SP_IN_PX_12 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 12;
     public static final int SP_IN_PX_14 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 14;
+    public static final int SP_IN_PX_16 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 16;
+    public static final int SP_IN_PX_18 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 18;
+    public static final int SP_IN_PX_20 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 20;
+    public static final int SP_IN_PX_22 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 22;
 }

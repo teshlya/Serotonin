@@ -14,6 +14,7 @@ public class LoadingViewHolder extends RecyclerView.ViewHolder {
     public LoadingViewHolder(View view) {
         super(view);
         progressBar = view.findViewById(R.id.progressBar);
+        progressBar.getIndeterminateDrawable().setColorFilter(0xFF1976D2, android.graphics.PorterDuff.Mode.MULTIPLY);
     }
 
     public void bind() {

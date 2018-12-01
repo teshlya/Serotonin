@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/placeholder"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#ff0000"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/conteinerPlayer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
     tools:context="teshlya.com.serotonin.screen.MpdPlayerFragment">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/player_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:id="@+id/player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-    <FrameLayout
-        android:id="@+id/holder_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#aaaaaa">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/video"
-            android:padding="10dp"/>
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/play_button"
+        android:visibility="gone" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/pause_button"
+        android:visibility="visible" />
+</RelativeLayout>

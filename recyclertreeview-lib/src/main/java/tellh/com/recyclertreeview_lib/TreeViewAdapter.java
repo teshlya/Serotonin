@@ -95,7 +95,6 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition() - 4);
                 // Prevent multi-click during the short interval.
                 try {

@@ -10,22 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <!--    <TextView
-            android:id="@+id/community"
-            style="@style/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"/>
-
-        <TextView
-            android:id="@+id/point1"
-            style="@style/score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/community"
-            android:paddingLeft="3dp"
-            android:text="&#8231;" /> -->
-
         <TextView
             android:id="@+id/author"
             style="@style/author"
@@ -34,7 +18,7 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
-            android:id="@+id/point2"
+                android:id="@+id/point2"
             style="@style/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,19 +43,11 @@
             android:drawablePadding="1dp"/>
 
         <TextView
-            android:id="@+id/point3"
-            style="@style/score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/score"
-            android:text="&#8231;" />
-
-        <TextView
             android:id="@+id/comments"
             style="@style/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/point3"
+            android:layout_toLeftOf="@id/score"
             android:drawablePadding="2dp"
             android:paddingRight="3dp" />
 

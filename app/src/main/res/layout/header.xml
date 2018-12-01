@@ -1,33 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
+        android:layout_marginTop="5dp">
 
-        <TextView
-            style="@style/ToolbarTitle"
+        <LinearLayout
+            android:id="@+id/conteiner_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title" />
+            android:layout_alignParentLeft="true"
+            android:orientation="vertical">
 
-        <TextView
-            style="@style/ToolbarSubTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sub_title" />
+            <TextView
+                style="@style/ToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title" />
 
-    </LinearLayout>
+            <TextView
+                style="@style/ToolbarSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sub_title" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/search_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:src="@drawable/search_button" />
+
+
+    </RelativeLayout>
 
     <FrameLayout
+        android:id="@+id/conteiner_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -36,36 +54,19 @@
             style="@style/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:background="@drawable/search_background"
+            android:hint="@string/search_reddit"
             android:paddingVertical="10dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="38dp"
             android:singleLine="true" />
 
-        <RelativeLayout
-            android:id="@+id/hint"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/arrow_hide_search"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp" />
 
-            <ImageView
-                android:id="@+id/icon_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"/>
-
-            <TextView
-                style="@style/search_hint"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/icon_search"
-                android:layout_marginLeft="15dp"
-                android:text="@string/search_reddit"/>
-
-
-        </RelativeLayout>
     </FrameLayout>
-</LinearLayout>
+</FrameLayout>

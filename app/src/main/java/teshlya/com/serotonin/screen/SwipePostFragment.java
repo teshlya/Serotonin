@@ -1,37 +1,38 @@
 package teshlya.com.serotonin.screen;
 
 
+import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import teshlya.com.serotonin.adapter.OnLoadMoreCallback;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.SnapHelper;
+import teshlya.com.serotonin.R;
+import teshlya.com.serotonin.adapter.ArticleAdapter;
+import teshlya.com.serotonin.adapter.ScrollListenerCallback;
 import teshlya.com.serotonin.adapter.ScrollListenerSwipePost;
+import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
+import teshlya.com.serotonin.component.NestedScrollingParentRecyclerView;
 import teshlya.com.serotonin.model.CommunityData;
 import teshlya.com.serotonin.parse.ParseCommunity;
 import teshlya.com.serotonin.utils.Constants;
-import teshlya.com.serotonin.R;
-import teshlya.com.serotonin.adapter.SwipePostAdapter;
 
 public class SwipePostFragment extends Fragment implements CallbackArticleLoaded {
 
     private String url;
     private CommunityData data;
     private int position;
-    private RecyclerView recyclerView;
+    private NestedScrollingParentRecyclerView recyclerView;
     private SwipePostAdapter adapter;
     private ScrollListenerSwipePost scrollListenerSwipePost;
     private String after;
-
+    private Context context;
 
     public static SwipePostFragment newInstance(CommunityData data,
                                                 String url,
@@ -45,7 +46,6 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,6 +55,7 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
     }
 
     private void init(View view) {
+        context = getContext();
         recyclerView = view.findViewById(R.id.rw);
         initArguments();
         initRecycler();
@@ -70,18 +71,27 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
         helper.attachToRecyclerView(recyclerView);
         recyclerView.scrollToPosition(position);
         scrollListenerSwipePost =
-                new ScrollListenerSwipePost(new OnLoadMoreCallback() {
+                new ScrollListenerSwipePost(new ScrollListenerCallback() {
                     @Override
-                    public void onLoadMore() {
+                    public void loadMore() {
                         if (after != null) {
                             new ParseCommunity(SwipePostFragment.this, Constants.DOMAIN + url + ".json" + "?after=" + after).execute();
                             adapter.showProgress();
                         }
+                    }
 
+                    @Override
+                    public void releasePlayer() {
+                        if (ArticleAdapter.mpdPlayerFragment != null) {
+                            FragmentTransaction transaction = ((FrontPageActivity) context).getSupportFragmentManager().beginTransaction();
+                            transaction.remove(ArticleAdapter.mpdPlayerFragment);
+                            transaction.commit();
+                            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                            ArticleAdapter.mpdPlayerFragment = null;
+                        }
                     }
                 });
         recyclerView.addOnScrollListener(scrollListenerSwipePost);
-
     }
 
     private void initArguments() {
@@ -104,6 +114,6 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
     @Override
     public void onStop() {
         super.onStop();
-        recyclerView.setAdapter(null);
+        //recyclerView.setAdapter(null);
     }
 }

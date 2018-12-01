@@ -2,10 +2,13 @@ package teshlya.com.serotonin.adapter;
 
 import android.content.Context;
 
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,8 +26,11 @@ import teshlya.com.serotonin.bean.CommentBean;
 import teshlya.com.serotonin.holder.LoadingViewHolder;
 import teshlya.com.serotonin.model.ArticleData;
 import teshlya.com.serotonin.model.CommentData;
+import teshlya.com.serotonin.model.PlayState;
 import teshlya.com.serotonin.parse.ParseArticle;
 import teshlya.com.serotonin.screen.FrontPageActivity;
+import teshlya.com.serotonin.screen.MpdPlayerFragment;
+import teshlya.com.serotonin.utils.MpdPlayer;
 
 import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_ITEM;
 import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_LOADING;
@@ -80,10 +86,9 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof SwipePostViewHolder) {
-            ((SwipePostViewHolder) holder).bind(articles.get(position));
+            ((SwipePostViewHolder) holder).bind(articles.get(position), position);
         } else if (holder instanceof LoadingViewHolder)
             ((LoadingViewHolder) holder).bind();
-        //holder.bind(articles.get(position));
     }
 
     @Override
@@ -102,15 +107,14 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public class SwipePostViewHolder extends RecyclerView.ViewHolder {
-        private ArrayList<CommentData> commentData;
         private RecyclerView recyclerView;
         private ArticleAdapter adapter;
 
 
-        public void bind(final ArticleData article) {
-            initRecycler();
+        public void bind(final ArticleData article, int position) {
+            initRecycler(position);
             adapter.setData(article);
-            ParseArticle parseArticle = new ParseArticle( domain + article.getUrl() + ".json", context, adapter);
+            ParseArticle parseArticle = new ParseArticle(domain + article.getUrl() + ".json", context, adapter);
             parseArticle.execute();
 
         }
@@ -120,27 +124,16 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             recyclerView = view.findViewById(R.id.rv);
         }
 
-        public void bind(ArrayList<CommentData> list) {
-            if (list == null) {
-                Toast.makeText(context, "Error, load comment!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            commentData = new ArrayList<>();
-            commentData.addAll(list);
-            initData();
-        }
-
-        protected void initRecycler() {
+        protected void initRecycler(int position) {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             recyclerView.setLayoutManager(linearLayoutManager);
-            adapter = new ArticleAdapter(Arrays.asList(new CommentAdapter()), context);
+            adapter = new ArticleAdapter(Arrays.asList(new CommentAdapter()), context, position);
             adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
                 @Override
                 public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
                     if (!node.isLeaf()) {
                         onToggle(!node.isExpand(), holder);
                     }
-
                     return false;
                 }
 
@@ -161,37 +154,29 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         FrontPageActivity.shownFab = true;
                         fab.show();
                     }
+                 /*   LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView2.getLayoutManager();
+                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+                    if (firstVisibleItem >1){
+                        if (MpdPlayerFragment.pause != null)
+                            MpdPlayerFragment.pause.performClick();
+                        if (ArticleAdapter.mpdPlayerFragment != null) {
+                            FragmentTransaction transaction = ((FrontPageActivity) context).getSupportFragmentManager().beginTransaction();
+                            transaction.remove(ArticleAdapter.mpdPlayerFragment);
+                            transaction.commit();
+                            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                            ArticleAdapter.mpdPlayerFragment = null;
+                        }
+                    }
+                    else{
+                        if (MpdPlayer.playState == PlayState.PAUSE && ArticleAdapter.mpdPlayerFragment == null){
+                            ((ArticleAdapter.MediaHolder)recyclerView.findViewHolderForAdapterPosition(1)).play.performClick();
+                        }
+                    }*/
+
 
                 }
             });
-
             recyclerView.setAdapter(adapter);
-        }
-
-
-        private void initData() {
-            List<TreeNode> nodes = new ArrayList<>();
-            if (commentData != null)
-                for (CommentData comment : commentData) {
-                    TreeNode<CommentBean> tempComment = new TreeNode<>(new CommentBean(comment.getComment()));
-                    tempComment.setChildList(setData(comment.getReplies()));
-                    tempComment.expandAll();
-                    nodes.add(tempComment);
-                }
-            adapter.findDisplayNodes(nodes);
-            adapter.notifyDataSetChanged();
-        }
-
-        private List<TreeNode> setData(ArrayList<CommentData> commentData) {
-            List<TreeNode> nodes = new ArrayList<>();
-            if (commentData != null)
-                for (CommentData comment : commentData) {
-                    TreeNode<CommentBean> tempComment = new TreeNode<>(new CommentBean(comment.getComment()));
-                    tempComment.setChildList(setData(comment.getReplies()));
-                    tempComment.expandAll();
-                    nodes.add(tempComment);
-                }
-            return nodes;
         }
     }
 }

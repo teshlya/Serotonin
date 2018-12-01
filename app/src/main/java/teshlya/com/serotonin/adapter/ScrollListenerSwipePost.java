@@ -9,9 +9,9 @@ public class ScrollListenerSwipePost extends RecyclerView.OnScrollListener {
     private int visibleThreshold = 5;
     private int lastVisibleItem;
     private int totalItemCount;
-    private OnLoadMoreCallback callback;
+    private ScrollListenerCallback callback;
 
-    public ScrollListenerSwipePost(OnLoadMoreCallback callback) {
+    public  ScrollListenerSwipePost(ScrollListenerCallback callback) {
         this.callback = callback;
     }
 
@@ -21,10 +21,17 @@ public class ScrollListenerSwipePost extends RecyclerView.OnScrollListener {
         initVariables(recyclerView);
         if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
             if (callback != null) {
-                callback.onLoadMore();
+                callback.loadMore();
             }
             isLoading = true;
         }
+
+        if (ArticleAdapter.positionPlayingVideo != -1 &&
+                ArticleAdapter.positionPlayingVideo != lastVisibleItem) {
+            callback.releasePlayer();
+            ArticleAdapter.positionPlayingVideo = -1;
+        }
+
     }
 
     private void initVariables(RecyclerView recyclerView) {

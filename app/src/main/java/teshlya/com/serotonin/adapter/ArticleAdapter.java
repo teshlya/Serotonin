@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,13 +22,17 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.holder.LoadingViewHolder;
 import teshlya.com.serotonin.model.ArticleData;
 import teshlya.com.serotonin.model.Media;
+import teshlya.com.serotonin.screen.CommunityFragment;
+import teshlya.com.serotonin.screen.FrontPageActivity;
 import teshlya.com.serotonin.screen.MpdPlayerActivity;
+import teshlya.com.serotonin.screen.MpdPlayerFragment;
 import teshlya.com.serotonin.utils.Calc;
 import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
@@ -44,11 +49,15 @@ public class ArticleAdapter extends TreeViewAdapter {
     private Drawable drawableImage;
     private int widthScreen;
     private boolean loaded = false;
+    private int position;
+    public static int positionPlayingVideo = -1;
+    public static MpdPlayerFragment mpdPlayerFragment = null;
 
 
-    public ArticleAdapter(List<CommentAdapter> commentAdapters, Context context) {
+    public ArticleAdapter(List<CommentAdapter> commentAdapters, Context context, int position) {
         super(commentAdapters);
         this.context = context;
+        this.position = position;
         init();
     }
 
@@ -187,13 +196,15 @@ public class ArticleAdapter extends TreeViewAdapter {
 
     public class MediaHolder extends RecyclerView.ViewHolder {
 
+        private FrameLayout conteinerMedia;
         private ImageView image;
         private RelativeLayout video;
         private ImageView videoPreview;
-        private Button play;
+        public Button play;
 
         public MediaHolder(View itemView) {
             super(itemView);
+            conteinerMedia = itemView.findViewById(R.id.conteiner_media);
             image = itemView.findViewById(R.id.image);
             video = itemView.findViewById(R.id.video);
             videoPreview = itemView.findViewById(R.id.videoPreview);
@@ -206,6 +217,7 @@ public class ArticleAdapter extends TreeViewAdapter {
                     initImage(articleData.getMediaImage());
                     break;
                 case MPD:
+                case GIF:
                     initMpd(articleData.getMediaImage(), articleData.getMediaVideo());
                     break;
                 case NONE: {
@@ -249,9 +261,15 @@ public class ArticleAdapter extends TreeViewAdapter {
             play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent myIntent = new Intent(context, MpdPlayerActivity.class);
+                    FragmentTransaction ft = ((FrontPageActivity)context).getSupportFragmentManager().beginTransaction();
+                    mpdPlayerFragment = MpdPlayerFragment.newInstance(mediaVideo);
+                    ft.add(R.id.conteiner_media, mpdPlayerFragment);
+                    ft.commit();
+                    positionPlayingVideo = position;
+
+                   /* Intent myIntent = new Intent(context, MpdPlayerActivity.class);
                     myIntent.putExtra("media", mediaVideo);
-                    context.startActivity(myIntent);
+                    context.startActivity(myIntent);*/
                 }
             });
             image.setVisibility(View.GONE);
@@ -284,5 +302,6 @@ public class ArticleAdapter extends TreeViewAdapter {
             comments.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.comment, null, null, null);
         }
     }
+
 }
 

@@ -12,10 +12,10 @@ public class ScrollListenerCommunity extends RecyclerView.OnScrollListener {
     private int visibleThreshold = 5;
     private int lastVisibleItem;
     private int totalItemCount;
-    private OnLoadMoreCallback callback;
+    private ScrollListenerCallback callback;
     private FloatingActionButton fab;
 
-    public ScrollListenerCommunity(FloatingActionButton fab, OnLoadMoreCallback callback) {
+    public ScrollListenerCommunity(FloatingActionButton fab, ScrollListenerCallback callback) {
         this.fab = fab;
         this.callback = callback;
     }
@@ -36,7 +36,7 @@ public class ScrollListenerCommunity extends RecyclerView.OnScrollListener {
         initVariables(recyclerView);
         if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
             if (callback != null) {
-                callback.onLoadMore();
+                callback.loadMore();
             }
             isLoading = true;
         }

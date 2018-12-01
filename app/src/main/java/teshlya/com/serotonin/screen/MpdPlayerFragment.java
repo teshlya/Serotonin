@@ -1,66 +1,41 @@
 package teshlya.com.serotonin.screen;
 
-import android.net.Uri;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.dash.DashMediaSource;
-import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.upstream.HttpDataSource;
-import com.google.android.exoplayer2.util.Util;
+
 import androidx.fragment.app.Fragment;
 import teshlya.com.serotonin.R;
+import teshlya.com.serotonin.model.Media;
+import teshlya.com.serotonin.model.PlayState;
+import teshlya.com.serotonin.utils.Calc;
+import teshlya.com.serotonin.utils.MpdPlayer;
+
+import static teshlya.com.serotonin.model.PlayState.PAUSE;
+import static teshlya.com.serotonin.model.PlayState.PLAY;
 
 
 public class MpdPlayerFragment extends Fragment {
 
-    private String videoUrl = null;
-    private SimpleExoPlayer player;
-    private SimpleExoPlayerView simpleExoPlayerView;
-    private Handler mainHandler;
-    private TrackSelection.Factory videoTrackSelectionFactory;
-    private TrackSelector trackSelector;
-    private LoadControl loadControl;
-    private DataSource.Factory dataSourceFactory;
-    private MediaSource videoSource;
-    private Uri uri;
-    private String userAgent;
-    private FrameLayout holderBackground;
-    private FrameLayout placeholder;
     private int width;
     private int height;
-    private DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+    private Media media;
+    private MpdPlayer mpdPlayer;
+    private ImageView play;
+    public static ImageView pause;
+    private PlayState playState = PAUSE;
 
-    public static MpdPlayerFragment newInstance(String url, int width, int height) {
+    public static MpdPlayerFragment newInstance(Media media) {
         MpdPlayerFragment fragment = new MpdPlayerFragment();
         Bundle args = new Bundle();
-        args.putString("url", url);
-        args.putInt("width", width);
-        args.putInt("height", height);
+        args.putSerializable("media", media);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,111 +44,95 @@ public class MpdPlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mpd_player, container, false);
-        getArgs();
-        if (videoUrl != null){
-            init(view);
-        }
+        init(view);
         return view;
+    }
+
+    private void init(View view) {
+        getArgs();
+        calcScreenSize(getScreenSize());
+        initButtons(view);
+        if (media != null)
+            initPlayer(view);
     }
 
     private void getArgs() {
         Bundle args = getArguments();
         if (args != null) {
-            videoUrl = args.getString("url");
-            width = args.getInt("width");
-            height = args.getInt("height");
+            media = (Media) args.getSerializable("media");
         }
     }
 
-    private void init(View view) {
-        initPlaceholder(view);
-        simpleExoPlayerView = (SimpleExoPlayerView) view.findViewById(R.id.player_view);
-        userAgent = Util.getUserAgent(getContext(), "Reddit");
-        createPlayer();
-        attachPlayerView();
-        preparePlayer();
+
+    private Point getScreenSize() {
+        return Calc.getWindowSizeInPx(getContext());
     }
 
-    private void initPlaceholder(View view){
-        placeholder = view.findViewById(R.id.placeholder);
-        placeholder.setLayoutParams(new FrameLayout.LayoutParams(width,height));
-        holderBackground = view.findViewById(R.id.holder_background);
+    private void calcScreenSize(Point point) {
+        if ((double) point.x / (double) point.y < (double) media.getWidth() / (double) media.getHeight()) {
+            width = point.x;
+            height = point.x * media.getHeight() / media.getWidth();
+        } else {
+            height = point.y;
+            width = point.y * media.getWidth() / media.getHeight();
+        }
+        if (point.y - height < 12)
+            width -= 40;
     }
 
-    public void createPlayer() {
-        mainHandler = new Handler();
-        videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        loadControl = new DefaultLoadControl();
-        player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
-        player.addListener(new ExoPlayer.EventListener() {
-            @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest) {
+    private void initButtons(View view) {
+        play = view.findViewById(R.id.play);
+        pause = view.findViewById(R.id.pause);
 
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                play.setVisibility(View.GONE);
+                pause.setVisibility(View.VISIBLE);
+                playState = PAUSE;
+                if (mpdPlayer != null)
+                    mpdPlayer.play();
             }
-
+        });
+        pause.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-            }
-
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                if(playbackState == ExoPlayer.STATE_READY){
-                    holderBackground.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-
-            }
-
-            @Override
-            public void onPositionDiscontinuity() {
-
-            }
-
-            @Override
-            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
+            public void onClick(View v) {
+                pause.setVisibility(View.GONE);
+                play.setVisibility(View.VISIBLE);
+                playState = PLAY;
+                if (mpdPlayer != null)
+                    mpdPlayer.pause();
             }
         });
     }
 
-    public void attachPlayerView() {
-        simpleExoPlayerView.setPlayer(player);
-    }
-
-    public void preparePlayer() {
-        uriParse();
-        dataSourceFactory = buildDataSourceFactory(bandwidthMeter);
-        videoSource = new DashMediaSource(uri, buildDataSourceFactory(null), new DefaultDashChunkSource.Factory(dataSourceFactory), mainHandler, null);
-        player.prepare(videoSource);
-    }
-
-    public void uriParse() {
-        uri = Uri.parse(videoUrl);
-    }
-
-    private DataSource.Factory buildDataSourceFactory(DefaultBandwidthMeter bandwidthMeter) {
-        return new DefaultDataSourceFactory(getContext(), bandwidthMeter, buildHttpDataSourceFactory(bandwidthMeter));
-    }
-
-    private HttpDataSource.Factory buildHttpDataSourceFactory(DefaultBandwidthMeter bandwidthMeter) {
-        return new DefaultHttpDataSourceFactory(userAgent, bandwidthMeter);
+    private void initPlayer(View view) {
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        //view.findViewById(R.id.conteinerPlayer).setLayoutParams(layoutParams);
+        SimpleExoPlayerView playerView = view.findViewById(R.id.player);
+        playerView.setControllerVisibilityListener(new PlaybackControlView.VisibilityListener() {
+            @Override
+            public void onVisibilityChange(int visibility) {
+                switch (playState) {
+                    case PLAY:
+                        play.setVisibility(visibility);
+                        break;
+                    case PAUSE:
+                        pause.setVisibility(visibility);
+                        break;
+                }
+            }
+        });
+        mpdPlayer = MpdPlayer.newInstance();
+        mpdPlayer.setPlayer(playerView);
+        mpdPlayer.init(getContext(), media.getUrl());
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        //player.release();
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mpdPlayer != null)
+            mpdPlayer.stop();
     }
-
-
 }

@@ -7,7 +7,7 @@
     <color name="colorCommentText">@android:color/tab_indicator_text</color>
     <color name="colorCommentBackground">#dedddd</color>
     <color name="colorCommentBorder">#afadad</color>
-    <color name="colorCommentAuthor">#729aff</color>
+    <color name="colorCommentAuthor">#1976d2</color>
 
     <color name="colorTitleMainWindow">#ffffff</color>
     <color name="colorBackgroundMainWindow">#1976d2</color>
@@ -23,7 +23,7 @@
     <color name="colorBackgroundCommunity">#ffffff</color>
     <color name="colorBackgroundSearch">#ffffff</color>
     <color name="colorBorderSearch">#cccccc</color>
-    <color name="colorCommunityListTitle">@android:color/tab_indicator_text</color>
+    <color name="colorCommunityListTitle">#000000</color>
     <color name="colorCommunityListAuthor">#729aff</color>
     <color name="colorCommunityListComment">@android:color/tab_indicator_text</color>
     <color name="colorCommentCount">#729aff</color>

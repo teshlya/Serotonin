@@ -1,16 +1,22 @@
 package teshlya.com.serotonin.screen;
 
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -22,6 +28,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.SortedSet;
@@ -44,8 +52,12 @@ import teshlya.com.serotonin.utils.Preference;
 
 public class MainMenuFragment extends Fragment {
 
-    public static MainMenuFragment newInstance() {
-        return new MainMenuFragment();
+    public static MainMenuFragment newInstance(int clickState) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("click", clickState);
+        MainMenuFragment fragment = new MainMenuFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     private Context context;
@@ -54,6 +66,8 @@ public class MainMenuFragment extends Fragment {
     private View searchMainMenu;
     private EditText search;
     private ArrayList<SubscriptionsGroup> subscriptionsGroups;
+    private int clickState;
+    private ImageView searchButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,11 +79,21 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void init(View view) {
+        getArgs();
         initView(view);
         initSearch(view);
         initRedditFeeds();
         initStarred();
         initSubscription();
+    }
+
+    private void getArgs() {
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            clickState = bundle.getInt("click", 0);
+        } else{
+            clickState = 0;
+        }
     }
 
     private void initView(View view) {
@@ -80,10 +104,12 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void initSearch(View view) {
+        initSearchView(view);
+        initAnimateSearch(view);
+    }
+
+    private void initSearchView(View view) {
         search = view.findViewById(R.id.search);
-        final RelativeLayout hint = view.findViewById(R.id.hint);
-        ImageView icon = view.findViewById(R.id.icon_search);
-        icon.setImageDrawable(DrawableIcon.hintSearch);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -95,8 +121,8 @@ public class MainMenuFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if (s.toString().length() > 0) {
-                    hint.setVisibility(View.INVISIBLE);
                     searchCommunity(s.toString());
                 } else {
                     conteinerMainMenu.removeAllViews();
@@ -104,7 +130,6 @@ public class MainMenuFragment extends Fragment {
                     ((StickyNestedScrollView) fullMainMenu.findViewById(R.id.scroll_view)).
                             fullScroll(NestedScrollView.FOCUS_UP);
                     search.requestFocus();
-                    hint.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -164,6 +189,73 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
+    private void initAnimateSearch(View view) {
+        setPositionSearch(view);
+        setShowAnimateSearch(view);
+        setHideAnimateSearch(view);
+    }
+
+    private void setPositionSearch(View view) {
+        final FrameLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
+        ((ImageView) view.findViewById(R.id.arrow_hide_search)).setImageDrawable(DrawableIcon.arrowHideSearch);
+
+        conteinerSearch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                conteinerSearch.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(conteinerSearch.getWidth(), ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(conteinerSearch.getWidth(), 0, 0, 0);
+                conteinerSearch.setLayoutParams(params);
+                if (clickState == Constants.LONG_CLICK){
+                    searchButton.performClick();
+                }
+            }
+        });
+    }
+
+    private void setShowAnimateSearch(View view) {
+        final FrameLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
+        searchButton = view.findViewById(R.id.search_button);
+        final LinearLayout conteinerTitle = view.findViewById(R.id.conteiner_title);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                conteinerTitle.setVisibility(View.GONE);
+                searchButton.setVisibility(View.GONE);
+                search.requestFocus();
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(search, InputMethodManager.SHOW_IMPLICIT);
+                View bottom_sheet = getActivity().findViewById(R.id.bottom_sheet);
+                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                ObjectAnimator animX = ObjectAnimator.ofFloat(conteinerSearch,
+                        View.TRANSLATION_X, 0, -conteinerSearch.getWidth());
+                animX.setDuration(300);
+                animX.start();
+            }
+        });
+    }
+
+    private void setHideAnimateSearch(View view) {
+        final FrameLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
+        final ImageView searchButton = view.findViewById(R.id.search_button);
+        final LinearLayout conteinerTitle = view.findViewById(R.id.conteiner_title);
+        view.findViewById(R.id.arrow_hide_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search.getText().clear();
+                conteinerTitle.setVisibility(View.VISIBLE);
+                searchButton.setVisibility(View.VISIBLE);
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                ObjectAnimator animX = ObjectAnimator.ofFloat(conteinerSearch,
+                        View.TRANSLATION_X, -conteinerSearch.getWidth(), 0);
+                animX.setDuration(300);
+                animX.start();
+            }
+        });
+    }
+
     private void addSubredditsToSearchMenu(final ArrayList<String> subreddits) {
         TextView subredditsTextView = searchMainMenu.findViewById(R.id.subreddits);
         ListView subredditsListView = searchMainMenu.findViewById(R.id.search_list);
@@ -219,7 +311,6 @@ public class MainMenuFragment extends Fragment {
                     case 3:
                         url = "/r/random";
                         community = "Random";
-                        star = true;
                         break;
                 }
                 openCommunity(url, community, star);

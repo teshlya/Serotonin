@@ -17,14 +17,6 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-            android:id="@+id/progress_bar_communuty"
-            style="@style/GradientProgressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-6dp"
-            android:indeterminate="true" />
-
         <FrameLayout
             android:id="@+id/conteiner"
             android:layout_width="match_parent"

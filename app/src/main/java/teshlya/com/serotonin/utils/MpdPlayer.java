@@ -29,6 +29,8 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 
+import teshlya.com.serotonin.model.PlayState;
+
 public class MpdPlayer {
 
     private Context context;
@@ -43,6 +45,8 @@ public class MpdPlayer {
     private MediaSource videoSource;
     private Uri uri;
     private String userAgent;
+    public static PlayState playState = PlayState.PLAY;
+    public static long position = 0;
     private DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
 
     public static MpdPlayer newInstance() {
@@ -68,21 +72,22 @@ public class MpdPlayer {
         trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         loadControl = new DefaultLoadControl();
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
-        player.setPlayWhenReady(true);
+        player.seekTo(position);
+        if (playState == PlayState.PLAY)
+            player.setPlayWhenReady(true);
+        else
+            player.setPlayWhenReady(false);
         player.addListener(new ExoPlayer.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest) {
-
             }
 
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
             }
 
             @Override
             public void onLoadingChanged(boolean isLoading) {
-
             }
 
             @Override
@@ -94,17 +99,14 @@ public class MpdPlayer {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-
             }
 
             @Override
             public void onPositionDiscontinuity() {
-
             }
 
             @Override
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
             }
         });
     }
@@ -133,13 +135,19 @@ public class MpdPlayer {
     }
 
     public void play(){
-        if (player != null)
+        if (player != null) {
             player.setPlayWhenReady(true);
+            playState = PlayState.PLAY;
+        }
     }
 
     public void pause(){
-        if (player != null)
+        if (player != null) {
             player.setPlayWhenReady(false);
+            playState = PlayState.PAUSE;
+            position = player.getCurrentPosition();
+        }
+
     }
 
     public void stop() {

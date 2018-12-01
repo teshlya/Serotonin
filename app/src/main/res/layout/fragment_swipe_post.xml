@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     tools:context=".screen.SwipePostFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <teshlya.com.serotonin.component.NestedScrollingParentRecyclerView
         android:id="@+id/rw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

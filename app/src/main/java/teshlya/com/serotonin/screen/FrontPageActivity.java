@@ -8,8 +8,12 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -39,7 +43,6 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     private TextView titleTextView;
     private String title = "Front page";
     public static boolean shownFab = true;
-    private SmoothProgressBar smoothProgressBar;
     private ImageView star_enabled;
     private ImageView star_disabled;
 
@@ -51,7 +54,7 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         init();
     }
 
-    private void getHeshKey() {
+  /*  private void getHeshKey() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "teshlya.com.reddit",
@@ -66,24 +69,16 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         } catch (NoSuchAlgorithmException e) {
 
         }
-    }
+    }*/
 
     private void init() {
         context = this;
         DrawableIcon.initAllIcons(this);
         Preference.getStarFromSharedPrefs(this);
-        initProgressBar();
         initFab();
         initTitle();
         initStar();
         parseCommunity(url);
-    }
-
-    private void openCommunityFragment(String url, CommunityData data) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        communityFragment = CommunityFragment.newInstance(url, data);
-        ft.replace(R.id.conteiner, communityFragment);
-        ft.commit();
     }
 
     private void initFab() {
@@ -92,22 +87,23 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MainMenuActivity.class);
+                intent.putExtra("click", Constants.NORMAL_CLICK);
                 ((FrontPageActivity) context).startActivityForResult(intent, 1);
+            }
+        });
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(context, MainMenuActivity.class);
+                intent.putExtra("click", Constants.LONG_CLICK);
+                ((FrontPageActivity) context).startActivityForResult(intent, 1);
+                return false;
             }
         });
     }
 
     private void initTitle() {
         titleTextView = findViewById(R.id.community_title);
-    }
-
-    private void initProgressBar() {
-        smoothProgressBar = findViewById(R.id.progress_bar_communuty);
-    }
-
-    private void parseCommunity(String url) {
-        smoothProgressBar.setVisibility(View.VISIBLE);
-        new ParseCommunity(this, Constants.DOMAIN + url + ".json").execute();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -118,13 +114,32 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
                 String community = data.getStringExtra(Constants.COMMUNITY);
                 Boolean star = data.getBooleanExtra(Constants.STAR, false);
                 if (url != null && community != null) {
-                    parseCommunity(url);
                     this.url = url;
                     this.title = community;
                     this.star = star;
+                    parseCommunity(url);
                 }
             }
         }
+    }
+
+    private void parseCommunity(String url) {
+        showProgressBar();
+        setTitle();
+        setStar();
+        new ParseCommunity(this, Constants.DOMAIN + url + ".json").execute();
+    }
+
+    private void showProgressBar() {
+        FrameLayout conteiner = findViewById(R.id.conteiner);
+        conteiner.removeAllViews();
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout progress = (LinearLayout) inflater.inflate(R.layout.item_loading, null);
+        ProgressBar progressBar = progress.findViewById(R.id.progressBar);
+        progressBar.getIndeterminateDrawable().setColorFilter(0xFF1976D2, android.graphics.PorterDuff.Mode.MULTIPLY);
+        conteiner.addView(progress);
+
     }
 
     private void initStar() {
@@ -170,15 +185,24 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     public void addArticles(CommunityData data) {
         if (data != null) {
             openCommunityFragment(url, data);
-            setTitle(data.getSubreddit());
-            setStar();
+            if (title.equals("Random")) {
+                title = data.getSubreddit();
+                star = true;
+                setTitle();
+                setStar();
+            }
         }
-        smoothProgressBar.setVisibility(View.GONE);
+        ((FrameLayout) findViewById(R.id.conteiner)).removeAllViews();
     }
 
-    private void setTitle(String str) {
-        if (title.equals("Random") && str != null)
-            title = str;
+    private void openCommunityFragment(String url, CommunityData data) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        communityFragment = CommunityFragment.newInstance(url, data);
+        ft.replace(R.id.conteiner, communityFragment);
+        ft.commit();
+    }
+
+    private void setTitle() {
         titleTextView.setText(title);
     }
 

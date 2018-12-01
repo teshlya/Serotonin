@@ -17,7 +17,7 @@ import me.saket.inboxrecyclerview.dimming.CompleteListTintPainter;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.adapter.CommunityAdapter;
-import teshlya.com.serotonin.adapter.OnLoadMoreCallback;
+import teshlya.com.serotonin.adapter.ScrollListenerCallback;
 import teshlya.com.serotonin.adapter.ScrollListenerCommunity;
 import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
@@ -86,13 +86,18 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
         recyclerView.setExpandablePage(conteinerSwipePostFragment);
         recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
         recyclerView.setAdapter(adapter);
-        scrollListenerCommunity = new ScrollListenerCommunity(fab, new OnLoadMoreCallback() {
+        scrollListenerCommunity = new ScrollListenerCommunity(fab, new ScrollListenerCallback() {
             @Override
-            public void onLoadMore() {
+            public void loadMore() {
                 if (after != null) {
                     new ParseCommunity(CommunityFragment.this, Constants.DOMAIN + url + ".json" + "?after=" + after).execute();
                     adapter.showProgress();
                 }
+            }
+
+            @Override
+            public void releasePlayer() {
+
             }
         });
         recyclerView.addOnScrollListener(scrollListenerCommunity);

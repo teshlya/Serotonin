@@ -7,7 +7,7 @@
         android:id="@+id/conteiner_main_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/search_background"
         android:paddingHorizontal="10dp"
         android:paddingVertical="3dp"/>

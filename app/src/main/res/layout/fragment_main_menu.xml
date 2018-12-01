@@ -15,14 +15,14 @@
             layout="@layout/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"/>
+            android:layout_marginHorizontal="5dp"/>
 
 
         <include
             layout="@layout/main_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"/>
+            android:layout_marginHorizontal="5dp"/>
 
     </LinearLayout>
 

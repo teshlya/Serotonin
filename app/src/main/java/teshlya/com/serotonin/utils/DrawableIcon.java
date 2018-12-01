@@ -12,11 +12,13 @@ public class DrawableIcon {
     public static Drawable comment;
     public static Drawable score;
     public static Drawable hintSearch;
+    public static Drawable arrowHideSearch;
 
     public static void initAllIcons(Context context){
         initCommentIcon(context);
         initScoreIcon(context);
         initHintSearchIcon(context);
+        initArrowHideSearch(context);
     }
 
     private static void initCommentIcon(Context context) {
@@ -36,5 +38,11 @@ public class DrawableIcon {
         Drawable drawable = context.getResources().getDrawable(R.drawable.search);
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         hintSearch = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, Constants.SP_IN_PX_14, Constants.SP_IN_PX_14, true));
+    }
+
+    private static void initArrowHideSearch(Context context) {
+        Drawable drawable = context.getResources().getDrawable(R.drawable.arrow_hide_search);
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        arrowHideSearch = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, Constants.SP_IN_PX_18, Constants.SP_IN_PX_18, true));
     }
 }

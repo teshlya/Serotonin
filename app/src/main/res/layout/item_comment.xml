@@ -18,15 +18,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="2dp">
 
             <TextView
                 android:id="@+id/author"
                 style="@style/author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:paddingLeft="5dp" />
+                android:layout_alignParentLeft="true"/>
 
             <TextView
                 android:id="@+id/point1"
@@ -60,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/point2"
-                android:paddingRight="5dp" />
+                android:paddingLeft="4dp" />
 
 
             <TextView
@@ -79,6 +78,8 @@
             style="@style/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical" />
+            android:textColorLink="#1976d2"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="2dp"/>
     </LinearLayout>
 </LinearLayout>

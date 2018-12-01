@@ -50,7 +50,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Drawable drawableImage;
     private int widthScreen;
 
-
     public CommunityAdapter(InboxRecyclerView rv,
                             ExpandablePageLayout conteinerSwipePostFragment,
                             String url) {
@@ -179,7 +178,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 case IMAGE:
                     initImage(article.getMediaImage());
                     break;
-                case MPD:
+                case MPD: case GIF:
                     initMpd(article.getMediaImage(), article.getMediaVideo());
                     break;
                 case NONE: {

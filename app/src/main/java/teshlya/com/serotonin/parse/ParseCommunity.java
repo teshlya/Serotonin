@@ -120,10 +120,13 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
                     article.setMediaVideo(getMpdMedia(data));
                     article.setMediaImage(getImageMedia(data));
                     break;
+                case GIF:
+                    article.setMediaVideo(getGifMedia(data));
+                    article.setMediaImage(getImageMedia(data));
+                    break;
                 case NONE:
                     break;
             }
-            //article.setMediaImage(getMedia(article.getMediaType(), data));
             if (article.getMediaImage() == null && article.getMediaVideo() == null)
                 article.setMediaType(MediaType.NONE);
 
@@ -150,6 +153,13 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         String text = "";
         if (data.has("selftext_html") && !data.isNull("selftext_html"))
             text = data.getString("selftext_html");
+        if (text == null || text.isEmpty())
+            if (data.has("post_hint") &&
+                    !data.isNull("post_hint") &&
+                    data.getString("post_hint").equals("link"))
+                if (data.has("url") && !data.isNull("url"))
+                    text = "<a href=\"" + data.getString("url") + "\">" + data.getString("url") + "</a>";
+
         return text;
     }
 
@@ -186,27 +196,26 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
             if (data.getBoolean("is_video"))
                 return MediaType.MPD;
 
+        if (data.has("preview") && !data.isNull("preview")) {
+            JSONObject preview = data.getJSONObject("preview");
+            if (preview.has("reddit_video_preview") && !preview.isNull("reddit_video_preview")) {
+                JSONObject redditVideoPreview = preview.getJSONObject("reddit_video_preview");
+
+                if (redditVideoPreview.has("is_gif") &&
+                        !redditVideoPreview.isNull("is_gif") &&
+                        redditVideoPreview.getBoolean("is_gif")) {
+                    return MediaType.GIF;
+                }
+            }
+        }
+
+
         Boolean isSelf = true;
         if (data.has("is_self"))
             isSelf = data.getBoolean("is_self");
         if (isSelf) return MediaType.NONE;
         else
             return MediaType.IMAGE;
-    }
-
-    private Media getMedia(MediaType mediaType, JSONObject data) throws JSONException {
-        Media media = null;
-        switch (mediaType) {
-            case IMAGE:
-                media = getImageMedia(data);
-                break;
-            case MPD:
-                media = getMpdMedia(data);
-                break;
-            case NONE:
-                break;
-        }
-        return media;
     }
 
     private Media getImageMedia(JSONObject data) throws JSONException {
@@ -286,6 +295,24 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         }
         return media;
     }
+
+    private Media getGifMedia(JSONObject data) throws JSONException {
+        Media media = new Media();
+        if (data.has("preview")) {
+            JSONObject mediaJson = data.getJSONObject("preview");
+            if (mediaJson.has("reddit_video_preview")) {
+                JSONObject redditVideo = mediaJson.getJSONObject("reddit_video_preview");
+                if (redditVideo.has("dash_url"))
+                    media.setUrl(redditVideo.getString("dash_url"));
+                if (redditVideo.has("width"))
+                    media.setWidth(redditVideo.getInt("width"));
+                if (redditVideo.has("height"))
+                    media.setHeight(redditVideo.getInt("height"));
+            }
+        }
+        return media;
+    }
+
 
     private boolean isCorrect(Media media) {
         if (media != null &&

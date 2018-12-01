@@ -1,7 +1,18 @@
 package teshlya.com.serotonin.screen;
 
+import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -10,10 +21,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.utils.Calc;
+import teshlya.com.serotonin.utils.Constants;
+import teshlya.com.serotonin.utils.DrawableIcon;
 
 public class MainMenuActivity extends AppCompatActivity {
 
     private BottomSheetBehavior bottomSheetBehavior;
+    private int cliskState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +37,24 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void init() {
+        getArgs();
         initFragmentMainMemu();
         initBottomSheet();
         initClickEmptyActivityArea();
     }
 
+    private void getArgs(){
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            cliskState = 0;
+        } else {
+            cliskState= extras.getInt("click");
+        }
+    }
+
     private void initFragmentMainMemu() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        MainMenuFragment mainMenuFragment = MainMenuFragment.newInstance();
+        MainMenuFragment mainMenuFragment = MainMenuFragment.newInstance(cliskState);
         ft.replace(R.id.bottom_sheet, mainMenuFragment);
         ft.commit();
     }

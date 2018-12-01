@@ -17,10 +17,6 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="teshlya.com.serotonin.screen.ArticleLoadedActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.TransparentWindow" />
-        <activity
             android:name="teshlya.com.serotonin.screen.FrontPageActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -33,7 +29,7 @@
             android:name="teshlya.com.serotonin.screen.MainMenuActivity"
             android:theme="@style/AppTheme.MainMenu" />
         <activity android:name="teshlya.com.serotonin.screen.MpdPlayerActivity"
-            android:theme="@style/MpdPlayerActivity"></activity>
+            android:theme="@style/MpdPlayerActivity"/>
     </application>
 
 </manifest>
