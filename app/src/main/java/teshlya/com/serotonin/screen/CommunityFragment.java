@@ -11,19 +11,23 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.dimming.CompleteListTintPainter;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.serotonin.R;
+import teshlya.com.serotonin.adapter.ArticleAdapter;
 import teshlya.com.serotonin.adapter.CommunityAdapter;
 import teshlya.com.serotonin.adapter.ScrollListenerCallback;
 import teshlya.com.serotonin.adapter.ScrollListenerCommunity;
 import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
 import teshlya.com.serotonin.model.CommunityData;
+import teshlya.com.serotonin.model.PlayState;
 import teshlya.com.serotonin.parse.ParseCommunity;
 import teshlya.com.serotonin.utils.Constants;
+import teshlya.com.serotonin.utils.MpdPlayer;
 
 @SuppressLint("ValidFragment")
 public class CommunityFragment extends Fragment implements CallbackArticleLoaded {
@@ -115,6 +119,18 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
 
     public boolean back() {
         if (conteinerSwipePostFragment.isExpandedOrExpanding()) {
+            if (MpdPlayerFragment.pause != null)
+                MpdPlayerFragment.pause.performClick();
+            MpdPlayer.playState = PlayState.PAUSE;
+            if (ArticleAdapter.mpdPlayerFragment != null) {
+                FragmentTransaction transaction = ((FrontPageActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                transaction.remove(ArticleAdapter.mpdPlayerFragment);
+                transaction.commit();
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                ArticleAdapter.mpdPlayerFragment = null;
+            }
+
+
             recyclerView.collapse();
             return false;
         }

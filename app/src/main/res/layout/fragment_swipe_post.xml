@@ -6,11 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:layout_gravity="center"
-    tools:context=".screen.SwipePostFragment">
+    tools:context=".screen.SwipePostFragment"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <teshlya.com.serotonin.component.NestedScrollingParentRecyclerView
         android:id="@+id/rw"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </FrameLayout>

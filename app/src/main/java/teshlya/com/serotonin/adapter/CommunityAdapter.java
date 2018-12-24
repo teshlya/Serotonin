@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +27,19 @@ import com.squareup.picasso.Picasso;
 
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
+import me.saket.inboxrecyclerview.page.PageStateChangeCallbacks;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.holder.LoadingViewHolder;
 import teshlya.com.serotonin.model.ArticleData;
 import teshlya.com.serotonin.model.CommunityData;
 import teshlya.com.serotonin.model.Media;
+import teshlya.com.serotonin.model.PlayState;
 import teshlya.com.serotonin.screen.MpdPlayerActivity;
+import teshlya.com.serotonin.screen.MpdPlayerFragment;
 import teshlya.com.serotonin.screen.SwipePostFragment;
 import teshlya.com.serotonin.utils.Calc;
 import teshlya.com.serotonin.utils.DrawableIcon;
+import teshlya.com.serotonin.utils.MpdPlayer;
 
 import static android.view.ViewGroup.*;
 import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_ITEM;
@@ -221,9 +227,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             play.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent myIntent = new Intent(context, MpdPlayerActivity.class);
+                    /* Intent myIntent = new Intent(context, MpdPlayerActivity.class);
                     myIntent.putExtra("media", mediaVideo); //Optional parameters
-                    context.startActivity(myIntent);
+                    context.startActivity(myIntent);*/
+                    ArticleAdapter.playWhenOpen = true;
+                    onClickItem.performClick();
                 }
             });
             image.setVisibility(View.GONE);
@@ -262,7 +270,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
         private void openArticle(int position) {
-
             AppCompatActivity articleActivity = (AppCompatActivity) context;
             SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(data,
                     url,
@@ -283,7 +290,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
-    /*ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -293,10 +300,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             int position = viewHolder.getAdapterPosition();
-            articles.remove(position);
+            data.getArticles().remove(position);
             notifyItemRemoved(position);
             //notifyDataSetChanged();
         }
-    };*/
+    };
 
 }

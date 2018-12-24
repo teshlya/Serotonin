@@ -1,17 +1,9 @@
 package teshlya.com.serotonin.adapter;
 
 import android.content.Context;
-
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -19,13 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import tellh.com.recyclertreeview_lib.TreeNode;
 import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 import teshlya.com.serotonin.R;
-import teshlya.com.serotonin.bean.CommentBean;
 import teshlya.com.serotonin.holder.LoadingViewHolder;
 import teshlya.com.serotonin.model.ArticleData;
-import teshlya.com.serotonin.model.CommentData;
 import teshlya.com.serotonin.model.PlayState;
 import teshlya.com.serotonin.parse.ParseArticle;
 import teshlya.com.serotonin.screen.FrontPageActivity;
@@ -42,6 +36,7 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context context;
     private ArrayList<ArticleData> articles = new ArrayList<>();
     private static FloatingActionButton fab;
+
 
     public static void setFab(FloatingActionButton fab) {
         SwipePostAdapter.fab = fab;
@@ -70,6 +65,15 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return holder;
     }
 
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+    }
 
     private SwipePostViewHolder createSwipePostViewHolder(ViewGroup viewGroup) {
         View view = LayoutInflater.from(viewGroup.getContext())
@@ -114,9 +118,8 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public void bind(final ArticleData article, int position) {
             initRecycler(position);
             adapter.setData(article);
-            ParseArticle parseArticle = new ParseArticle(domain + article.getUrl() + ".json", context, adapter);
-            parseArticle.execute();
-
+            final ParseArticle parseArticle = new ParseArticle(domain + article.getUrl() + ".json", context, adapter);
+           parseArticle.execute();
         }
 
         public SwipePostViewHolder(View view) {
@@ -154,11 +157,12 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         FrontPageActivity.shownFab = true;
                         fab.show();
                     }
-                 /*   LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView2.getLayoutManager();
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView2.getLayoutManager();
                     int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
                     if (firstVisibleItem >1){
                         if (MpdPlayerFragment.pause != null)
                             MpdPlayerFragment.pause.performClick();
+                        MpdPlayer.playState = PlayState.PAUSE;
                         if (ArticleAdapter.mpdPlayerFragment != null) {
                             FragmentTransaction transaction = ((FrontPageActivity) context).getSupportFragmentManager().beginTransaction();
                             transaction.remove(ArticleAdapter.mpdPlayerFragment);
@@ -167,13 +171,6 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             ArticleAdapter.mpdPlayerFragment = null;
                         }
                     }
-                    else{
-                        if (MpdPlayer.playState == PlayState.PAUSE && ArticleAdapter.mpdPlayerFragment == null){
-                            ((ArticleAdapter.MediaHolder)recyclerView.findViewHolderForAdapterPosition(1)).play.performClick();
-                        }
-                    }*/
-
-
                 }
             });
             recyclerView.setAdapter(adapter);

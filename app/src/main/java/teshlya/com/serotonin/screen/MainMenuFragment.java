@@ -4,18 +4,15 @@ package teshlya.com.serotonin.screen;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,13 +34,17 @@ import java.util.TreeSet;
 
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import teshlya.com.serotonin.R;
+import teshlya.com.serotonin.adapter.MainMenuAdapter;
+import teshlya.com.serotonin.adapter.StickHeaderItemDecoration;
 import teshlya.com.serotonin.callback.ExistsUrlCallback;
 import teshlya.com.serotonin.component.StickyNestedScrollView;
+import teshlya.com.serotonin.model.DataMainMenu;
 import teshlya.com.serotonin.model.SubscriptionsGroup;
 import teshlya.com.serotonin.parse.ParseArticle;
 import teshlya.com.serotonin.parse.ParseJsonSubscription;
-import teshlya.com.serotonin.utils.Calc;
 import teshlya.com.serotonin.utils.CheckUrlExists;
 import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
@@ -51,14 +52,6 @@ import teshlya.com.serotonin.utils.Preference;
 
 
 public class MainMenuFragment extends Fragment {
-
-    public static MainMenuFragment newInstance(int clickState) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("click", clickState);
-        MainMenuFragment fragment = new MainMenuFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
 
     private Context context;
     private FrameLayout conteinerMainMenu;
@@ -68,6 +61,17 @@ public class MainMenuFragment extends Fragment {
     private ArrayList<SubscriptionsGroup> subscriptionsGroups;
     private int clickState;
     private ImageView searchButton;
+    private ArrayList<DataMainMenu> list;
+    private RecyclerView recyclerView;
+    private static int positionScroll = 0;
+
+    public static MainMenuFragment newInstance(int clickState) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("click", clickState);
+        MainMenuFragment fragment = new MainMenuFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,9 +86,41 @@ public class MainMenuFragment extends Fragment {
         getArgs();
         initView(view);
         initSearch(view);
+        fillList();
+        initListMenu();
+    }
+
+    public void fillList() {
+        list = new ArrayList<>();
         initRedditFeeds();
         initStarred();
         initSubscription();
+    }
+
+    private void initRedditFeeds() {
+
+        list.add(new DataMainMenu("REDDIT FEEDS", "feeds", 1));
+        list.add(new DataMainMenu("All", "/r/all", 0));
+        list.add(new DataMainMenu("Front page", "/", 0));
+        list.add(new DataMainMenu("Popular", "/r/popular", 0));
+        list.add(new DataMainMenu("Random", "/r/random", 0));
+    }
+
+    private void initStarred() {
+        if (Preference.starList != null && Preference.starList.size() > 0) {
+            list.add(new DataMainMenu("STARRED", "star", 1));
+            for (String community : Preference.starList)
+                list.add(new DataMainMenu(community, "/r/" + community, 0));
+        }
+    }
+
+    private void initSubscription() {
+        subscriptionsGroups = new ParseJsonSubscription(context).getSubscription();
+        for (SubscriptionsGroup group : subscriptionsGroups) {
+            list.add(new DataMainMenu(group.title, group.icon, 1));
+            for (String community : group.subscriptions)
+                list.add(new DataMainMenu(community, "/r/" + community, 0));
+        }
     }
 
     private void getArgs() {
@@ -127,8 +163,8 @@ public class MainMenuFragment extends Fragment {
                 } else {
                     conteinerMainMenu.removeAllViews();
                     conteinerMainMenu.addView(fullMainMenu);
-                    ((StickyNestedScrollView) fullMainMenu.findViewById(R.id.scroll_view)).
-                            fullScroll(NestedScrollView.FOCUS_UP);
+                    //((StickyNestedScrollView) fullMainMenu.findViewById(R.id.scroll_view)).
+                    //        fullScroll(NestedScrollView.FOCUS_UP);
                     search.requestFocus();
                 }
             }
@@ -196,8 +232,8 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void setPositionSearch(View view) {
-        final FrameLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
-        ((ImageView) view.findViewById(R.id.arrow_hide_search)).setImageDrawable(DrawableIcon.arrowHideSearch);
+        final RelativeLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
+        ((ImageView) view.findViewById(R.id.arrow_hide_search)).setImageDrawable(DrawableIcon.clearMenuSearch);
 
         conteinerSearch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -214,7 +250,7 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void setShowAnimateSearch(View view) {
-        final FrameLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
+        final RelativeLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
         searchButton = view.findViewById(R.id.search_button);
         final LinearLayout conteinerTitle = view.findViewById(R.id.conteiner_title);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +273,7 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void setHideAnimateSearch(View view) {
-        final FrameLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
+        final RelativeLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
         final ImageView searchButton = view.findViewById(R.id.search_button);
         final LinearLayout conteinerTitle = view.findViewById(R.id.conteiner_title);
         view.findViewById(R.id.arrow_hide_search).setOnClickListener(new View.OnClickListener() {
@@ -279,102 +315,13 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
-    private void initRedditFeeds() {
-
-        ListView redditFeedsList = fullMainMenu.findViewById(R.id.reddit_feeds_list);
-
-        String[] strings;
-        strings = getResources().getStringArray(R.array.reddit_feeds);
-        ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, strings);
-        redditFeedsList.setAdapter(adapter);
-        setListViewHeightBasedOnChildren(redditFeedsList);
-
-        redditFeedsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = "/";
-                String community = "";
-                Boolean star = false;
-                switch (position) {
-                    case 0:
-                        url = "/r/all";
-                        community = "All";
-                        break;
-                    case 1:
-                        url = "/";
-                        community = "Front Page";
-                        break;
-                    case 2:
-                        url = "/r/popular";
-                        community = "Popular";
-                        break;
-                    case 3:
-                        url = "/r/random";
-                        community = "Random";
-                        break;
-                }
-                openCommunity(url, community, star);
-            }
-        });
-    }
-
-    private void initStarred() {
-        if (Preference.starList != null && Preference.starList.size() > 0) {
-            TextView textView = fullMainMenu.findViewById(R.id.starred);
-            textView.setVisibility(View.VISIBLE);
-            ListView listView = fullMainMenu.findViewById(R.id.starred_list);
-            listView.setVisibility(View.VISIBLE);
-            final ArrayList<String> starList = Preference.starList;
-            ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, starList);
-            listView.setAdapter(adapter);
-            setListViewHeightBasedOnChildren(listView);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    openCommunity("/r/" + starList.get(position) + "/", starList.get(position), true);
-                }
-            });
-        }
-    }
-
-    private void initSubscription() {
-        LinearLayout fullMainMenuConteiner = fullMainMenu.findViewById(R.id.full_main_menu_conteiner);
-        subscriptionsGroups = new ParseJsonSubscription(getContext()).getSubscription();
-        for (SubscriptionsGroup group : subscriptionsGroups) {
-            fullMainMenuConteiner.addView(createTextView(group.title));
-            fullMainMenuConteiner.addView(createListView(group.subscriptions));
-        }
-    }
-
-    private View createTextView(String title) {
-        TextView titleTextView = new TextView(context);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0, Calc.dpToPx(5), 0, 0);
-        titleTextView.setLayoutParams(lp);
-        titleTextView.setBackgroundColor(Color.WHITE);
-        titleTextView.setText(title.toUpperCase());
-        titleTextView.setTag("sticky");
-        titleTextView.setTextAppearance(context, R.style.reddit_feeds);
-        return titleTextView;
-    }
-
-
-    private View createListView(final ArrayList<String> subscriptions) {
-        ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, subscriptions);
-        ListView listView = new ListView(context);
-        listView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        listView.setDivider(null);
-        listView.setAdapter(adapter);
-        setListViewHeightBasedOnChildren(listView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openCommunity("/r/" + subscriptions.get(position) + "/", subscriptions.get(position), true);
-            }
-        });
-        return listView;
+    private void initListMenu() {
+        recyclerView = fullMainMenu.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        MainMenuAdapter adapter = new MainMenuAdapter(list, context);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new StickHeaderItemDecoration(adapter));
+        recyclerView.scrollToPosition(positionScroll);
     }
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
@@ -418,4 +365,13 @@ public class MainMenuFragment extends Fragment {
                 Toast.makeText(getActivity(), "Subreddit does not exist!", Toast.LENGTH_SHORT).show();
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (recyclerView != null) {
+            positionScroll = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            Log.d("qwerty", "" + positionScroll);
+        }
+    }
 }

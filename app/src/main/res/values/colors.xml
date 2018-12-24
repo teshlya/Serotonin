@@ -16,7 +16,7 @@
     <color name="colorSearchBackground">#ffffff</color>
 
     <color name="colorSearchText">@android:color/tab_indicator_text</color>
-    <color name="colorRedditFeeds">#8b9999</color>
+    <color name="colorRedditFeeds">#004c8c</color>
     <color name="colorRedditFeedsList">#090909</color>
     <color name="colorSubscriptionList">#090909</color>
     <color name="colorSearchMenu">#090909</color>
@@ -27,6 +27,7 @@
     <color name="colorCommunityListAuthor">#729aff</color>
     <color name="colorCommunityListComment">@android:color/tab_indicator_text</color>
     <color name="colorCommentCount">#729aff</color>
+    <color name="colorMainMenuIcon">#004c8c</color>
 
 
     <color name="bright_pink">#FF007F</color>

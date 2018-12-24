@@ -110,10 +110,4 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
         }
         scrollListenerSwipePost.setLoaded();
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //recyclerView.setAdapter(null);
-    }
 }

@@ -1,0 +1,43 @@
+-- Merging decision tree log ---
+manifest
+ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:1-12:12
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:1-12:12
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:1-12:12
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:1-12:12
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:1-12:12
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:1-12:12
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:1-12:12
+	package
+		ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:3:5-40
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:5:5-33
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:4:5-28
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+uses-sdk
+ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:7:5-47
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:7:5-47
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:7:5-47
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:7:5-47
+INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:7:5-47
+	android:targetSdkVersion
+		ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:7:15-44
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+		ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:7:5-47
+		INJECTED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml
+uses-permission#com.android.vending.BILLING
+ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:9:5-67
+	android:name
+		ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:9:22-64
+application
+ADDED from E:\java\project\Serotonin\library inApp\src\main\AndroidManifest.xml:11:5-20

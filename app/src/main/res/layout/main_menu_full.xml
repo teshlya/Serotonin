@@ -1,47 +1,13 @@
-<teshlya.com.serotonin.component.StickyNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll_view"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/full_main_menu_conteiner"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+    android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="-4dp">
 
-        <TextView
-            style="@style/reddit_feeds"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="#ffffff"
-            android:tag="sticky"
-            android:text="@string/reddit_feeds" />
-
-        <ListView
-            android:id="@+id/reddit_feeds_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@null" />
-
-        <TextView
-            android:id="@+id/starred"
-            style="@style/reddit_feeds"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="#ffffff"
-            android:tag="sticky"
-            android:text="@string/starred"
-            android:visibility="gone" />
-
-        <ListView
-            android:id="@+id/starred_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@null"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-</teshlya.com.serotonin.component.StickyNestedScrollView>
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

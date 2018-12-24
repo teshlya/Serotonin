@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,12 +25,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
 import teshlya.com.serotonin.model.CommunityData;
 import teshlya.com.serotonin.parse.ParseCommunity;
+import teshlya.com.serotonin.parse.ParseJsonSubscription;
 import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
 import teshlya.com.serotonin.utils.Preference;
@@ -73,7 +77,11 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
 
     private void init() {
         context = this;
+
+        //MainMenuFragment.fillSubscriptionsList(this);
+
         DrawableIcon.initAllIcons(this);
+
         Preference.getStarFromSharedPrefs(this);
         initFab();
         initTitle();

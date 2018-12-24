@@ -3,6 +3,7 @@
     package="teshlya.com.serotonin">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -17,19 +18,22 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="teshlya.com.serotonin.screen.FrontPageActivity"
+            android:name=".screen.FrontPageActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="teshlya.com.serotonin.screen.MainMenuActivity"
+            android:name=".screen.MainMenuActivity"
             android:theme="@style/AppTheme.MainMenu" />
-        <activity android:name="teshlya.com.serotonin.screen.MpdPlayerActivity"
-            android:theme="@style/MpdPlayerActivity"/>
+        <activity
+            android:name=".screen.MpdPlayerActivity"
+            android:theme="@style/MpdPlayerActivity" />
+        <activity android:name=".screen.BillingActivity">
+
+        </activity>
     </application>
 
 </manifest>

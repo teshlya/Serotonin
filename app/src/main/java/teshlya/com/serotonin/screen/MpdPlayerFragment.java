@@ -2,6 +2,7 @@ package teshlya.com.serotonin.screen;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import androidx.fragment.app.Fragment;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.model.Media;
-import teshlya.com.serotonin.model.PlayState;
 import teshlya.com.serotonin.utils.Calc;
 import teshlya.com.serotonin.utils.MpdPlayer;
 
@@ -30,7 +30,6 @@ public class MpdPlayerFragment extends Fragment {
     private MpdPlayer mpdPlayer;
     private ImageView play;
     public static ImageView pause;
-    private PlayState playState = PAUSE;
 
     public static MpdPlayerFragment newInstance(Media media) {
         MpdPlayerFragment fragment = new MpdPlayerFragment();
@@ -89,7 +88,7 @@ public class MpdPlayerFragment extends Fragment {
             public void onClick(View v) {
                 play.setVisibility(View.GONE);
                 pause.setVisibility(View.VISIBLE);
-                playState = PAUSE;
+                MpdPlayer.playState = PLAY;
                 if (mpdPlayer != null)
                     mpdPlayer.play();
             }
@@ -99,7 +98,7 @@ public class MpdPlayerFragment extends Fragment {
             public void onClick(View v) {
                 pause.setVisibility(View.GONE);
                 play.setVisibility(View.VISIBLE);
-                playState = PLAY;
+                MpdPlayer.playState = PAUSE;
                 if (mpdPlayer != null)
                     mpdPlayer.pause();
             }
@@ -114,11 +113,11 @@ public class MpdPlayerFragment extends Fragment {
         playerView.setControllerVisibilityListener(new PlaybackControlView.VisibilityListener() {
             @Override
             public void onVisibilityChange(int visibility) {
-                switch (playState) {
-                    case PLAY:
+                switch (MpdPlayer.playState) {
+                    case PAUSE:
                         play.setVisibility(visibility);
                         break;
-                    case PAUSE:
+                    case PLAY:
                         pause.setVisibility(visibility);
                         break;
                 }
@@ -127,6 +126,26 @@ public class MpdPlayerFragment extends Fragment {
         mpdPlayer = MpdPlayer.newInstance();
         mpdPlayer.setPlayer(playerView);
         mpdPlayer.init(getContext(), media.getUrl());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override

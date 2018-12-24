@@ -24,6 +24,18 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="BarTheme" parent="android:Theme.Holo.Light">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">#ff0000</item>
+    </style>
+
+    <style name="ConOver" >
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+
+
     <style name="MpdPlayerActivity" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

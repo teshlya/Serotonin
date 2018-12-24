@@ -65,6 +65,7 @@ public class ParseJsonSubscription {
                 SubscriptionsGroup group = new SubscriptionsGroup();
                 JSONObject groupJson = data.getJSONObject(i);
                 group.title = groupJson.getString("cat");
+                group.icon = groupJson.getString("icon");
                 group.subscriptions = new ArrayList<>();
                 JSONArray sub = groupJson.getJSONArray("sub");
                 for (int j = 0; j < sub.length(); j++) {

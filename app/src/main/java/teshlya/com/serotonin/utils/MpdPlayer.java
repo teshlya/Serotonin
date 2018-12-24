@@ -36,7 +36,7 @@ public class MpdPlayer {
     private Context context;
     private String videoUrl = null;
     private SimpleExoPlayer player;
-    private SimpleExoPlayerView simpleExoPlayerView;
+    public static SimpleExoPlayerView simpleExoPlayerView;
     private Handler mainHandler;
     private TrackSelection.Factory videoTrackSelectionFactory;
     private TrackSelector trackSelector;
@@ -45,8 +45,7 @@ public class MpdPlayer {
     private MediaSource videoSource;
     private Uri uri;
     private String userAgent;
-    public static PlayState playState = PlayState.PLAY;
-    public static long position = 0;
+    public static PlayState playState = PlayState.PAUSE;
     private DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
 
     public static MpdPlayer newInstance() {
@@ -72,7 +71,7 @@ public class MpdPlayer {
         trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         loadControl = new DefaultLoadControl();
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
-        player.seekTo(position);
+        player.seekTo(0);
         if (playState == PlayState.PLAY)
             player.setPlayWhenReady(true);
         else
@@ -145,9 +144,7 @@ public class MpdPlayer {
         if (player != null) {
             player.setPlayWhenReady(false);
             playState = PlayState.PAUSE;
-            position = player.getCurrentPosition();
         }
-
     }
 
     public void stop() {

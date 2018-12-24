@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "teshlya.com.serotonin"
+        applicationId "teshlya.com.reddit"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
+        versionCode 3
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -18,50 +18,43 @@ android {
     }
 }
 
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
     //recycrerview
     implementation 'com.google.android.material:material:1.0.0'
-
     //picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'
-
     //recyclerview
-    implementation 'me.saket:inboxrecyclerview:1.0.0-beta3'
-
+    implementation 'me.saket:inboxrecyclerview:1.0.0-rc1'
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
-
     //youtube
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1'
-
     //progressbar
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
-
     //Facebook
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.facebook.android:facebook-applinks:4.34.0'
-
     //ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:r2.4.0'
     implementation 'com.google.android.exoplayer:exoplayer-dash:r2.4.0'
     implementation 'com.google.android.exoplayer:exoplayer-hls:r2.4.0'
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:r2.4.0'
     implementation 'com.google.android.exoplayer:exoplayer-ui:r2.4.0'
-
     //StickyScrollViewItems
     implementation 'se.emilsjolander:StickyScrollViewItems:1.0.0'
-
     //Gson
     implementation 'com.google.code.gson:gson:2.8.2'
+    //in app purchase
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta02'
     api project(path: ':recyclertreeview-lib')
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(include: ['*.jar'], dir: 'libs')
 }

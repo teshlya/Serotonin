@@ -1,7 +1,6 @@
 package teshlya.com.serotonin.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,13 +27,13 @@ import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.holder.LoadingViewHolder;
 import teshlya.com.serotonin.model.ArticleData;
 import teshlya.com.serotonin.model.Media;
-import teshlya.com.serotonin.screen.CommunityFragment;
+import teshlya.com.serotonin.model.PlayState;
 import teshlya.com.serotonin.screen.FrontPageActivity;
-import teshlya.com.serotonin.screen.MpdPlayerActivity;
 import teshlya.com.serotonin.screen.MpdPlayerFragment;
 import teshlya.com.serotonin.utils.Calc;
 import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
+import teshlya.com.serotonin.utils.MpdPlayer;
 import teshlya.com.serotonin.utils.TrimHtml;
 
 import static android.view.View.GONE;
@@ -52,7 +50,7 @@ public class ArticleAdapter extends TreeViewAdapter {
     private int position;
     public static int positionPlayingVideo = -1;
     public static MpdPlayerFragment mpdPlayerFragment = null;
-
+    public static boolean playWhenOpen = false;
 
     public ArticleAdapter(List<CommentAdapter> commentAdapters, Context context, int position) {
         super(commentAdapters);
@@ -161,6 +159,7 @@ public class ArticleAdapter extends TreeViewAdapter {
         loaded = true;
     }
 
+
     public class TitleHolder extends RecyclerView.ViewHolder {
 
         TextView title;
@@ -196,15 +195,14 @@ public class ArticleAdapter extends TreeViewAdapter {
 
     public class MediaHolder extends RecyclerView.ViewHolder {
 
-        private FrameLayout conteinerMedia;
         private ImageView image;
         private RelativeLayout video;
+        private Button play;
         private ImageView videoPreview;
-        public Button play;
+
 
         public MediaHolder(View itemView) {
             super(itemView);
-            conteinerMedia = itemView.findViewById(R.id.conteiner_media);
             image = itemView.findViewById(R.id.image);
             video = itemView.findViewById(R.id.video);
             videoPreview = itemView.findViewById(R.id.videoPreview);
@@ -261,20 +259,21 @@ public class ArticleAdapter extends TreeViewAdapter {
             play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MpdPlayer.playState = PlayState.PLAY;
                     FragmentTransaction ft = ((FrontPageActivity)context).getSupportFragmentManager().beginTransaction();
                     mpdPlayerFragment = MpdPlayerFragment.newInstance(mediaVideo);
                     ft.add(R.id.conteiner_media, mpdPlayerFragment);
                     ft.commit();
                     positionPlayingVideo = position;
-
-                   /* Intent myIntent = new Intent(context, MpdPlayerActivity.class);
-                    myIntent.putExtra("media", mediaVideo);
-                    context.startActivity(myIntent);*/
                 }
             });
             image.setVisibility(View.GONE);
             video.setVisibility(VISIBLE);
             video.setPadding(0, Calc.dpToPx(8), 0, 0);
+            if (playWhenOpen) {
+                playWhenOpen = false;
+                play.performClick();
+            }
         }
     }
 

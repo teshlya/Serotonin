@@ -44,7 +44,7 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/conteiner_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -58,15 +58,16 @@
             android:background="@drawable/search_background"
             android:hint="@string/search_reddit"
             android:paddingVertical="10dp"
-            android:paddingLeft="38dp"
+            android:paddingLeft="10dp"
             android:singleLine="true" />
 
         <ImageView
             android:id="@+id/arrow_hide_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"/>
 
-    </FrameLayout>
+    </RelativeLayout>
 </FrameLayout>

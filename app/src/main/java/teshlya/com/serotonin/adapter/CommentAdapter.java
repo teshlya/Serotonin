@@ -94,6 +94,5 @@ public class CommentAdapter extends TreeViewBinder<CommentAdapter.ViewHolder> {
             this.lines = rootView.findViewById(R.id.lines);
             this.commentCount = rootView.findViewById(R.id.comment_count);
         }
-
     }
 }

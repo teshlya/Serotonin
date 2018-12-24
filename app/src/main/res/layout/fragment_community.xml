@@ -18,6 +18,7 @@
     <me.saket.inboxrecyclerview.page.ExpandablePageLayout
         android:id="@+id/conteinerSwipePostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
