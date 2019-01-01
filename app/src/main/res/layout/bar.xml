@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#ffffff"
+        android:background="#fff"
         app:contentInsetStart="10dp"
         app:layout_behavior="teshlya.com.reddit.HidingViewWithBottomSheetBehaviorrgev"
         app:layout_scrollFlags="scroll|enterAlways">
