@@ -37,6 +37,7 @@ import static android.view.ViewGroup.OnClickListener;
 import static android.view.ViewGroup.VISIBLE;
 import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_ITEM;
 import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_LOADING;
+import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_TWO_LINE_ITEM;
 
 
 public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -79,15 +80,19 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        return data.getArticles().get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        if (data.getArticles().get(position) == null) return VIEW_TYPE_LOADING;
+        if (position == 0) return VIEW_TYPE_TWO_LINE_ITEM;
+        return VIEW_TYPE_ITEM;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         RecyclerView.ViewHolder holder = null;
-        if (viewType == VIEW_TYPE_ITEM) {
+        if (viewType == VIEW_TYPE_ITEM)
             holder = createCommunityViewHolder(viewGroup);
-        } else if (viewType == VIEW_TYPE_LOADING)
+        if (viewType == VIEW_TYPE_TWO_LINE_ITEM)
+            holder = createCommunityViewHolderTwoLine(viewGroup);
+        if (viewType == VIEW_TYPE_LOADING)
             holder = createLoadingViewHolder(viewGroup);
         return holder;
     }
@@ -95,6 +100,12 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private CommunityViewHolder createCommunityViewHolder(ViewGroup viewGroup) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.community_item, viewGroup, false);
+        return new CommunityViewHolder(view);
+    }
+
+    private CommunityViewHolder createCommunityViewHolderTwoLine(ViewGroup viewGroup) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.community_item_two_line, viewGroup, false);
         return new CommunityViewHolder(view);
     }
 

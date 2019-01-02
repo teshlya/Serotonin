@@ -345,6 +345,7 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        findViewById(R.id.sort).setVisibility(View.VISIBLE);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 String url = data.getStringExtra(Constants.URL);

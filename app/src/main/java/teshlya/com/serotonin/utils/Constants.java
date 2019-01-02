@@ -22,6 +22,7 @@ public class Constants {
 
     public static final int VIEW_TYPE_ITEM = 5;
     public static final int VIEW_TYPE_LOADING = 6;
+    public static final int VIEW_TYPE_TWO_LINE_ITEM = 7;
 
     public static final String LEFT = "left";
     public static final String RIGHT = "right";

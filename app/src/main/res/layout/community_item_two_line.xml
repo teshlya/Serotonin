@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/onClickItem"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:background="#ffc9cbca" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="10.0dip"
+        android:background="#ffebeff0" />
+
+    <TextView
+        android:id="@id/title"
+        style="@style/community_list_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginTop="8.0dip"
+        android:layout_marginRight="10.0dip" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@id/image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@id/video"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@id/videoPreview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY" />
+
+            <Button
+                android:id="@id/play"
+                android:layout_width="64.0dip"
+                android:layout_height="64.0dip"
+                android:layout_centerInParent="true"
+                android:background="@drawable/selector_play" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <include
+        layout="@layout/article_detail_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8.0dip" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:background="#ffc9cbca" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="10.0dip"
+        android:background="#ffebeff0" />
+</LinearLayout>
