@@ -175,5 +175,12 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
             recyclerView.setAdapter(adapter);
         }
+
+        public void scrollRecyclerViewUp()
+        {
+            if (this.recyclerView != null) {
+                this.recyclerView.scrollToPosition(0);
+            }
+        }
     }
 }

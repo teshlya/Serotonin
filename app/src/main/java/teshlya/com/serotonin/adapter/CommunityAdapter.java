@@ -55,6 +55,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private String url;
     private Drawable drawableImage;
     private int widthScreen;
+    SwipePostFragment swipePostFragment;
 
     public CommunityAdapter(InboxRecyclerView rv,
                             ExpandablePageLayout conteinerSwipePostFragment,
@@ -134,6 +135,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void hideProgress() {
         data.getArticles().remove(data.getArticles().size() - 1);
         notifyItemRemoved(data.getArticles().size());
+    }
+
+    public void scrollRecyclerViewUp()
+    {
+        if (this.swipePostFragment != null) {
+            this.swipePostFragment.scrollRecyclerViewUp();
+        }
     }
 
     public class CommunityViewHolder extends RecyclerView.ViewHolder {
@@ -271,7 +279,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private void openArticle(int position) {
             AppCompatActivity articleActivity = (AppCompatActivity) context;
-            SwipePostFragment swipePostFragment = SwipePostFragment.newInstance(data,
+            swipePostFragment = SwipePostFragment.newInstance(data,
                     url,
                     position);
 

@@ -137,4 +137,15 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
         return true;
     }
 
+    public void scrollRecyclerViewUp()
+    {
+        if (this.recyclerView != null)
+        {
+            this.recyclerView.scrollToPosition(0);
+            if (this.adapter != null) {
+                this.adapter.scrollRecyclerViewUp();
+            }
+        }
+    }
+
 }

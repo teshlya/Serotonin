@@ -77,15 +77,12 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
 
     private void init() {
         context = this;
-
-        //MainMenuFragment.fillSubscriptionsList(this);
-
         DrawableIcon.initAllIcons(this);
-
         Preference.getStarFromSharedPrefs(this);
         initFab();
         initTitle();
         initStar();
+        initToolbar();
         parseCommunity(url);
     }
 
@@ -106,6 +103,19 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
                 intent.putExtra("click", Constants.LONG_CLICK);
                 ((FrontPageActivity) context).startActivityForResult(intent, 1);
                 return false;
+            }
+        });
+    }
+
+    private void initToolbar()
+    {
+        findViewById(R.id.toolbar).setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View paramAnonymousView)
+            {
+                if (FrontPageActivity.this.communityFragment != null) {
+                    FrontPageActivity.this.communityFragment.scrollRecyclerViewUp();
+                }
             }
         });
     }

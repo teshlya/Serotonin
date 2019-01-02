@@ -110,4 +110,16 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
         }
         scrollListenerSwipePost.setLoaded();
     }
+
+    public void scrollRecyclerViewUp()
+    {
+        if (this.recyclerView != null)
+        {
+            int i = ((LinearLayoutManager)this.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            SwipePostAdapter.SwipePostViewHolder localSwipePostViewHolder = (SwipePostAdapter.SwipePostViewHolder)this.recyclerView.findViewHolderForLayoutPosition(i);
+            if (localSwipePostViewHolder != null) {
+                localSwipePostViewHolder.scrollRecyclerViewUp();
+            }
+        }
+    }
 }
