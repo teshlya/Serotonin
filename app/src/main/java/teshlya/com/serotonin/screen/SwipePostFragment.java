@@ -59,6 +59,12 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
         recyclerView = view.findViewById(R.id.rw);
         initArguments();
         initRecycler();
+        hidePopupMenuSort();
+    }
+
+    private void hidePopupMenuSort()
+    {
+        getActivity().findViewById(R.id.sort).setVisibility(View.GONE);
     }
 
     private void initRecycler() {

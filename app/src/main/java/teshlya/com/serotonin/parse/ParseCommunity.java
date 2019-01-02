@@ -1,6 +1,7 @@
 package teshlya.com.serotonin.parse;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +27,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
     private String url;
 
     public ParseCommunity(CallbackArticleLoaded callbackArticleLoaded, String url) {
+        Log.d("qwerty", url);
         this.callbackArticleLoaded = callbackArticleLoaded;
         this.url = url;
     }

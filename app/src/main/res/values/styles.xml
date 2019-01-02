@@ -4,6 +4,7 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
+        <item name="android:colorEdgeEffect">#ff1976d2</item>
     </style>
 
     <style name="AppTheme.TransparentWindow">
@@ -205,6 +206,13 @@
         <item name="android:textSize">11.0sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorTitleArticle</item>
+    </style>
+
+    <style name="MyPopupTheme" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:textColorSecondary">#ff1976d2</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:popupBackground">#ffffffff</item>
+        <item name="colorAccent">#ff1976d2</item>
     </style>
 
 </resources>

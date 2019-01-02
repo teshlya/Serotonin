@@ -9,6 +9,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
+import teshlya.com.serotonin.R;
+
 public class Preference {
     public static ArrayList<String> starList;
 
@@ -28,5 +30,18 @@ public class Preference {
         starList = gson.fromJson(json, new TypeToken<ArrayList<String>>(){}.getType());
         if (starList == null)
             starList = new ArrayList<>();
+    }
+
+    public static void savePopupMenuToSharedPrefs(Context context, int paramInt)
+    {
+        SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        prefsEditor.putInt("idCheckedButton", paramInt);
+        prefsEditor.commit();
+    }
+
+    public static int getPopupmenuFromSharedPrefs(Context paramContext)
+    {
+        return PreferenceManager.getDefaultSharedPreferences(paramContext.getApplicationContext()).getInt("idCheckedButton", R.id.hot);
     }
 }

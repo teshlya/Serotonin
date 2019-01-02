@@ -129,12 +129,16 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 ArticleAdapter.mpdPlayerFragment = null;
             }
-
-
             recyclerView.collapse();
+            showPopupMenuSort();
             return false;
         }
         return true;
+    }
+
+    private void showPopupMenuSort()
+    {
+        getActivity().findViewById(R.id.sort).setVisibility(View.VISIBLE);
     }
 
     public void scrollRecyclerViewUp()

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/new_"
+            android:title="New"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/hot"
+            android:checked="true"
+            android:title="Hot"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/rising"
+            android:title="Rising"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/controversial"
+            android:title="Controversial"
+            app:showAsAction="always">
+            <menu>
+                <group
+                    android:checkableBehavior="single"
+                    android:menuCategory="secondary">
+                    <item
+                        android:id="@+id/controversial_hour"
+                        android:title="Hour"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/controversial_day"
+                        android:title="Day"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/controversial_week"
+                        android:icon="@drawable/ic_keyboard_arrow_right_black_18dp"
+                        android:title="Week"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/controversial_month"
+                        android:title="Month"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/controversial_year"
+                        android:title="Year"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/controversial_all"
+                        android:title="All"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/controversial_none"
+                        android:title=""
+                        android:visible="false" />
+                </group>
+            </menu>
+        </item>
+        <item
+            android:id="@+id/top"
+            android:title="Top"
+            app:showAsAction="always">
+            <menu>
+                <group
+                    android:checkableBehavior="single"
+                    android:menuCategory="secondary">
+                    <item
+                        android:id="@+id/top_hour"
+                        android:title="Hour"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/top_day"
+                        android:title="Day"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/top_week"
+                        android:title="Week"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/top_month"
+                        android:title="Month"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/top_year"
+                        android:title="Year"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/top_all"
+                        android:title="All"
+                        app:showAsAction="always" />
+                    <item
+                        android:id="@+id/top_none"
+                        android:title=""
+                        android:visible="false" />
+                </group>
+            </menu>
+        </item>
+        <item
+            android:id="@+id/best"
+            android:title="Best"
+            app:showAsAction="always" />
+    </group>
+</menu>

@@ -100,17 +100,17 @@ public class MainMenuFragment extends Fragment {
     private void initRedditFeeds() {
 
         list.add(new DataMainMenu("REDDIT FEEDS", "feeds", 1));
-        list.add(new DataMainMenu("All", "/r/all", 0));
+        list.add(new DataMainMenu("All", "/r/all/", 0));
         list.add(new DataMainMenu("Front page", "/", 0));
-        list.add(new DataMainMenu("Popular", "/r/popular", 0));
-        list.add(new DataMainMenu("Random", "/r/random", 0));
+        list.add(new DataMainMenu("Popular", "/r/popular/", 0));
+        list.add(new DataMainMenu("Random", "/r/random/", 0));
     }
 
     private void initStarred() {
         if (Preference.starList != null && Preference.starList.size() > 0) {
             list.add(new DataMainMenu("STARRED", "star", 1));
             for (String community : Preference.starList)
-                list.add(new DataMainMenu(community, "/r/" + community, 0));
+                list.add(new DataMainMenu(community, "/r/" + community + "/", 0));
         }
     }
 
@@ -119,7 +119,7 @@ public class MainMenuFragment extends Fragment {
         for (SubscriptionsGroup group : subscriptionsGroups) {
             list.add(new DataMainMenu(group.title, group.icon, 1));
             for (String community : group.subscriptions)
-                list.add(new DataMainMenu(community, "/r/" + community, 0));
+                list.add(new DataMainMenu(community, "/r/" + community + "/", 0));
         }
     }
 
