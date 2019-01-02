@@ -131,15 +131,16 @@ public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> 
         return str;
     }
 
-    private String processScore(int score) {
-        String point = " pts";
-        String result = Integer.toString(score);
-        if (score > 1000)
-            result = new DecimalFormat("#.#").format((float) score / 1000) + "k";
-
-        if (score == 1)
-            point = " pt";
-        return result + point;
+    private String processScore(int paramInt)
+    {
+        if (paramInt > 1000)
+        {
+            StringBuilder localStringBuilder = new StringBuilder();
+            localStringBuilder.append(new DecimalFormat("#.#").format(paramInt / 1000.0F));
+            localStringBuilder.append("k");
+            return localStringBuilder.toString();
+        }
+        return Integer.toString(paramInt);
     }
 
     private String processDate(Long milliseconds) {

@@ -296,9 +296,7 @@ public class ArticleAdapter extends TreeViewAdapter {
             author.setText(articleData.getAuthor());
             date.setText(articleData.getDate());
             score.setText(articleData.getScore());
-            score.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.score, null, null, null);
             comments.setText(articleData.getCommentCount());
-            comments.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.comment, null, null, null);
         }
     }
 

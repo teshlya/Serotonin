@@ -28,39 +28,20 @@
                 android:layout_alignParentLeft="true"/>
 
             <TextView
-                android:id="@+id/point1"
+                android:id="@+id/score"
                 style="@style/score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/author"
-                android:paddingLeft="5dp"
-                android:text="&#8231;" />
+                android:layout_toRightOf="@id/author"
+                android:paddingLeft="4dp" />
 
             <TextView
                 android:id="@+id/date"
                 style="@style/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/point1"
-                android:paddingLeft="5dp" />
-
-            <TextView
-                android:id="@+id/point2"
-                style="@style/score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/date"
-                android:paddingLeft="5dp"
-                android:text="&#8231;" />
-
-            <TextView
-                android:id="@+id/score"
-                style="@style/score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/point2"
+                android:layout_toRightOf="@id/score"
                 android:paddingLeft="4dp" />
-
 
             <TextView
                 android:id="@+id/comment_count"

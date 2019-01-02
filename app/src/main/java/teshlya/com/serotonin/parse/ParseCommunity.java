@@ -111,7 +111,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
             article.setScore(processScore(getScore(data)));
             article.setUrl(getUrl(data));
             article.setMediaType(getMediaType(data));
-
+            article.setSubreddit(getSubredditTitle(data));
             switch (article.getMediaType()) {
                 case IMAGE:
                     article.setMediaImage(getImageMedia(data));
@@ -189,6 +189,17 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         if (data.has("permalink"))
             url = data.getString("permalink");
         return url;
+    }
+
+
+    private String getSubredditTitle(JSONObject paramJSONObject)
+            throws JSONException
+    {
+        String str = "";
+        if (paramJSONObject.has("subreddit")) {
+            str = paramJSONObject.getString("subreddit");
+        }
+        return str;
     }
 
     private MediaType getMediaType(JSONObject data) throws JSONException {
@@ -336,28 +347,31 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
     }
 
 
-    private static String processScore(int score) {
-        String point = " pts";
-        String result = Integer.toString(score);
-        if (score > 1000)
-            result = new DecimalFormat("#.#").format((float) score / 1000) + "k";
 
-        if (score == 1)
-            point = " pt";
-        return result + point;
+
+    private static String processScore(int paramInt)
+    {
+        if (paramInt < 1000) {
+            return Integer.toString(paramInt);
+        }
+        StringBuilder localStringBuilder = new StringBuilder();
+        localStringBuilder.append(new DecimalFormat("#.#").format(paramInt / 1000.0F));
+        localStringBuilder.append("k");
+        return localStringBuilder.toString();
     }
 
     private static String processDate(Long milliseconds) {
         return new TimeAgo().timeAgo((milliseconds) * 1000);
     }
 
-    private static String processComments(Long commentsCount) {
-        String result = Long.toString(commentsCount);
-        if (commentsCount <= 1)
-            result = result + "";
-        else
-            result = result + "";
-
-        return result;
+    private static String processComments(Long paramLong)
+    {
+        if (paramLong.longValue() < 1000L) {
+            return Long.toString(paramLong.longValue());
+        }
+        StringBuilder localStringBuilder = new StringBuilder();
+        localStringBuilder.append(new DecimalFormat("#.#").format((float)paramLong.longValue() / 1000.0F));
+        localStringBuilder.append("k");
+        return localStringBuilder.toString();
     }
 }

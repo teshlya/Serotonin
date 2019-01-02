@@ -201,4 +201,10 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="subreddit">
+        <item name="android:textSize">11.0sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTitleArticle</item>
+    </style>
+
 </resources>

@@ -1,19 +1,10 @@
 package teshlya.com.serotonin.adapter;
 
 import android.content.Context;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,23 +16,25 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
-import me.saket.inboxrecyclerview.page.PageStateChangeCallbacks;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.holder.LoadingViewHolder;
 import teshlya.com.serotonin.model.ArticleData;
 import teshlya.com.serotonin.model.CommunityData;
 import teshlya.com.serotonin.model.Media;
-import teshlya.com.serotonin.model.PlayState;
-import teshlya.com.serotonin.screen.MpdPlayerActivity;
-import teshlya.com.serotonin.screen.MpdPlayerFragment;
+import teshlya.com.serotonin.screen.FrontPageActivity;
 import teshlya.com.serotonin.screen.SwipePostFragment;
 import teshlya.com.serotonin.utils.Calc;
-import teshlya.com.serotonin.utils.DrawableIcon;
-import teshlya.com.serotonin.utils.MpdPlayer;
 
-import static android.view.ViewGroup.*;
+import static android.view.ViewGroup.GONE;
+import static android.view.ViewGroup.OnClickListener;
+import static android.view.ViewGroup.VISIBLE;
 import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_ITEM;
 import static teshlya.com.serotonin.utils.Constants.VIEW_TYPE_LOADING;
 
@@ -56,6 +49,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Drawable drawableImage;
     private int widthScreen;
     SwipePostFragment swipePostFragment;
+    private String subreddit;
 
     public CommunityAdapter(InboxRecyclerView rv,
                             ExpandablePageLayout conteinerSwipePostFragment,
@@ -68,6 +62,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.url = url;
         initDrawable();
         widthScreen = Calc.getWindowSizeInDp(context).x;
+        getSubreddit();
     }
 
     private void initDrawable() {
@@ -137,6 +132,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyItemRemoved(data.getArticles().size());
     }
 
+    private void getSubreddit() {
+        String str = ((TextView) ((FrontPageActivity) this.context).findViewById(R.id.community_title)).getText().toString();
+        if ((!str.equals("All")) && (!str.equals("Front page")) && (!str.equals("Popular"))) {
+            this.subreddit = "";
+            return;
+        }
+        this.subreddit = str;
+    }
+
     public void scrollRecyclerViewUp()
     {
         if (this.swipePostFragment != null) {
@@ -157,6 +161,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private RelativeLayout video;
         private ImageView videoPreview;
         private Button play;
+        private TextView subredditTV;
 
         public CommunityViewHolder(View itemView) {
             super(itemView);
@@ -171,6 +176,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             video = itemView.findViewById(R.id.video);
             videoPreview = itemView.findViewById(R.id.videoPreview);
             play = itemView.findViewById(R.id.play);
+            this.subredditTV = itemView.findViewById(R.id.subreddit);
         }
 
         public void bind(final ArticleData article, final int position) {
@@ -178,9 +184,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             date.setText(article.getDate());
             author.setText(article.getAuthor());
             comment.setText(article.getCommentCount());
-            comment.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.comment, null, null, null);
             score.setText(article.getScore());
-            score.setCompoundDrawablesWithIntrinsicBounds(DrawableIcon.score, null, null, null);
+            if (CommunityAdapter.this.subreddit.equals("")) {
+                this.subredditTV.setVisibility(GONE);
+            } else {
+                this.subredditTV.setText(article.getSubreddit());
+                this.subredditTV.setVisibility(VISIBLE);
+            }
             onClickItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

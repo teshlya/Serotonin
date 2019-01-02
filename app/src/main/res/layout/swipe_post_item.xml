@@ -5,4 +5,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:id="@+id/rv"
     android:layout_width="match_parent"
-    android:background="#ffffff" />
+    android:background="#ffffff"
+    android:clipToPadding="false"
+    android:paddingBottom="6dp"/>

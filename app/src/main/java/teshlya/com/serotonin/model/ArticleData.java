@@ -9,6 +9,7 @@ public class ArticleData implements Serializable {
     private String author;
     private String date;
     private String score;
+    private String subreddit;
     private String commentCount;
     private Media mediaImage;
     private Media mediaVideo;
@@ -95,5 +96,13 @@ public class ArticleData implements Serializable {
 
     public void setMediaVideo(Media mediaVideo) {
         this.mediaVideo = mediaVideo;
+    }
+
+    public String getSubreddit() {
+        return subreddit;
+    }
+
+    public void setSubreddit(String subreddit) {
+        this.subreddit = subreddit;
     }
 }
