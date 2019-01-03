@@ -2,19 +2,11 @@ package teshlya.com.serotonin.screen;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,22 +14,14 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
 import teshlya.com.serotonin.model.CommunityData;
 import teshlya.com.serotonin.parse.ParseCommunity;
-import teshlya.com.serotonin.parse.ParseJsonSubscription;
 import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
 import teshlya.com.serotonin.utils.Preference;
@@ -54,12 +38,11 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     public static boolean shownFab = true;
     private ImageView star_enabled;
     private ImageView star_disabled;
-    private String period = "";
+    public static String period = "";
     private PopupMenu popupMenu;
-    private String sort = "hot";
+    public static String sort = "hot";
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +67,6 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         }
     }*/
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     private void init() {
         context = this;
         DrawableIcon.initAllIcons(this);
@@ -144,11 +126,13 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         popupMenu.getMenu().findItem(R.id.top_none).setChecked(true);
     }
 
-    @RequiresApi(api=22)
     private void initPopupMenu()
     {
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
         Context wrapper = new ContextThemeWrapper(this, R.style.MyPopupTheme);
-        popupMenu = new PopupMenu(wrapper, findViewById(R.id.align_menu), Gravity.NO_GRAVITY, 0, R.style.MyPopupTheme);
+        popupMenu = new PopupMenu(wrapper, findViewById(R.id.align_menu));
+        //} else
+        //popupMenu = new PopupMenu(context, findViewById(R.id.align_menu));
         popupMenu.inflate(R.menu.popup_menu_sort);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
         {
@@ -260,7 +244,9 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     private void setCheckedPopupMenu()
     {
         int idCheckedButton = Preference.getPopupmenuFromSharedPrefs(this);
-        this.popupMenu.getMenu().findItem(idCheckedButton).setChecked(true);
+        MenuItem menuItem = popupMenu.getMenu().findItem(idCheckedButton);
+        if (menuItem != null)
+            menuItem.setChecked(true);
         switch (idCheckedButton)
         {
             case R.id.top_year:
@@ -345,19 +331,45 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        findViewById(R.id.sort).setVisibility(View.VISIBLE);
         if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                String url = data.getStringExtra(Constants.URL);
-                String community = data.getStringExtra(Constants.COMMUNITY);
-                Boolean star = data.getBooleanExtra(Constants.STAR, false);
-                if (url != null && community != null) {
-                    this.url = url;
-                    this.title = community;
-                    this.star = star;
-                    parseCommunity(url);
-                }
+            switch (resultCode) {
+                case Constants.RESULT_SABREDDIT:
+                    openSabreddit(data);
+                    break;
+                case Constants.RESULT_QUESTION:
+                    openQuestion();
+                    break;
             }
+        }
+    }
+
+    private void openQuestion() {
+        findViewById(R.id.sort).setVisibility(View.GONE);
+        findViewById(R.id.sort).setVisibility(View.GONE);
+        star = false;
+        setStar();
+        title = "Serotonin for Reddit";
+        setTitle();
+        openQuestionFragment();
+    }
+
+    private void openQuestionFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        QuestionFragment questionFragment = new QuestionFragment();
+        ft.replace(R.id.conteiner, questionFragment);
+        ft.commit();
+    }
+
+    private void openSabreddit(Intent data) {
+        findViewById(R.id.sort).setVisibility(View.VISIBLE);
+        String url = data.getStringExtra(Constants.URL);
+        String community = data.getStringExtra(Constants.COMMUNITY);
+        Boolean star = data.getBooleanExtra(Constants.STAR, false);
+        if (url != null && community != null) {
+            this.url = url;
+            this.title = community;
+            this.star = star;
+            parseCommunity(url);
         }
     }
 

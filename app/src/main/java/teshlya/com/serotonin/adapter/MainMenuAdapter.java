@@ -154,7 +154,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             data.putExtra(Constants.URL, url);
             data.putExtra(Constants.COMMUNITY, community);
             data.putExtra(Constants.STAR, star);
-            ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
+            ((Activity) context).setResult(Constants.RESULT_SABREDDIT, data);
             ((Activity) context).finish();
         }
     }

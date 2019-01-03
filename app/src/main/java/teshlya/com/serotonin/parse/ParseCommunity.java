@@ -109,7 +109,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
             article.setAuthor(getAuthor(data));
             article.setText((htmlToString(getText(data))).trim());
             article.setDate(processDate(getDate(data)));
-            article.setCommentCount(processComments(getCommentCount(data)));
+            article.setCommentCount(processComments(getCommentCount(data)) + " comments");
             article.setScore(processScore(getScore(data)));
             article.setUrl(getUrl(data));
             article.setMediaType(getMediaType(data));

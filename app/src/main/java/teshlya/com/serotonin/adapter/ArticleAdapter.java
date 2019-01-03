@@ -283,6 +283,7 @@ public class ArticleAdapter extends TreeViewAdapter {
         private TextView date;
         private TextView score;
         private TextView comments;
+        private TextView subreddit;
 
         public DetailHolder(View itemView) {
             super(itemView);
@@ -290,6 +291,7 @@ public class ArticleAdapter extends TreeViewAdapter {
             date = itemView.findViewById(R.id.date);
             score = itemView.findViewById(R.id.score);
             comments = itemView.findViewById(R.id.comments);
+            subreddit = itemView.findViewById(R.id.subreddit);
         }
 
         public void bind() {
@@ -297,6 +299,7 @@ public class ArticleAdapter extends TreeViewAdapter {
             date.setText(articleData.getDate());
             score.setText(articleData.getScore());
             comments.setText(articleData.getCommentCount());
+            subreddit.setText(articleData.getSubreddit());
         }
     }
 

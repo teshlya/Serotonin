@@ -41,7 +41,8 @@
                     <item
                         android:id="@+id/controversial_month"
                         android:title="Month"
-                        app:showAsAction="always" />
+                        app:showAsAction="always"
+                        />
                     <item
                         android:id="@+id/controversial_year"
                         android:title="Year"

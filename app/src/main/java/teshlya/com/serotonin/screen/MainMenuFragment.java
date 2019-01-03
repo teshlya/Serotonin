@@ -2,8 +2,11 @@ package teshlya.com.serotonin.screen;
 
 
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -88,6 +91,19 @@ public class MainMenuFragment extends Fragment {
         initSearch(view);
         fillList();
         initListMenu();
+        initQuestion(view);
+    }
+
+
+    private void initQuestion(View view) {
+        view.findViewById(R.id.question).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseArticle.hmap.clear();
+                getActivity().setResult(Constants.RESULT_QUESTION, null);
+                getActivity().finish();
+            }
+        });
     }
 
     public void fillList() {
@@ -352,7 +368,7 @@ public class MainMenuFragment extends Fragment {
         data.putExtra(Constants.URL, url);
         data.putExtra(Constants.COMMUNITY, community);
         data.putExtra(Constants.STAR, star);
-        getActivity().setResult(getActivity().RESULT_OK, data);
+        getActivity().setResult(Constants.RESULT_SABREDDIT, data);
         getActivity().finish();
     }
 
@@ -371,7 +387,6 @@ public class MainMenuFragment extends Fragment {
         super.onDestroy();
         if (recyclerView != null) {
             positionScroll = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-            Log.d("qwerty", "" + positionScroll);
         }
     }
 }

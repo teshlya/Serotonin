@@ -94,7 +94,10 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
             @Override
             public void loadMore() {
                 if (after != null) {
-                    new ParseCommunity(CommunityFragment.this, Constants.DOMAIN + url + ".json" + "?after=" + after).execute();
+                    String period = "?";
+                    if (!FrontPageActivity.period.equals(""))
+                        period = FrontPageActivity.period + "&";
+                    new ParseCommunity(CommunityFragment.this, Constants.DOMAIN + url + FrontPageActivity.sort + ".json" + period + "after=" + after ).execute();
                     adapter.showProgress();
                 }
             }
