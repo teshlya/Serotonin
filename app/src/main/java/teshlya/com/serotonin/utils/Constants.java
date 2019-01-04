@@ -24,8 +24,8 @@ public class Constants {
     public static final int VIEW_TYPE_LOADING = 6;
     public static final int VIEW_TYPE_TWO_LINE_ITEM = 7;
 
-    public static final int RESULT_SABREDDIT = 0;
-    public static final int RESULT_QUESTION = 1;
+    public static final int RESULT_SABREDDIT = 1;
+    public static final int RESULT_QUESTION = 2;
 
     public static final String LEFT = "left";
     public static final String RIGHT = "right";
