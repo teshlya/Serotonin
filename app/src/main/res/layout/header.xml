@@ -38,16 +38,18 @@
             android:layout_height="38dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="7dp"
             android:layout_marginRight="3dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="7dp"
             android:src="@drawable/search_button" />
 
         <ImageView
             android:id="@+id/question"
             android:layout_width="38dp"
             android:layout_height="38dp"
-            android:layout_toLeftOf="@id/search_button"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/search_button"
+            android:background="?android:attr/selectableItemBackground"
             android:padding="7dp"
             android:src="@drawable/question" />
 
@@ -63,6 +65,8 @@
             style="@style/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_marginVertical="5dp"
             android:background="@drawable/search_background"
             android:hint="@string/search_reddit"
@@ -72,11 +76,13 @@
 
         <ImageView
             android:id="@+id/arrow_hide_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"/>
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="10dp" />
 
     </RelativeLayout>
 </FrameLayout>

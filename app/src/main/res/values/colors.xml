@@ -15,7 +15,7 @@
     <color name="colorMenuIcon">#ffffff</color>
     <color name="colorSearchBackground">#ffffff</color>
 
-    <color name="colorSearchText">@android:color/tab_indicator_text</color>
+    <color name="colorSearchText">#000000</color>
     <color name="colorRedditFeeds">#004c8c</color>
     <color name="colorRedditFeedsList">#090909</color>
     <color name="colorSubscriptionList">#090909</color>

@@ -19,7 +19,7 @@
             app:showAsAction="always" />
         <item
             android:id="@+id/controversial"
-            android:title="Controversial"
+            android:title="Controversial..."
             app:showAsAction="always">
             <menu>
                 <group
@@ -60,7 +60,7 @@
         </item>
         <item
             android:id="@+id/top"
-            android:title="Top"
+            android:title="Top..."
             app:showAsAction="always">
             <menu>
                 <group

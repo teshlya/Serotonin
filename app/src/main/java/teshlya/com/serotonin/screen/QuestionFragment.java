@@ -19,10 +19,10 @@ import teshlya.com.serotonin.R;
 
 public class QuestionFragment extends Fragment implements BillingProcessor.IBillingHandler {
 
-    private static final String PRODUCT_ID_1 = "Product_1";
-    private static final String PRODUCT_ID_2 = "Product_2";
-    private static final String PRODUCT_ID_3 = "Product_3";
-    private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAijFB3LauVEC6cxbQYyn57BgCcnnfNa9Vdk8vKFiqWs9S0nu+YiWMz06dcNxaE0JRlS82C5gSmcWxewSOcJVc3iW36fxsYQrtqKGnLowoAnZpkJh5DeO5VBoIJ9lQmjZBrPz/8lpkT8lR1UWjdB3MU3Oi2qRzDl+6ypvebUJ2M8/2814R/P4BX2dTQP6zNGfzDhCPL/TjEW4HnZwqXd+hZvZfEhXTK+b0/tQRs9HKkmRRqfvGd+nQ0qe/41+wv8yE+UeEMb+Cm6fUMGeYF6DHjCEmEqlqKPgOs7a9Gm4Yy168cGicS7OkNf4k8THi/AV3QIPyz2jTxKUNQPhFpgSTvwIDAQAB";
+    private static final String PRODUCT_ID_1 = "product_1";
+    private static final String PRODUCT_ID_2 = "product_2";
+    private static final String PRODUCT_ID_3 = "product_3";
+    private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhI1UriB5hYcvcqpytPrU4qYleSQ5JN1JGr3tXPWgsbGAdangtvvq1OOhCVNwqBH4VInPA6cR99XbtLpg/MeBN9fupDb16FpZ5JdMqTxa8KMVPxsSFSn6doKYBj4uCFrhnFW0OSPLxhFwcIZQ2lA/ZCYLvtRNN78iqOZuFsT4uc4jRRs/4FehBYjrJtZxDbOfNQV7741dFdVyZMwp79nb2hKma2YkR+IcefR2J1feNBK7yFkDIBTRdGwC7kHozKFj9gomayA/t3KOaipI13EN8nS9h/zPa0Nipd9RuvozkYPmzG/dwGn/2qyT9Ly2xFIyHO5EfNjC7NNEpSeb7i7lNwIDAQAB";
     private BillingProcessor bp;
 
 
@@ -83,7 +83,7 @@ public class QuestionFragment extends Fragment implements BillingProcessor.IBill
         view.findViewById(R.id.github).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openWebURL("https://github.com/reddit");
+                openWebURL("https://github.com/teshlya/Serotonin");
             }
         });
     }
@@ -124,7 +124,7 @@ public class QuestionFragment extends Fragment implements BillingProcessor.IBill
         view.findViewById(R.id.reddit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openWebURL("https://www.reddit.com/");
+                openWebURL("https://www.reddit.com/r/serotoninapp/");
             }
         });
     }
@@ -136,7 +136,7 @@ public class QuestionFragment extends Fragment implements BillingProcessor.IBill
                 String appName = "org.telegram.messenger";
                 boolean isAppInstalled = isAppAvailable(getContext(), appName);
                 if (isAppInstalled) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tg://resolve?domain=reddittop"));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tg://resolve?domain=serotoninapp"));
                     startActivity(intent);
                 } else {
                     Toast.makeText(getActivity(), "Telegram not Installed", Toast.LENGTH_SHORT).show();
