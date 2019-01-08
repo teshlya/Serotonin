@@ -17,16 +17,6 @@
         <item>wtf</item>
     </string-array>
 
-    <integer-array name="subscriptions_icon">
-        <item>@drawable/android</item>
-        <item>@drawable/default_icon</item>
-        <item>@drawable/aww</item>
-        <item>@drawable/funny</item>
-        <item>@drawable/pics</item>
-        <item>@drawable/default_icon</item>
-        <item>@drawable/wtf</item>
-    </integer-array>
-
     <array name="rainbow">
         <item>@color/bright_pink</item>
         <item>@color/chartreuse</item>

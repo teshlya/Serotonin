@@ -34,22 +34,24 @@
                 android:id="@+id/star_conteiner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp">
 
                 <ImageView
                     android:id="@+id/star_disabled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:padding="5dp"
                     android:src="@drawable/star_disabled"
                     android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/star_enabled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:padding="5dp"
                     android:src="@drawable/star_enabled"
                     android:visibility="gone" />
@@ -61,7 +63,8 @@
                 android:layout_height="34dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/star_conteiner">
+                android:layout_toLeftOf="@id/star_conteiner"
+                android:background="?android:attr/selectableItemBackground">
 
                 <View
                     android:id="@+id/align_menu"
@@ -72,8 +75,8 @@
 
                 <ImageView
                     android:id="@+id/sort"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:src="@drawable/sort" />
             </RelativeLayout>

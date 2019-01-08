@@ -65,7 +65,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private void initBottomSheet() {
         View bottom_sheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
-        bottomSheetBehavior.setPeekHeight(Calc.getWindowSizeInPx(this).y / 2);
+        bottomSheetBehavior.setPeekHeight(Calc.getWindowSizeInPx(this).y * 62 / 100);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override

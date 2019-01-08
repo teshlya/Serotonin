@@ -268,12 +268,14 @@ public class MainMenuFragment extends Fragment {
     private void setShowAnimateSearch(View view) {
         final RelativeLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
         searchButton = view.findViewById(R.id.search_button);
+        final ImageView questionButton = view.findViewById(R.id.question);
         final LinearLayout conteinerTitle = view.findViewById(R.id.conteiner_title);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 conteinerTitle.setVisibility(View.GONE);
                 searchButton.setVisibility(View.GONE);
+                questionButton.setVisibility(View.GONE);
                 search.requestFocus();
                 InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(search, InputMethodManager.SHOW_IMPLICIT);
@@ -282,7 +284,7 @@ public class MainMenuFragment extends Fragment {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 ObjectAnimator animX = ObjectAnimator.ofFloat(conteinerSearch,
                         View.TRANSLATION_X, 0, -conteinerSearch.getWidth());
-                animX.setDuration(300);
+                animX.setDuration(100);
                 animX.start();
             }
         });
@@ -291,6 +293,7 @@ public class MainMenuFragment extends Fragment {
     private void setHideAnimateSearch(View view) {
         final RelativeLayout conteinerSearch = view.findViewById(R.id.conteiner_search);
         final ImageView searchButton = view.findViewById(R.id.search_button);
+        final ImageView questionButton = view.findViewById(R.id.question);
         final LinearLayout conteinerTitle = view.findViewById(R.id.conteiner_title);
         view.findViewById(R.id.arrow_hide_search).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,11 +301,12 @@ public class MainMenuFragment extends Fragment {
                 search.getText().clear();
                 conteinerTitle.setVisibility(View.VISIBLE);
                 searchButton.setVisibility(View.VISIBLE);
+                questionButton.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
                 ObjectAnimator animX = ObjectAnimator.ofFloat(conteinerSearch,
                         View.TRANSLATION_X, -conteinerSearch.getWidth(), 0);
-                animX.setDuration(300);
+                animX.setDuration(100);
                 animX.start();
             }
         });
