@@ -129,7 +129,6 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
                 fragmentTransaction.remove(getActivity().getSupportFragmentManager().findFragmentById(conteinerSwipePostFragment.getId()));
                 fragmentTransaction.commit ();
             }
-            Log.d("qwerty","asdfrtnryb");
             if (MpdPlayerFragment.pause != null)
                 MpdPlayerFragment.pause.performClick();
             MpdPlayer.playState = PlayState.PAUSE;
