@@ -233,7 +233,7 @@ public class ArticleAdapter extends TreeViewAdapter {
                     .into(image);
             image.setVisibility(View.VISIBLE);
             video.setVisibility(GONE);
-            image.setPadding(0, Calc.dpToPx(10), 0, 0);
+            image.setPadding(0, Calc.dpToPx(8), 0, 0);
         }
 
         private Drawable getPlaceholder(int w, int h) {

@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 public class Constants {
 
+    public static final String LISTENER = "listener";
     public static String DOMAIN = "https://www.reddit.com";
 
     public static final String POSITION = "position";

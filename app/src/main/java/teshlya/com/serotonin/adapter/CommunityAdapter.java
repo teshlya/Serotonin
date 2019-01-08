@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
@@ -44,22 +46,24 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private Context context;
     private CommunityData data = new CommunityData();
-    private InboxRecyclerView recyclerView;
-    private ExpandablePageLayout conteinerSwipePostFragment;
+    private RecyclerView recyclerView;
+    private FrameLayout conteinerSwipePostFragment;
     private String url;
     private Drawable drawableImage;
     private int widthScreen;
-    SwipePostFragment swipePostFragment;
+    private SwipePostFragment swipePostFragment;
     private String subreddit;
-
-    public CommunityAdapter(InboxRecyclerView rv,
-                            ExpandablePageLayout conteinerSwipePostFragment,
-                            String url) {
+    private ScrollListenerCommunityList listener;
+    public CommunityAdapter(RecyclerView rv,
+                            FrameLayout conteinerSwipePostFragment,
+                            String url,
+                            ScrollListenerCommunityList listener) {
         //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         //itemTouchHelper.attachToRecyclerView(rv);
         context = rv.getContext();
         recyclerView = rv;
         this.conteinerSwipePostFragment = conteinerSwipePostFragment;
+        this.listener = listener;
         this.url = url;
         initDrawable();
         widthScreen = Calc.getWindowSizeInDp(context).x;
@@ -302,13 +306,17 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             AppCompatActivity articleActivity = (AppCompatActivity) context;
             swipePostFragment = SwipePostFragment.newInstance(data,
                     url,
-                    position);
+                    position,
+                    listener);
 
             FragmentManager fm = articleActivity.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(conteinerSwipePostFragment.getId(), swipePostFragment)
-                    .commitNowAllowingStateLoss();
-            recyclerView.expandItem(position);
+            ft.add(conteinerSwipePostFragment.getId(), swipePostFragment);
+            //ft.addToBackStack(null);
+            ft.commit();
+            ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
+
+            //recyclerView.expandItem(position);
         }
 
        /* public void onDisappear() {

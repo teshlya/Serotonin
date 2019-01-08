@@ -8,14 +8,14 @@
 
 
 
-    <me.saket.inboxrecyclerview.InboxRecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/community_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBackgroundCommunity"
         android:clipToPadding="false"/>
 
-    <me.saket.inboxrecyclerview.page.ExpandablePageLayout
+    <FrameLayout
         android:id="@+id/conteinerSwipePostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

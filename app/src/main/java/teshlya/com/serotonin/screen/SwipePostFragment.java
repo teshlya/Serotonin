@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.adapter.ArticleAdapter;
 import teshlya.com.serotonin.adapter.ScrollListenerCallback;
+import teshlya.com.serotonin.adapter.ScrollListenerCommunityList;
 import teshlya.com.serotonin.adapter.ScrollListenerSwipePost;
 import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
@@ -33,13 +34,16 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
     private ScrollListenerSwipePost scrollListenerSwipePost;
     private String after;
     private Context context;
+    private ScrollListenerCommunityList listener;
 
     public static SwipePostFragment newInstance(CommunityData data,
                                                 String url,
-                                                int position) {
+                                                int position,
+                                                ScrollListenerCommunityList listener) {
         SwipePostFragment fragment = new SwipePostFragment();
         Bundle args = new Bundle();
         args.putSerializable(Constants.DATA, data);
+        args.putSerializable(Constants.LISTENER, listener);
         args.putInt(Constants.POSITION, position);
         args.putString(Constants.URL, url);
         fragment.setArguments(args);
@@ -77,7 +81,7 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
         helper.attachToRecyclerView(recyclerView);
         recyclerView.scrollToPosition(position);
         scrollListenerSwipePost =
-                new ScrollListenerSwipePost(new ScrollListenerCallback() {
+                new ScrollListenerSwipePost(listener, new ScrollListenerCallback() {
                     @Override
                     public void loadMore() {
                         if (after != null) {
@@ -105,6 +109,7 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
 
     private void initArguments() {
         data = (CommunityData) getArguments().getSerializable(Constants.DATA);
+        listener = (ScrollListenerCommunityList) getArguments().getSerializable(Constants.LISTENER);
         position = getArguments().getInt(Constants.POSITION);
         url = getArguments().getString(Constants.URL);
         after = data.getAfter();

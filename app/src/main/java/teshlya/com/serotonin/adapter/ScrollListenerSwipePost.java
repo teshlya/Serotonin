@@ -7,11 +7,13 @@ public class ScrollListenerSwipePost extends RecyclerView.OnScrollListener {
 
     private boolean isLoading = false;
     private int visibleThreshold = 5;
-    private int lastVisibleItem;
+    public static int lastVisibleItem;
     private int totalItemCount;
     private ScrollListenerCallback callback;
+    private ScrollListenerCommunityList listener;
 
-    public  ScrollListenerSwipePost(ScrollListenerCallback callback) {
+    public  ScrollListenerSwipePost(ScrollListenerCommunityList listener, ScrollListenerCallback callback) {
+        this.listener = listener;
         this.callback = callback;
     }
 
@@ -19,6 +21,7 @@ public class ScrollListenerSwipePost extends RecyclerView.OnScrollListener {
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         initVariables(recyclerView);
+        listener.scrollTo(lastVisibleItem);
         if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
             if (callback != null) {
                 callback.loadMore();

@@ -2,25 +2,25 @@ package teshlya.com.serotonin.screen;
 
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import me.saket.inboxrecyclerview.InboxRecyclerView;
-import me.saket.inboxrecyclerview.dimming.CompleteListTintPainter;
-import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.adapter.ArticleAdapter;
 import teshlya.com.serotonin.adapter.CommunityAdapter;
 import teshlya.com.serotonin.adapter.ScrollListenerCallback;
 import teshlya.com.serotonin.adapter.ScrollListenerCommunity;
+import teshlya.com.serotonin.adapter.ScrollListenerCommunityList;
 import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
 import teshlya.com.serotonin.model.CommunityData;
@@ -30,12 +30,13 @@ import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.MpdPlayer;
 
 @SuppressLint("ValidFragment")
-public class CommunityFragment extends Fragment implements CallbackArticleLoaded {
+public class CommunityFragment extends Fragment implements CallbackArticleLoaded, ScrollListenerCommunityList {
 
-    private InboxRecyclerView recyclerView;
+    //private InboxRecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private CommunityAdapter adapter;
     private String url;
-    private ExpandablePageLayout conteinerSwipePostFragment;
+    private FrameLayout conteinerSwipePostFragment;
     private FloatingActionButton fab;
     private ScrollListenerCommunity scrollListenerCommunity;
     private String after = null;
@@ -82,13 +83,13 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
         recyclerView = view.findViewById(R.id.community_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         conteinerSwipePostFragment = view.findViewById(R.id.conteinerSwipePostFragment);
-        conteinerSwipePostFragment.setAnimationDurationMillis(800);
-        conteinerSwipePostFragment.setPullToCollapseEnabled(false);
-        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url);
+        //conteinerSwipePostFragment.setAnimationDurationMillis(800);
+        //conteinerSwipePostFragment.setPullToCollapseEnabled(false);
+        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url, this);
         adapter.setHasStableIds(true);
         adapter.addArticle(data);
-        recyclerView.setExpandablePage(conteinerSwipePostFragment);
-        recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
+        //recyclerView.setExpandablePage(conteinerSwipePostFragment);
+        //recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
         recyclerView.setAdapter(adapter);
         scrollListenerCommunity = new ScrollListenerCommunity(fab, new ScrollListenerCallback() {
             @Override
@@ -121,7 +122,14 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
     }
 
     public boolean back() {
-        if (conteinerSwipePostFragment.isExpandedOrExpanding()) {
+        if (getActivity().getSupportFragmentManager().findFragmentById(conteinerSwipePostFragment.getId()) != null) {
+            {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction ();
+// work here to change Activity fragments (add, remove, etc.).  Example here of adding.
+                fragmentTransaction.remove(getActivity().getSupportFragmentManager().findFragmentById(conteinerSwipePostFragment.getId()));
+                fragmentTransaction.commit ();
+            }
+            Log.d("qwerty","asdfrtnryb");
             if (MpdPlayerFragment.pause != null)
                 MpdPlayerFragment.pause.performClick();
             MpdPlayer.playState = PlayState.PAUSE;
@@ -132,7 +140,7 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 ArticleAdapter.mpdPlayerFragment = null;
             }
-            recyclerView.collapse();
+            //recyclerView.collapse();
             showPopupMenuSort();
             return false;
         }
@@ -155,4 +163,8 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
         }
     }
 
+    @Override
+    public void scrollTo(int position) {
+        ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
+    }
 }
