@@ -53,17 +53,14 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private int widthScreen;
     private SwipePostFragment swipePostFragment;
     private String subreddit;
-    private ScrollListenerCommunityList listener;
     public CommunityAdapter(RecyclerView rv,
                             FrameLayout conteinerSwipePostFragment,
-                            String url,
-                            ScrollListenerCommunityList listener) {
-        //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        //itemTouchHelper.attachToRecyclerView(rv);
+                            String url) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rv);
         context = rv.getContext();
         recyclerView = rv;
         this.conteinerSwipePostFragment = conteinerSwipePostFragment;
-        this.listener = listener;
         this.url = url;
         initDrawable();
         widthScreen = Calc.getWindowSizeInDp(context).x;
@@ -306,8 +303,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             AppCompatActivity articleActivity = (AppCompatActivity) context;
             swipePostFragment = SwipePostFragment.newInstance(data,
                     url,
-                    position,
-                    listener);
+                    position);
 
             FragmentManager fm = articleActivity.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();

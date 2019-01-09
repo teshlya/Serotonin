@@ -3,7 +3,6 @@ package teshlya.com.serotonin.screen;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import teshlya.com.serotonin.adapter.CommunityAdapter;
 import teshlya.com.serotonin.adapter.ScrollListenerCallback;
 import teshlya.com.serotonin.adapter.ScrollListenerCommunity;
 import teshlya.com.serotonin.adapter.ScrollListenerCommunityList;
+import teshlya.com.serotonin.adapter.ScrollListenerSwipePost;
 import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
 import teshlya.com.serotonin.model.CommunityData;
@@ -30,7 +30,7 @@ import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.MpdPlayer;
 
 @SuppressLint("ValidFragment")
-public class CommunityFragment extends Fragment implements CallbackArticleLoaded, ScrollListenerCommunityList {
+public class CommunityFragment extends Fragment implements CallbackArticleLoaded {
 
     //private InboxRecyclerView recyclerView;
     private RecyclerView recyclerView;
@@ -85,7 +85,7 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
         conteinerSwipePostFragment = view.findViewById(R.id.conteinerSwipePostFragment);
         //conteinerSwipePostFragment.setAnimationDurationMillis(800);
         //conteinerSwipePostFragment.setPullToCollapseEnabled(false);
-        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url, this);
+        adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url);
         adapter.setHasStableIds(true);
         adapter.addArticle(data);
         //recyclerView.setExpandablePage(conteinerSwipePostFragment);
@@ -123,12 +123,15 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
 
     public boolean back() {
         if (getActivity().getSupportFragmentManager().findFragmentById(conteinerSwipePostFragment.getId()) != null) {
-            {
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction ();
+            ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(ScrollListenerSwipePost.lastVisibleItem, 0);
+
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction ();
 // work here to change Activity fragments (add, remove, etc.).  Example here of adding.
                 fragmentTransaction.remove(getActivity().getSupportFragmentManager().findFragmentById(conteinerSwipePostFragment.getId()));
                 fragmentTransaction.commit ();
-            }
+
+
+
             if (MpdPlayerFragment.pause != null)
                 MpdPlayerFragment.pause.performClick();
             MpdPlayer.playState = PlayState.PAUSE;
@@ -162,8 +165,4 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
         }
     }
 
-    @Override
-    public void scrollTo(int position) {
-        ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
-    }
 }
