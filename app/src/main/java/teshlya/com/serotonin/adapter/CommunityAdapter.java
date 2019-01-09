@@ -56,8 +56,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public CommunityAdapter(RecyclerView rv,
                             FrameLayout conteinerSwipePostFragment,
                             String url) {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(rv);
+        //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        //itemTouchHelper.attachToRecyclerView(rv);
         context = rv.getContext();
         recyclerView = rv;
         this.conteinerSwipePostFragment = conteinerSwipePostFragment;
