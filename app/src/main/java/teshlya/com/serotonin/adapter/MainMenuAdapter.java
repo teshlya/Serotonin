@@ -122,14 +122,11 @@ public class MainMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tvHeader.setText(list.get(position).getTitle());
             iconHeader.setImageDrawable(getDrawable(list.get(position).getDetail()));
         }
-
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvRows;
         View view;
-
         ViewHolder(View itemView) {
             super(itemView);
             tvRows = itemView.findViewById(R.id.tvRows);
@@ -158,6 +155,5 @@ public class MainMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((Activity) context).finish();
         }
     }
-
 }
 

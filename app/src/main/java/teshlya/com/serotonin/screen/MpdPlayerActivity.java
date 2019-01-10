@@ -1,12 +1,5 @@
 package teshlya.com.serotonin.screen;
 
-import androidx.appcompat.app.AppCompatActivity;
-import teshlya.com.serotonin.R;
-import teshlya.com.serotonin.model.Media;
-import teshlya.com.serotonin.model.PlayState;
-import teshlya.com.serotonin.utils.Calc;
-import teshlya.com.serotonin.utils.MpdPlayer;
-
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +8,13 @@ import android.widget.RelativeLayout;
 
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import teshlya.com.serotonin.R;
+import teshlya.com.serotonin.model.Media;
+import teshlya.com.serotonin.model.PlayState;
+import teshlya.com.serotonin.utils.Calc;
+import teshlya.com.serotonin.utils.MpdPlayer;
 
 import static teshlya.com.serotonin.model.PlayState.PAUSE;
 import static teshlya.com.serotonin.model.PlayState.PLAY;

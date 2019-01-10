@@ -1,13 +1,13 @@
 package teshlya.com.serotonin.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import teshlya.com.serotonin.R;
 
 public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder> {

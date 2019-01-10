@@ -41,15 +41,6 @@ public class CheckUrlExists extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         existsUrlCallback.sendResult(result, subreddit);
-       /* boolean bResponse = result;
-        if (bResponse==true)
-        {
-            Toast.makeText(MainActivity.this, "File exists!", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(MainActivity.this, "File does not exist!", Toast.LENGTH_SHORT).show();
-        }*/
     }
 }
 

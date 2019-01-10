@@ -23,8 +23,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import me.saket.inboxrecyclerview.InboxRecyclerView;
-import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.holder.LoadingViewHolder;
 import teshlya.com.serotonin.model.ArticleData;
@@ -168,7 +166,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private TextView comment;
         private TextView score;
         private LinearLayout onClickItem;
-        //public YouTubePlayerView youTubePlayerView;
         private ImageView image;
         private RelativeLayout video;
         private ImageView videoPreview;
@@ -257,9 +254,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             play.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /* Intent myIntent = new Intent(context, MpdPlayerActivity.class);
-                    myIntent.putExtra("media", mediaVideo); //Optional parameters
-                    context.startActivity(myIntent);*/
                     ArticleAdapter.playWhenOpen = true;
                     onClickItem.performClick();
                 }
@@ -268,36 +262,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             video.setVisibility(VISIBLE);
             video.setPadding(0, Calc.dpToPx(8), 0, 0);
         }
-
-
-        private boolean initVideo(ArticleData article) {
-            return false;
-          /*  if (!article.getMediaType().equals("youtube.com")) {
-                youTubePlayerView.setVisibility(View.GONE);
-                return false;
-            }
-            idVideo = YouTubeURL.extractYTId(article.getVideoUrl());
-            if (idVideo == null)
-                idVideo = article.getVideoUrl().substring(article.getVideoUrl().length() - 11);
-
-
-          /*  youTubePlayerView.initialize(new YouTubePlayerInitListener() {
-                @Override
-                public void onInitSuccess(final YouTubePlayer initializedYouTubePlayer) {
-                    initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
-                        @Override
-                        public void onReady() {
-                            initializedYouTubePlayer.cueVideo(idVideo, 0);
-
-                        }
-                    });
-                }
-            }, true);
-
-            youTubePlayerView.setVisibility(View.VISIBLE);
-            image.setVisibility(View.GONE);*/
-        }
-
 
         private void openArticle(int position) {
             AppCompatActivity articleActivity = (AppCompatActivity) context;
@@ -308,18 +272,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             FragmentManager fm = articleActivity.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.add(conteinerSwipePostFragment.getId(), swipePostFragment);
-            //ft.addToBackStack(null);
             ft.commit();
             ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
-
-            //recyclerView.expandItem(position);
         }
-
-       /* public void onDisappear() {
-            if (youTubePlayerView != null)
-                youTubePlayerView.release();
-        }*/
-
     }
 
 

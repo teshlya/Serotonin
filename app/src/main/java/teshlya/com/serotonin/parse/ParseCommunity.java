@@ -221,7 +221,6 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
             }
         }
 
-
         Boolean isSelf = true;
         if (data.has("is_self"))
             isSelf = data.getBoolean("is_self");
@@ -346,9 +345,6 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         str = str.replace("\\n", "");
         return str;
     }
-
-
-
 
     private static String processScore(int paramInt)
     {

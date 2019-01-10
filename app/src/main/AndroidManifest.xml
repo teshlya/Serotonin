@@ -31,9 +31,6 @@
         <activity
             android:name=".screen.MpdPlayerActivity"
             android:theme="@style/MpdPlayerActivity" />
-        <activity android:name=".screen.BillingActivity">
-
-        </activity>
     </application>
 
 </manifest>

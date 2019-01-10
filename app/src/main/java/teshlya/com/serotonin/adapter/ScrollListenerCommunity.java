@@ -32,7 +32,6 @@ public class ScrollListenerCommunity extends RecyclerView.OnScrollListener {
             fab.show();
         }
 
-
         initVariables(recyclerView);
         if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
             if (callback != null) {

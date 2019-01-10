@@ -16,11 +16,6 @@ import java.util.ArrayList;
 import androidx.core.widget.NestedScrollView;
 import teshlya.com.serotonin.R;
 
-/**
- * Created by didik on 8/29/17.
- * Sticky
- */
-
 public class StickyNestedScrollView extends NestedScrollView {
     /**
      * Tag for views that should stick and have constant drawing. e.g. TextViews, ImageViews etc
@@ -103,11 +98,6 @@ public class StickyNestedScrollView extends NestedScrollView {
 
     }
 
-    /**
-     * Sets the height of the shadow drawable in pixels.
-     *
-     * @param height
-     */
     public void setShadowHeight(int height) {
         mShadowHeight = height;
     }

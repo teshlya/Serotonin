@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.SnapHelper;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.adapter.ArticleAdapter;
 import teshlya.com.serotonin.adapter.ScrollListenerCallback;
-import teshlya.com.serotonin.adapter.ScrollListenerCommunityList;
 import teshlya.com.serotonin.adapter.ScrollListenerSwipePost;
 import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;

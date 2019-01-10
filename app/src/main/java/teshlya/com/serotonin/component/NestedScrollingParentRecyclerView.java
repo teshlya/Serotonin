@@ -53,7 +53,6 @@ public class NestedScrollingParentRecyclerView extends RecyclerView {
                 if (mChildIsScrolling) {
                     return false;
                 }
-
                 final int xDiff = calculateDistanceX(ev);
                 final int yDiff = calculateDistanceY(ev);
 

@@ -50,23 +50,6 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         init();
     }
 
-  /*  private void getHeshKey() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "teshlya.com.reddit",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-    }*/
-
     private void init() {
         context = this;
         DrawableIcon.initAllIcons(this);
@@ -128,11 +111,8 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
 
     private void initPopupMenu()
     {
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
         Context wrapper = new ContextThemeWrapper(this, R.style.MyPopupTheme);
         popupMenu = new PopupMenu(wrapper, findViewById(R.id.align_menu));
-        //} else
-        //popupMenu = new PopupMenu(context, findViewById(R.id.align_menu));
         popupMenu.inflate(R.menu.popup_menu_sort);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
         {

@@ -25,11 +25,6 @@ public class QuestionFragment extends Fragment implements BillingProcessor.IBill
     private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhI1UriB5hYcvcqpytPrU4qYleSQ5JN1JGr3tXPWgsbGAdangtvvq1OOhCVNwqBH4VInPA6cR99XbtLpg/MeBN9fupDb16FpZ5JdMqTxa8KMVPxsSFSn6doKYBj4uCFrhnFW0OSPLxhFwcIZQ2lA/ZCYLvtRNN78iqOZuFsT4uc4jRRs/4FehBYjrJtZxDbOfNQV7741dFdVyZMwp79nb2hKma2YkR+IcefR2J1feNBK7yFkDIBTRdGwC7kHozKFj9gomayA/t3KOaipI13EN8nS9h/zPa0Nipd9RuvozkYPmzG/dwGn/2qyT9Ly2xFIyHO5EfNjC7NNEpSeb7i7lNwIDAQAB";
     private BillingProcessor bp;
 
-
-    public QuestionFragment() {
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -160,24 +155,19 @@ public class QuestionFragment extends Fragment implements BillingProcessor.IBill
         startActivity(browse);
     }
 
-
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-
     }
 
     @Override
     public void onPurchaseHistoryRestored() {
-
     }
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
-
     }
 
     @Override
     public void onBillingInitialized() {
-
     }
 }

@@ -32,7 +32,6 @@ import teshlya.com.serotonin.screen.FrontPageActivity;
 import teshlya.com.serotonin.screen.MpdPlayerFragment;
 import teshlya.com.serotonin.utils.Calc;
 import teshlya.com.serotonin.utils.Constants;
-import teshlya.com.serotonin.utils.DrawableIcon;
 import teshlya.com.serotonin.utils.MpdPlayer;
 import teshlya.com.serotonin.utils.TrimHtml;
 

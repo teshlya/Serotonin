@@ -8,7 +8,6 @@ public class CommentBean implements LayoutItemType {
     public Comment comment;
 
     public CommentBean(Comment comment) {
-
         this.comment = comment;
     }
 

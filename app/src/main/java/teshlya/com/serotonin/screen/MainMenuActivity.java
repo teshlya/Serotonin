@@ -1,21 +1,7 @@
 package teshlya.com.serotonin.screen;
 
-import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -24,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.utils.Calc;
-import teshlya.com.serotonin.utils.Constants;
-import teshlya.com.serotonin.utils.DrawableIcon;
 
 public class MainMenuActivity extends AppCompatActivity {
 

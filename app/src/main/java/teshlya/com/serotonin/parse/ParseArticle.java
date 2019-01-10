@@ -76,7 +76,6 @@ public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> 
             e.printStackTrace();
             return null;
         }
-
         hmap.put(url, articleDataWithComment.getCommentData());
         return articleDataWithComment.getCommentData();
     }
@@ -85,7 +84,6 @@ public class ParseArticle extends AsyncTask<Void, Void, ArrayList<CommentData>> 
     protected void onPostExecute(ArrayList<CommentData> list) {
         super.onPostExecute(list);
         bind(list);
-
     }
 
     private ArrayList<CommentData> parseComment(JSONObject jsonObject) {

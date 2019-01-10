@@ -4,7 +4,6 @@ import android.content.res.Resources;
 
 public class Constants {
 
-    public static final String LISTENER = "listener";
     public static String DOMAIN = "https://www.reddit.com";
 
     public static final String POSITION = "position";
@@ -27,11 +26,6 @@ public class Constants {
 
     public static final int RESULT_SABREDDIT = 1;
     public static final int RESULT_QUESTION = 2;
-
-    public static final String LEFT = "left";
-    public static final String RIGHT = "right";
-    public static final String TOP = "top";
-    public static final String BOTTOM = "bottom";
 
     public static final int SP_IN_PX_12 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 12;
     public static final int SP_IN_PX_14 = Math.round(Resources.getSystem().getDisplayMetrics().scaledDensity) * 14;

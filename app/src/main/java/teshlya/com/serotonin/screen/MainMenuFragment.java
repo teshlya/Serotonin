@@ -2,15 +2,11 @@ package teshlya.com.serotonin.screen;
 
 
 import android.animation.ObjectAnimator;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +49,6 @@ import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
 import teshlya.com.serotonin.utils.Preference;
 
-
 public class MainMenuFragment extends Fragment {
 
     private Context context;
@@ -93,7 +88,6 @@ public class MainMenuFragment extends Fragment {
         initListMenu();
         initQuestion(view);
     }
-
 
     private void initQuestion(View view) {
         view.findViewById(R.id.question).setOnClickListener(new View.OnClickListener() {
@@ -179,8 +173,6 @@ public class MainMenuFragment extends Fragment {
                 } else {
                     conteinerMainMenu.removeAllViews();
                     conteinerMainMenu.addView(fullMainMenu);
-                    //((StickyNestedScrollView) fullMainMenu.findViewById(R.id.scroll_view)).
-                    //        fullScroll(NestedScrollView.FOCUS_UP);
                     search.requestFocus();
                 }
             }

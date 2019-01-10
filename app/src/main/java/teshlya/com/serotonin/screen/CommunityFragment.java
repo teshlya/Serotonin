@@ -19,7 +19,6 @@ import teshlya.com.serotonin.adapter.ArticleAdapter;
 import teshlya.com.serotonin.adapter.CommunityAdapter;
 import teshlya.com.serotonin.adapter.ScrollListenerCallback;
 import teshlya.com.serotonin.adapter.ScrollListenerCommunity;
-import teshlya.com.serotonin.adapter.ScrollListenerCommunityList;
 import teshlya.com.serotonin.adapter.ScrollListenerSwipePost;
 import teshlya.com.serotonin.adapter.SwipePostAdapter;
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
@@ -32,7 +31,6 @@ import teshlya.com.serotonin.utils.MpdPlayer;
 @SuppressLint("ValidFragment")
 public class CommunityFragment extends Fragment implements CallbackArticleLoaded {
 
-    //private InboxRecyclerView recyclerView;
     private RecyclerView recyclerView;
     private CommunityAdapter adapter;
     private String url;
@@ -83,13 +81,9 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
         recyclerView = view.findViewById(R.id.community_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         conteinerSwipePostFragment = view.findViewById(R.id.conteinerSwipePostFragment);
-        //conteinerSwipePostFragment.setAnimationDurationMillis(800);
-        //conteinerSwipePostFragment.setPullToCollapseEnabled(false);
         adapter = new CommunityAdapter(recyclerView, conteinerSwipePostFragment, url);
         adapter.setHasStableIds(true);
         adapter.addArticle(data);
-        //recyclerView.setExpandablePage(conteinerSwipePostFragment);
-        //recyclerView.setTintPainter(new CompleteListTintPainter(Color.WHITE, 0.65F));
         recyclerView.setAdapter(adapter);
         scrollListenerCommunity = new ScrollListenerCommunity(fab, new ScrollListenerCallback() {
             @Override
@@ -126,7 +120,6 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
             ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(ScrollListenerSwipePost.lastVisibleItem, 0);
 
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction ();
-// work here to change Activity fragments (add, remove, etc.).  Example here of adding.
                 fragmentTransaction.remove(getActivity().getSupportFragmentManager().findFragmentById(conteinerSwipePostFragment.getId()));
                 fragmentTransaction.commit ();
 
@@ -142,7 +135,6 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 ArticleAdapter.mpdPlayerFragment = null;
             }
-            //recyclerView.collapse();
             showPopupMenuSort();
             return false;
         }
@@ -164,5 +156,4 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
             }
         }
     }
-
 }

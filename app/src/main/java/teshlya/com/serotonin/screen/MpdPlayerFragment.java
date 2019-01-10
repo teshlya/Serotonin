@@ -2,7 +2,6 @@ package teshlya.com.serotonin.screen;
 
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import teshlya.com.serotonin.utils.MpdPlayer;
 
 import static teshlya.com.serotonin.model.PlayState.PAUSE;
 import static teshlya.com.serotonin.model.PlayState.PLAY;
-
 
 public class MpdPlayerFragment extends Fragment {
 
@@ -61,7 +59,6 @@ public class MpdPlayerFragment extends Fragment {
             media = (Media) args.getSerializable("media");
         }
     }
-
 
     private Point getScreenSize() {
         return Calc.getWindowSizeInPx(getContext());
@@ -108,7 +105,6 @@ public class MpdPlayerFragment extends Fragment {
     private void initPlayer(View view) {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        //view.findViewById(R.id.conteinerPlayer).setLayoutParams(layoutParams);
         SimpleExoPlayerView playerView = view.findViewById(R.id.player);
         playerView.setControllerVisibilityListener(new PlaybackControlView.VisibilityListener() {
             @Override
