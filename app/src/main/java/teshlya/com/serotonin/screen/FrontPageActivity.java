@@ -1,5 +1,6 @@
 package teshlya.com.serotonin.screen;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -336,7 +337,8 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     private void openQuestionFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         QuestionFragment questionFragment = new QuestionFragment();
-        ft.replace(R.id.conteiner, questionFragment);
+        ft.add(R.id.conteiner, questionFragment);
+        ft.addToBackStack(null);
         ft.commit();
     }
 
