@@ -4,6 +4,7 @@ package teshlya.com.serotonin.screen;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,13 +97,8 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
             }
 
             Uri buildUri(){
-                Uri.Builder builderUri = Uri.parse(Constants.DOMAIN).buildUpon();
-                builderUri
-                        .appendEncodedPath(url)
-                        .appendEncodedPath(FrontPageActivity.sort)
-                        .appendEncodedPath(".json")
-                        .appendQueryParameter("t",FrontPageActivity.period)
-                        .appendQueryParameter("after",after);
+                Uri.Builder builderUri = Uri.parse(FrontPageActivity.builderUri.build().toString()).buildUpon();
+                builderUri.appendQueryParameter("after",after);
                 return builderUri.build();
             }
 
@@ -152,6 +148,7 @@ public class CommunityFragment extends Fragment implements CallbackArticleLoaded
 
     private void showPopupMenuSort()
     {
+        if (!FrontPageActivity.searchMode)
         getActivity().findViewById(R.id.sort).setVisibility(View.VISIBLE);
     }
 

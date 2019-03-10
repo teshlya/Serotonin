@@ -39,9 +39,11 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     public static boolean shownFab = true;
     private ImageView star_enabled;
     private ImageView star_disabled;
-    public static String period = "";
     private PopupMenu popupMenu;
-    public static String sort = "hot";
+    public String period = "";
+    public String sort = "hot";
+    public static boolean searchMode = false;
+    public static Uri.Builder builderUri;
 
 
     @Override
@@ -326,7 +328,6 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
 
     private void openQuestion() {
         findViewById(R.id.sort).setVisibility(View.GONE);
-        findViewById(R.id.sort).setVisibility(View.GONE);
         star = false;
         setStar();
         title = "Serotonin for Reddit";
@@ -343,7 +344,6 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     }
 
     private void openSubreddit(Intent data) {
-        findViewById(R.id.sort).setVisibility(View.VISIBLE);
         String url = data.getStringExtra(Constants.URL);
         String community = data.getStringExtra(Constants.COMMUNITY);
         Boolean star = data.getBooleanExtra(Constants.STAR, false);
@@ -363,12 +363,25 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     }
 
     Uri buildUri(String url) {
-        Uri.Builder builderUri = Uri.parse(Constants.DOMAIN).buildUpon();
-        builderUri
-                .appendEncodedPath(url)
-                .appendEncodedPath(sort)
-                .appendEncodedPath(".json")
-                .appendQueryParameter("t", period);
+        builderUri = Uri.parse(Constants.DOMAIN).buildUpon();
+        String[] searchParametrs = url.split(" ");
+        if (searchParametrs.length > 1 && searchParametrs[0].equals("search")) {
+            builderUri
+                    .appendEncodedPath(searchParametrs[0])
+                    .appendEncodedPath(".json")
+                    .appendQueryParameter("q", searchParametrs[1]);
+            findViewById(R.id.sort).setVisibility(View.GONE);
+            searchMode = true;
+
+        } else {
+            builderUri
+                    .appendEncodedPath(url)
+                    .appendEncodedPath(sort)
+                    .appendEncodedPath(".json")
+                    .appendQueryParameter("t", period);
+            findViewById(R.id.sort).setVisibility(View.VISIBLE);
+            searchMode = false;
+        }
         return builderUri.build();
     }
 

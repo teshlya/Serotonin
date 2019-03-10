@@ -35,7 +35,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.d("qwerty", uri.toString());
+        Log.d("qwerty", "ParseCommunity - " + uri.toString());
     }
 
     @Override

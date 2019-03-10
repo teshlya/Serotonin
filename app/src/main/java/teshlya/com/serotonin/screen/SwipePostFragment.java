@@ -88,13 +88,8 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
                     }
 
                     Uri buildUri(){
-                        Uri.Builder builderUri = Uri.parse(Constants.DOMAIN).buildUpon();
-                        builderUri
-                                .appendEncodedPath(url)
-                                .appendEncodedPath(FrontPageActivity.sort)
-                                .appendEncodedPath(".json")
-                                .appendQueryParameter("t",FrontPageActivity.period)
-                                .appendQueryParameter("after",after);
+                        Uri.Builder builderUri = Uri.parse(FrontPageActivity.builderUri.build().toString()).buildUpon();
+                        builderUri.appendQueryParameter("after",after);
                         return builderUri.build();
                     }
 

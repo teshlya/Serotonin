@@ -231,7 +231,7 @@ public class MainMenuFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //new CheckUrlExists(existsUrlCallback, str).execute();
-                    //openCommunity("/r/" + subreddits.get(position) + "/", subreddits.get(position), true);
+                    openCommunity("search " + str, "Search", false);
 
                 }
             });
