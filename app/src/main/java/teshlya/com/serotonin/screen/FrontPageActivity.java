@@ -1,8 +1,8 @@
 package teshlya.com.serotonin.screen;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -30,7 +30,7 @@ import teshlya.com.serotonin.utils.Preference;
 public class FrontPageActivity extends AppCompatActivity implements CallbackArticleLoaded {
 
     private CommunityFragment communityFragment;
-    private String url = "/";
+    private String url = "";
     private Boolean star = false;
     private FloatingActionButton fab;
     private Context context;
@@ -231,27 +231,27 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         switch (idCheckedButton)
         {
             case R.id.top_year:
-                this.period = "?t=year";
+                this.period = "year";
                 setCheckedTop();
                 return;
             case R.id.top_week:
-                this.period = "?t=week";
+                this.period = "week";
                 setCheckedTop();
                 return;
             case R.id.top_month:
-                this.period = "?t=month";
+                this.period = "month";
                 setCheckedTop();
                 return;
             case R.id.top_hour:
-                this.period = "?t=hour";
+                this.period = "hour";
                 setCheckedTop();
                 return;
             case R.id.top_day:
-                this.period = "?t=day";
+                this.period = "day";
                 setCheckedTop();
                 return;
             case R.id.top_all:
-                this.period = "?t=all";
+                this.period = "all";
                 setCheckedTop();
                 return;
             case R.id.rising:
@@ -267,27 +267,27 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
                 this.sort = "best";
                 return;
             case R.id.controversial_year:
-                this.period = "?t=year";
+                this.period = "year";
                 setCheckedControversial();
                 return;
             case R.id.controversial_week:
-                this.period = "?t=week";
+                this.period = "week";
                 setCheckedControversial();
                 return;
             case R.id.controversial_month:
-                this.period = "?t=month";
+                this.period = "month";
                 setCheckedControversial();
                 return;
             case R.id.controversial_hour:
-                this.period = "?t=hour";
+                this.period = "hour";
                 setCheckedControversial();
                 return;
             case R.id.controversial_day:
-                this.period = "?t=day";
+                this.period = "day";
                 setCheckedControversial();
                 return;
             case R.id.controversial_all:
-                this.period = "?t=all";
+                this.period = "all";
                 setCheckedControversial();
                 return;
         }
@@ -302,7 +302,7 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
     private void initSubMenu(String sort, String period)
     {
         this.sort = sort;
-        this.period = "?t=" + period;
+        this.period = period;
         parseCommunity(this.url);
         if (sort.equals("controversial"))
             popupMenu.getMenu().findItem(R.id.controversial).setChecked(true);
@@ -315,7 +315,7 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         if (requestCode == 1) {
             switch (resultCode) {
                 case Constants.RESULT_SABREDDIT:
-                    openSabreddit(data);
+                    openSubreddit(data);
                     break;
                 case Constants.RESULT_QUESTION:
                     openQuestion();
@@ -342,7 +342,7 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         ft.commit();
     }
 
-    private void openSabreddit(Intent data) {
+    private void openSubreddit(Intent data) {
         findViewById(R.id.sort).setVisibility(View.VISIBLE);
         String url = data.getStringExtra(Constants.URL);
         String community = data.getStringExtra(Constants.COMMUNITY);
@@ -359,7 +359,17 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
         showProgressBar();
         setTitle();
         setStar();
-        new ParseCommunity(this, Constants.DOMAIN + url + sort+ ".json" + period).execute();
+        new ParseCommunity(this, buildUri(url)).execute();
+    }
+
+    Uri buildUri(String url) {
+        Uri.Builder builderUri = Uri.parse(Constants.DOMAIN).buildUpon();
+        builderUri
+                .appendEncodedPath(url)
+                .appendEncodedPath(sort)
+                .appendEncodedPath(".json")
+                .appendQueryParameter("t", period);
+        return builderUri.build();
     }
 
     private void showProgressBar() {

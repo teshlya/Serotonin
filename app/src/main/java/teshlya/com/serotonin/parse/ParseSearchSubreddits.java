@@ -1,6 +1,5 @@
 package teshlya.com.serotonin.parse;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,36 +11,33 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import teshlya.com.serotonin.callback.CallbackArticleLoaded;
+import teshlya.com.serotonin.callback.CallbackSubredditSearched;
 import teshlya.com.serotonin.model.ArticleData;
 import teshlya.com.serotonin.model.CommunityData;
 import teshlya.com.serotonin.model.Media;
 import teshlya.com.serotonin.model.MediaType;
 import teshlya.com.serotonin.utils.TimeAgo;
 
-public class ParseCommunity extends AsyncTask<Void, Void, String> {
-    private CallbackArticleLoaded callbackArticleLoaded;
-    private URL url;
+public class ParseSearchSubreddits extends AsyncTask<Void, Void, String> {
+    private CallbackSubredditSearched callbackSubredditSearched;
+    private String url;
 
-    public ParseCommunity(CallbackArticleLoaded callbackArticleLoaded, Uri uri) {
-        this.callbackArticleLoaded = callbackArticleLoaded;
-        try {
-            this.url = new URL(uri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        Log.d("qwerty", uri.toString());
+    public ParseSearchSubreddits(CallbackSubredditSearched callbackSubredditSearched, String url) {
+        this.callbackSubredditSearched = callbackSubredditSearched;
+        this.url = url;
+        Log.d("qwerty",url);
     }
 
     @Override
     protected String doInBackground(Void... params) {
         String resultJson = "";
         try {
+            URL url = new URL(this.url);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -68,7 +64,7 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String strJson) {
         super.onPostExecute(strJson);
 
-        try {
+       /* try {
             CommunityData communityData = new CommunityData();
             JSONObject dataJsonObj = new JSONObject(strJson);
             JSONObject data = dataJsonObj.getJSONObject("data");
@@ -76,11 +72,11 @@ public class ParseCommunity extends AsyncTask<Void, Void, String> {
             communityData.setSubreddit(getSubreddit(data));
             JSONArray children = data.getJSONArray("children");
             communityData.setArticles(parseChildren(children));
-            callbackArticleLoaded.addArticles(communityData);
+            //callbackSubredditSearched.addArticles(communityData);
         } catch (JSONException e) {
-            callbackArticleLoaded.addArticles(null);
+            //callbackSubredditSearched.addArticles(null);
             e.printStackTrace();
-        }
+        }*/
     }
 
     private String getAfter(JSONObject data) throws JSONException {

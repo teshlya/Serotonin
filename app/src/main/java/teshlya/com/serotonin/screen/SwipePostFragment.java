@@ -2,6 +2,7 @@ package teshlya.com.serotonin.screen;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,12 +82,20 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
                     @Override
                     public void loadMore() {
                         if (after != null) {
-                            String period = "?";
-                            if (!FrontPageActivity.period.equals(""))
-                                period = FrontPageActivity.period + "&";
-                            new ParseCommunity(SwipePostFragment.this, Constants.DOMAIN + url + FrontPageActivity.sort + ".json" + period + "after=" + after ).execute();
+                            new ParseCommunity(SwipePostFragment.this, buildUri()).execute();
                             adapter.showProgress();
                         }
+                    }
+
+                    Uri buildUri(){
+                        Uri.Builder builderUri = Uri.parse(Constants.DOMAIN).buildUpon();
+                        builderUri
+                                .appendEncodedPath(url)
+                                .appendEncodedPath(FrontPageActivity.sort)
+                                .appendEncodedPath(".json")
+                                .appendQueryParameter("t",FrontPageActivity.period)
+                                .appendQueryParameter("after",after);
+                        return builderUri.build();
                     }
 
                     @Override

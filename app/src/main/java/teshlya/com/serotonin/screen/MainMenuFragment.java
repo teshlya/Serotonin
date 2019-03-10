@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,12 +40,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.adapter.MainMenuAdapter;
 import teshlya.com.serotonin.adapter.StickHeaderItemDecoration;
+import teshlya.com.serotonin.callback.CallbackSubredditSearched;
 import teshlya.com.serotonin.callback.ExistsUrlCallback;
 import teshlya.com.serotonin.component.StickyNestedScrollView;
 import teshlya.com.serotonin.model.DataMainMenu;
 import teshlya.com.serotonin.model.SubscriptionsGroup;
 import teshlya.com.serotonin.parse.ParseArticle;
 import teshlya.com.serotonin.parse.ParseJsonSubscription;
+import teshlya.com.serotonin.parse.ParseSearchSubreddits;
 import teshlya.com.serotonin.utils.CheckUrlExists;
 import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
@@ -110,17 +114,17 @@ public class MainMenuFragment extends Fragment {
     private void initRedditFeeds() {
 
         list.add(new DataMainMenu("REDDIT FEEDS", "feeds", 1));
-        list.add(new DataMainMenu("All", "/r/all/", 0));
-        list.add(new DataMainMenu("Front page", "/", 0));
-        list.add(new DataMainMenu("Popular", "/r/popular/", 0));
-        list.add(new DataMainMenu("Random", "/r/random/", 0));
+        list.add(new DataMainMenu("All", "r/all", 0));
+        list.add(new DataMainMenu("Front page", "", 0));
+        list.add(new DataMainMenu("Popular", "r/popular", 0));
+        list.add(new DataMainMenu("Random", "r/random", 0));
     }
 
     private void initStarred() {
         if (Preference.starList != null && Preference.starList.size() > 0) {
             list.add(new DataMainMenu("STARRED", "star", 1));
             for (String community : Preference.starList)
-                list.add(new DataMainMenu(community, "/r/" + community + "/", 0));
+                list.add(new DataMainMenu(community, "/r/" + community, 0));
         }
     }
 
@@ -129,7 +133,7 @@ public class MainMenuFragment extends Fragment {
         for (SubscriptionsGroup group : subscriptionsGroups) {
             list.add(new DataMainMenu(group.title, group.icon, 1));
             for (String community : group.subscriptions)
-                list.add(new DataMainMenu(community, "/r/" + community + "/", 0));
+                list.add(new DataMainMenu(community, "/r/" + community, 0));
         }
     }
 
@@ -205,6 +209,8 @@ public class MainMenuFragment extends Fragment {
         }
         addGotoToMainMenu(listCloneContainsSubscruption, str);
         addSubredditsToSearchMenu(listClone);
+        new ParseSearchSubreddits(callbackSubredditSearched,
+                "https://www.reddit.com/search?q=" + str + "&type=sr").execute();
     }
 
     private void addGotoToMainMenu(Boolean listContainsSubscruption, final String str) {
@@ -215,7 +221,7 @@ public class MainMenuFragment extends Fragment {
             gotoTextView.setVisibility(View.VISIBLE);
             gotoListView.setVisibility(View.VISIBLE);
             final ArrayList<String> gotoList = new ArrayList<String>();
-            gotoList.add(str);
+            gotoList.add("Search " + Character.toString((char) 8810) + str + Character.toString((char) 8811));
 
             ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, gotoList);
             gotoListView.setAdapter(adapter);
@@ -224,7 +230,9 @@ public class MainMenuFragment extends Fragment {
             gotoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    new CheckUrlExists(existsUrlCallback, str).execute();
+                    //new CheckUrlExists(existsUrlCallback, str).execute();
+                    //openCommunity("/r/" + subreddits.get(position) + "/", subreddits.get(position), true);
+
                 }
             });
         } else {
@@ -307,10 +315,12 @@ public class MainMenuFragment extends Fragment {
     private void addSubredditsToSearchMenu(final ArrayList<String> subreddits) {
         TextView subredditsTextView = searchMainMenu.findViewById(R.id.subreddits);
         ListView subredditsListView = searchMainMenu.findViewById(R.id.search_list);
+        ProgressBar progressBar = searchMainMenu.findViewById(R.id.progressBar);
 
         if (subreddits.size() > 0) {
             subredditsTextView.setVisibility(View.VISIBLE);
             subredditsListView.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
             ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, subreddits);
             subredditsListView.setAdapter(adapter);
             setListViewHeightBasedOnChildren(subredditsListView);
@@ -318,7 +328,7 @@ public class MainMenuFragment extends Fragment {
             subredditsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    openCommunity("/r/" + subreddits.get(position) + "/", subreddits.get(position), true);
+                    openCommunity("/r/" + subreddits.get(position), subreddits.get(position), true);
                 }
             });
         } else {
@@ -372,7 +382,7 @@ public class MainMenuFragment extends Fragment {
         @Override
         public void sendResult(Boolean isExists, String subreddit) {
             if (isExists)
-                openCommunity("/r/" + subreddit + "/", subreddit, true);
+                openCommunity("/r/" + subreddit, subreddit, true);
             else
                 Toast.makeText(getActivity(), "Subreddit does not exist!", Toast.LENGTH_SHORT).show();
         }
@@ -385,4 +395,11 @@ public class MainMenuFragment extends Fragment {
             positionScroll = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         }
     }
+
+    CallbackSubredditSearched callbackSubredditSearched = new CallbackSubredditSearched() {
+        @Override
+        public void addSubredditsToListMenu(ArrayList<String> list) {
+
+        }
+    };
 }
