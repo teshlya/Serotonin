@@ -265,9 +265,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private void openArticle(int position) {
             AppCompatActivity articleActivity = (AppCompatActivity) context;
-            swipePostFragment = SwipePostFragment.newInstance(data,
-                    url,
-                    position);
+            swipePostFragment = SwipePostFragment.newInstance(data, position);
 
             FragmentManager fm = articleActivity.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();

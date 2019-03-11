@@ -1,5 +1,8 @@
 package teshlya.com.serotonin.adapter;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +21,8 @@ public class ScrollListenerSwipePost extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+
+
         initVariables(recyclerView);
         if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
             if (callback != null) {
@@ -32,6 +37,19 @@ public class ScrollListenerSwipePost extends RecyclerView.OnScrollListener {
             ArticleAdapter.positionPlayingVideo = -1;
         }
 
+    }
+
+    @Override
+    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        if (newState == RecyclerView.SCROLL_STATE_IDLE){
+            int currentPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            if (callback != null) {
+                Log.d("qwerty", ""+currentPosition);
+
+                callback.setTitleInSearchMode(currentPosition);
+            }
+        }
     }
 
     private void initVariables(RecyclerView recyclerView) {

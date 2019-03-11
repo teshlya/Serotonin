@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,26 +25,27 @@ import teshlya.com.serotonin.component.NestedScrollingParentRecyclerView;
 import teshlya.com.serotonin.model.CommunityData;
 import teshlya.com.serotonin.parse.ParseCommunity;
 import teshlya.com.serotonin.utils.Constants;
+import teshlya.com.serotonin.utils.Preference;
 
 public class SwipePostFragment extends Fragment implements CallbackArticleLoaded {
 
-    private String url;
     private CommunityData data;
     private int position;
+    private String title;
     private NestedScrollingParentRecyclerView recyclerView;
     private SwipePostAdapter adapter;
     private ScrollListenerSwipePost scrollListenerSwipePost;
     private String after;
     private Context context;
+    private ImageView star_enabled;
+    private ImageView star_disabled;
 
     public static SwipePostFragment newInstance(CommunityData data,
-                                                String url,
                                                 int position) {
         SwipePostFragment fragment = new SwipePostFragment();
         Bundle args = new Bundle();
         args.putSerializable(Constants.DATA, data);
         args.putInt(Constants.POSITION, position);
-        args.putString(Constants.URL, url);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +63,26 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
         recyclerView = view.findViewById(R.id.rw);
         initArguments();
         initRecycler();
+        if (FrontPageActivity.searchMode) {
+            initTitle();
+            initStar();
+        }
         hidePopupMenuSort();
+    }
+
+    private void initStar() {
+        star_enabled = getActivity().findViewById(R.id.star_enabled);
+        star_disabled = getActivity().findViewById(R.id.star_disabled);
+        setStar();
+    }
+
+    private void setStar() {
+        star_enabled.setVisibility(View.GONE);
+        star_disabled.setVisibility(View.GONE);
+        if (Preference.starList.contains(title))
+            star_enabled.setVisibility(View.VISIBLE);
+        else
+            star_disabled.setVisibility(View.VISIBLE);
     }
 
     private void hidePopupMenuSort()
@@ -103,14 +125,30 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
                             ArticleAdapter.mpdPlayerFragment = null;
                         }
                     }
+
+                    @Override
+                    public void setTitleInSearchMode(int curentPositionItem) {
+                        if (FrontPageActivity.searchMode) {
+                            title = adapter.getArticles().get(curentPositionItem).getSubreddit();
+                            ((TextView) getActivity().findViewById(R.id.community_title)).
+                                    setText(title);
+                            setStar();
+                        }
+                    }
                 });
         recyclerView.addOnScrollListener(scrollListenerSwipePost);
+    }
+
+    private void initTitle() {
+        title = adapter.getArticles().get(position).getSubreddit();
+
+        ((TextView) getActivity().findViewById(R.id.community_title)).
+                setText(title);
     }
 
     private void initArguments() {
         data = (CommunityData) getArguments().getSerializable(Constants.DATA);
         position = getArguments().getInt(Constants.POSITION);
-        url = getArguments().getString(Constants.URL);
         after = data.getAfter();
     }
 
@@ -135,4 +173,6 @@ public class SwipePostFragment extends Fragment implements CallbackArticleLoaded
             }
         }
     }
+
+
 }

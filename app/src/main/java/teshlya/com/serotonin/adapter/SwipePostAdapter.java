@@ -49,6 +49,10 @@ public class SwipePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyItemRangeChanged(listSize, addCount);
     }
 
+    public List<ArticleData> getArticles(){
+        return articles;
+    }
+
     @Override
     public int getItemViewType(int position) {
         return articles.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;

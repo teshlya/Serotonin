@@ -410,6 +410,7 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
             public void onClick(View v) {
                 star_enabled.setVisibility(View.GONE);
                 star_disabled.setVisibility(View.VISIBLE);
+                String title = titleTextView.getText().toString();
                 if (Preference.starList.contains(title))
                     Preference.starList.remove(title);
                 Preference.saveStarToSharedPrefs(context);
@@ -423,6 +424,7 @@ public class FrontPageActivity extends AppCompatActivity implements CallbackArti
             public void onClick(View v) {
                 star_disabled.setVisibility(View.GONE);
                 star_enabled.setVisibility(View.VISIBLE);
+                String title = titleTextView.getText().toString();
                 Preference.starList.add(title);
                 Preference.saveStarToSharedPrefs(context);
             }
