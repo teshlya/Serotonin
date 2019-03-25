@@ -45,8 +45,6 @@ public class ScrollListenerSwipePost extends RecyclerView.OnScrollListener {
         if (newState == RecyclerView.SCROLL_STATE_IDLE){
             int currentPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
             if (callback != null) {
-                Log.d("qwerty", ""+currentPosition);
-
                 callback.setTitleInSearchMode(currentPosition);
             }
         }

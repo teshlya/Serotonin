@@ -40,15 +40,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.adapter.MainMenuAdapter;
 import teshlya.com.serotonin.adapter.StickHeaderItemDecoration;
-import teshlya.com.serotonin.callback.CallbackSubredditSearched;
+import teshlya.com.serotonin.callback.CallbackSubredditFound;
 import teshlya.com.serotonin.callback.ExistsUrlCallback;
 import teshlya.com.serotonin.component.StickyNestedScrollView;
 import teshlya.com.serotonin.model.DataMainMenu;
+import teshlya.com.serotonin.model.SearchResult;
 import teshlya.com.serotonin.model.SubscriptionsGroup;
 import teshlya.com.serotonin.parse.ParseArticle;
 import teshlya.com.serotonin.parse.ParseJsonSubscription;
 import teshlya.com.serotonin.parse.ParseSearchSubreddits;
-import teshlya.com.serotonin.utils.CheckUrlExists;
 import teshlya.com.serotonin.utils.Constants;
 import teshlya.com.serotonin.utils.DrawableIcon;
 import teshlya.com.serotonin.utils.Preference;
@@ -66,6 +66,11 @@ public class MainMenuFragment extends Fragment {
     private ArrayList<DataMainMenu> list;
     private RecyclerView recyclerView;
     private static int positionScroll = 0;
+    private ArrayList<String> foundListLocal = new ArrayList<>();
+    private String after = "";
+    private String searchString = "";
+    private ProgressBar progressBar;
+
 
     public static MainMenuFragment newInstance(int clickState) {
         Bundle bundle = new Bundle();
@@ -151,6 +156,7 @@ public class MainMenuFragment extends Fragment {
         fullMainMenu = LayoutInflater.from(context).inflate(R.layout.main_menu_full, null, false);
         searchMainMenu = LayoutInflater.from(context).inflate(R.layout.main_menu_search, null, false);
         conteinerMainMenu.addView(fullMainMenu);
+        progressBar = searchMainMenu.findViewById(R.id.progressBar);
     }
 
     private void initSearch(View view) {
@@ -187,8 +193,21 @@ public class MainMenuFragment extends Fragment {
         if (conteinerMainMenu.findViewById(R.id.searchMenu) == null) {
             conteinerMainMenu.removeAllViews();
             conteinerMainMenu.addView(searchMainMenu);
-            ((StickyNestedScrollView) searchMainMenu.findViewById(R.id.scroll_view)).
-                    fullScroll(NestedScrollView.FOCUS_UP);
+            StickyNestedScrollView stickyNestedScrollView = searchMainMenu.findViewById(R.id.scroll_view);
+            stickyNestedScrollView.fullScroll(NestedScrollView.FOCUS_UP);
+            stickyNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (!v.canScrollVertically(1)) {
+                        if (after != null && searchString != null && !after.equals("") && !searchString.equals("")) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            new ParseSearchSubreddits(callbackSubredditFound,
+                                    "https://www.reddit.com/search.json?q=" + searchString + "&type=sr" + "&after=" + after, searchString).execute();
+                            after = "";
+                        }
+                    }
+                }
+            });
             search.requestFocus();
         }
         SortedSet<String> sortedSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
@@ -198,26 +217,26 @@ public class MainMenuFragment extends Fragment {
         }
         sortedSet.addAll(Preference.starList);
 
-        boolean listCloneContainsSubscruption = false;
-        final ArrayList<String> listClone = new ArrayList<String>();
+        foundListLocal.clear();
         for (String string : sortedSet) {
             if (string.toLowerCase().contains(str.toLowerCase())) {
-                listClone.add(string);
-                if (string.toLowerCase().equals(str.toLowerCase()))
-                    listCloneContainsSubscruption = true;
+                foundListLocal.add(string);
             }
         }
-        addGotoToMainMenu(listCloneContainsSubscruption, str);
-        addSubredditsToSearchMenu(listClone);
-        new ParseSearchSubreddits(callbackSubredditSearched,
-                "https://www.reddit.com/search?q=" + str + "&type=sr").execute();
+        addGotoToMainMenu(str);
+        addSubredditsToSearchMenu(foundListLocal);
+        if (str.length() > 2) {
+            progressBar.setVisibility(View.VISIBLE);
+            new ParseSearchSubreddits(callbackSubredditFound,
+                    "https://www.reddit.com/search.json?q=" + str + "&type=sr", str).execute();
+        }
     }
 
-    private void addGotoToMainMenu(Boolean listContainsSubscruption, final String str) {
+    private void addGotoToMainMenu(final String str) {
         TextView gotoTextView = searchMainMenu.findViewById(R.id.go_to);
         ListView gotoListView = searchMainMenu.findViewById(R.id.goto_list);
 
-        if (!listContainsSubscruption) {
+
             gotoTextView.setVisibility(View.VISIBLE);
             gotoListView.setVisibility(View.VISIBLE);
             final ArrayList<String> gotoList = new ArrayList<String>();
@@ -225,7 +244,7 @@ public class MainMenuFragment extends Fragment {
 
             ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, gotoList);
             gotoListView.setAdapter(adapter);
-            setListViewHeightBasedOnChildren(gotoListView);
+        setListViewHeightBasedOnChildren(gotoListView);
 
             gotoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -235,10 +254,6 @@ public class MainMenuFragment extends Fragment {
 
                 }
             });
-        } else {
-            gotoTextView.setVisibility(View.GONE);
-            gotoListView.setVisibility(View.GONE);
-        }
     }
 
     private void initAnimateSearch(View view) {
@@ -315,12 +330,9 @@ public class MainMenuFragment extends Fragment {
     private void addSubredditsToSearchMenu(final ArrayList<String> subreddits) {
         TextView subredditsTextView = searchMainMenu.findViewById(R.id.subreddits);
         ListView subredditsListView = searchMainMenu.findViewById(R.id.search_list);
-        ProgressBar progressBar = searchMainMenu.findViewById(R.id.progressBar);
 
-        if (subreddits.size() > 0) {
             subredditsTextView.setVisibility(View.VISIBLE);
             subredditsListView.setVisibility(View.VISIBLE);
-            //progressBar.setVisibility(View.VISIBLE);
             ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, subreddits);
             subredditsListView.setAdapter(adapter);
             setListViewHeightBasedOnChildren(subredditsListView);
@@ -331,10 +343,6 @@ public class MainMenuFragment extends Fragment {
                     openCommunity("/r/" + subreddits.get(position), subreddits.get(position), true);
                 }
             });
-        } else {
-            subredditsTextView.setVisibility(View.GONE);
-            subredditsListView.setVisibility(View.GONE);
-        }
     }
 
     private void initListMenu() {
@@ -371,6 +379,8 @@ public class MainMenuFragment extends Fragment {
     private void openCommunity(String url, String community, Boolean star) {
         ParseArticle.hmap.clear();
         Intent data = new Intent();
+        Log.d("qwerty", url);
+
         data.putExtra(Constants.URL, url);
         data.putExtra(Constants.COMMUNITY, community);
         data.putExtra(Constants.STAR, star);
@@ -396,10 +406,23 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
-    CallbackSubredditSearched callbackSubredditSearched = new CallbackSubredditSearched() {
+    CallbackSubredditFound callbackSubredditFound = new CallbackSubredditFound() {
         @Override
-        public void addSubredditsToListMenu(ArrayList<String> list) {
+        public void addSubredditsToListMenu(SearchResult searchResult, String str) {
+            if (searchResult != null) {
+                SortedSet<String> sortedSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                sortedSet.addAll(foundListLocal);
+                sortedSet.addAll(searchResult.getCommunities());
+                foundListLocal.clear();
+                foundListLocal.addAll(sortedSet);
+                addSubredditsToSearchMenu(foundListLocal);
 
+                if (str.equals(search.getText().toString())) {
+                    searchString = str;
+                    after = searchResult.getAfter();
+                }
+            }
+            progressBar.setVisibility(View.GONE);
         }
     };
 }
