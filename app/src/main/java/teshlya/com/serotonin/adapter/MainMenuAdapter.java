@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import teshlya.com.serotonin.R;
 import teshlya.com.serotonin.model.DataMainMenu;
@@ -27,10 +29,12 @@ import teshlya.com.serotonin.utils.Constants;
 public class MainMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickHeaderItemDecoration.StickyHeaderInterface {
     private ArrayList<DataMainMenu> list;
     private Context context;
+    private int[] rainbow;
 
     public MainMenuAdapter(ArrayList<DataMainMenu> list, Context context) {
         this.list = list;
         this.context = context;
+        rainbow = context.getResources().getIntArray(R.array.rainbow);
     }
 
     @NonNull
@@ -126,15 +130,26 @@ public class MainMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvRows;
+        TextView tvCircleDescription;
         View view;
         ViewHolder(View itemView) {
             super(itemView);
             tvRows = itemView.findViewById(R.id.tvRows);
+            tvCircleDescription = itemView.findViewById(R.id.circleDescription);
             view = itemView.findViewById(R.id.onClickItem);
         }
 
         void bindData(final int position) {
             tvRows.setText(list.get(position).getTitle());
+            tvCircleDescription.setText("r/");
+
+
+            Drawable background = tvCircleDescription.getBackground();
+            if (background instanceof GradientDrawable) {
+                GradientDrawable gradientDrawable = (GradientDrawable) background;
+                gradientDrawable.setStroke(2, rainbow[position % 11]);
+            }
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

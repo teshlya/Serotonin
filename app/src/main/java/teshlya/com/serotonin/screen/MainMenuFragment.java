@@ -38,6 +38,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import teshlya.com.serotonin.R;
+import teshlya.com.serotonin.adapter.ListViewAdapter;
 import teshlya.com.serotonin.adapter.MainMenuAdapter;
 import teshlya.com.serotonin.adapter.StickHeaderItemDecoration;
 import teshlya.com.serotonin.callback.CallbackSubredditFound;
@@ -202,7 +203,15 @@ public class MainMenuFragment extends Fragment {
                         if (after != null && searchString != null && !after.equals("") && !searchString.equals("")) {
                             progressBar.setVisibility(View.VISIBLE);
                             new ParseSearchSubreddits(callbackSubredditFound,
-                                    "https://www.reddit.com/search.json?q=" + searchString + "&type=sr" + "&after=" + after, searchString).execute();
+                                    "https://www.reddit.com/search.json?q=" +
+                                            searchString +
+                                            "&type=sr%2Cuser" +
+                                            "&include_over_18=1" +
+                                            "&sort=relevance" +
+                                            "&t=all" +
+                                            "&after=" +
+                                            after,
+                                    searchString).execute();
                             after = "";
                         }
                     }
@@ -224,11 +233,16 @@ public class MainMenuFragment extends Fragment {
             }
         }
         addGotoToMainMenu(str);
-        addSubredditsToSearchMenu(foundListLocal);
+        addSubredditsToSearchMenu(foundListLocal, foundListLocal.size());
         if (str.length() > 2) {
             progressBar.setVisibility(View.VISIBLE);
             new ParseSearchSubreddits(callbackSubredditFound,
-                    "https://www.reddit.com/search.json?q=" + str + "&type=sr", str).execute();
+                    "https://www.reddit.com/search.json?q=" + str +
+                            "&type=sr%2Cuser" +
+                            "&include_over_18=1" +
+                            "&sort=relevance" +
+                            "&t=all",
+                    str).execute();
         }
     }
 
@@ -327,13 +341,14 @@ public class MainMenuFragment extends Fragment {
         });
     }
 
-    private void addSubredditsToSearchMenu(final ArrayList<String> subreddits) {
+    private void addSubredditsToSearchMenu(final ArrayList<String> subreddits, int countLocalFound) {
         TextView subredditsTextView = searchMainMenu.findViewById(R.id.subreddits);
         ListView subredditsListView = searchMainMenu.findViewById(R.id.search_list);
 
             subredditsTextView.setVisibility(View.VISIBLE);
             subredditsListView.setVisibility(View.VISIBLE);
-            ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, subreddits);
+        //ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.main_menu_item, R.id.community_item, subreddits);
+        ListViewAdapter adapter = new ListViewAdapter(context, subreddits, countLocalFound);
             subredditsListView.setAdapter(adapter);
             setListViewHeightBasedOnChildren(subredditsListView);
 
@@ -379,7 +394,6 @@ public class MainMenuFragment extends Fragment {
     private void openCommunity(String url, String community, Boolean star) {
         ParseArticle.hmap.clear();
         Intent data = new Intent();
-        Log.d("qwerty", url);
 
         data.putExtra(Constants.URL, url);
         data.putExtra(Constants.COMMUNITY, community);
@@ -410,12 +424,14 @@ public class MainMenuFragment extends Fragment {
         @Override
         public void addSubredditsToListMenu(SearchResult searchResult, String str) {
             if (searchResult != null) {
-                SortedSet<String> sortedSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-                sortedSet.addAll(foundListLocal);
-                sortedSet.addAll(searchResult.getCommunities());
-                foundListLocal.clear();
-                foundListLocal.addAll(sortedSet);
-                addSubredditsToSearchMenu(foundListLocal);
+                //SortedSet<String> sortedSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                //sortedSet.addAll(foundListLocal);
+                //sortedSet.addAll(searchResult.getCommunities());
+                //foundListLocal.clear();
+                //foundListLocal.addAll(sortedSet);
+                int countLocalFound = foundListLocal.size();
+                foundListLocal.addAll(searchResult.getCommunities());
+                addSubredditsToSearchMenu(foundListLocal, countLocalFound);
 
                 if (str.equals(search.getText().toString())) {
                     searchString = str;

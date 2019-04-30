@@ -49,7 +49,7 @@ public class LineAdapter extends RecyclerView.Adapter<LineAdapter.LineHolder> {
 
         public void bind(int position){
             int[] rainbow = context.getResources().getIntArray(R.array.rainbow);
-            linearLayout.setBackgroundColor(rainbow[position % 12]);
+            linearLayout.setBackgroundColor(rainbow[position % 11]);
         }
     }
 }
